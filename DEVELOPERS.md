@@ -9,8 +9,6 @@ man man/cc-test-reporter.1
 
 This is the payload currently expected by `codeclimate.com/test_reports`.
 
-*TODO*: remove keys not actually used by our system.
-
 ```json
 {
   "ci_service": {
@@ -27,8 +25,10 @@ This is the payload currently expected by `codeclimate.com/test_reports`.
   "covered_strength": 1,
   "environment": {
     "gem_version": "",
+    "package_version": "",
     "pwd": "",
     "rails_root": "",
+    "reporter_version": "",
     "simplecov_root": ""
   },
   "git": {
@@ -60,3 +60,50 @@ This is the payload currently expected by `codeclimate.com/test_reports`.
   ]
 }
 ```
+
+## Server-Side Notes
+
+### Writing
+
+- We default `run_at` to `Time.now` when missing
+- We ignore `committed_at` when it's `0` (after `to_i`), apparently
+  - No idea what downstream impact this case has, I know we at least rely on
+    this in the Extension to know if results are still able to be rendered
+- We just skip reports if `ci_service.pull_request != "false"`, so good thing
+  no-one writes that?
+- `environment` doesn't seem required, and we store only the following keys:
+
+  - `:test_framework`
+  - `:pwd`
+  - `:rails_root`
+  - `:simplecov_root`
+  - `:gem_version`
+
+- From `ci_service` we store the following keys:
+
+  - `:name`
+  - `:build_url`
+  - `:build_identifier`
+  - `:pull_request`
+  - `:branch`
+  - `:commit_sha`
+
+### Reading
+
+#### Coverage Comparisons
+
+Used for comparison and/or status update event payloads:
+
+- `branch`
+- `commit_sha`
+- `committed_at`
+- `covered_percent`
+
+#### Rendering Coverage Info on codeclimate.com
+
+Unclear. It think only `covered_percent` is copied to `snapshot` (repo-totals)
+and `constant` (by source file) records.
+
+#### Rendering Coverage Info on api.codeclimate.com
+
+TODO
