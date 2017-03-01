@@ -12,7 +12,7 @@ sudo mv ./cc-test-reporter /usr/local/bin # anywhere in $PATH
 
 ## Usage
 
-See the [man-pages][./man].
+See the [man-pages](man).
 
 ## Client-Side Aggregation (i.e Parallel Test Coverage)
 
@@ -36,4 +36,4 @@ TODO: describe further
 
 ## Copyright
 
-See the [LICENSE][./LICENSE].
+See the [LICENSE](LICENSE).
