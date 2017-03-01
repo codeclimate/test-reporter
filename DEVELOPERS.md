@@ -47,7 +47,7 @@ This is the payload currently expected by `codeclimate.com/test_reports`.
   "source_files": [
     {
       "blob_id": "",
-      "coverage": [nil, 0, 1],
+      "coverage": [null, 0, 1],
       "covered_percent": 100,
       "covered_strength": 1,
       "line_counts": {
