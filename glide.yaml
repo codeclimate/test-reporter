@@ -1,4 +1,0 @@
-package: github.com/codeclimate/test-reporter
-import:
-- package: github.com/spf13/cobra
-- package: github.com/spf13/viper

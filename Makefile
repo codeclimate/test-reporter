@@ -13,7 +13,7 @@ man/%: man/%.md
 all: $(MAN_PAGES)
 
 test:
-	go test $(go list ./... | grep -v /vendor/)
+	go test `go list ./... | grep -v /vendor/`
 
 build:
 	go build -v ${LDFLAGS} -o bin/test-reporter

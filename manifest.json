@@ -1,0 +1,10 @@
+{
+    "dependencies": {
+        "github.com/gobuffalo/envy": {
+            "branch": "master"
+        },
+        "github.com/spf13/cobra": {
+            "branch": "master"
+        }
+    }
+}
