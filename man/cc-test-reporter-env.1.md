@@ -48,7 +48,7 @@ following environment variables in order:
 
 ## GIT_COMMIT_SHA
 
-If *./.git* exists, read **git log -1 --pretty=format'%H'**. Otherwise, try the
+If *./.git* exists, read **git log -1 --pretty=format:'%H'**. Otherwise, try the
 following environment variables in order:
 
     APPVEYOR_REPO_COMMIT
