@@ -5,6 +5,13 @@ make all
 man man/cc-test-reporter.1
 ```
 
+## Sample Coverage Files
+
+### Python
+
+- [File](/examples/.coverage)
+- [Project](https://github.com/codeclimate/python-test-reporter/tree/dc5236b37fe5eac5604bd7b1384d382072e4fd43)
+
 ## Coverage Payload
 
 This is the payload currently expected by `codeclimate.com/test_reports`.
