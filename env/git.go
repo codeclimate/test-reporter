@@ -6,13 +6,13 @@ import (
 	"strings"
 )
 
-type Git struct {
+type git struct {
 	Branch      string
 	CommitSHA   string
 	CommittedAt string
 }
 
-func (g Git) String() string {
+func (g git) String() string {
 	out := &bytes.Buffer{}
 	out.WriteString("GIT_BRANCH=")
 	out.WriteString(g.Branch)
@@ -23,14 +23,14 @@ func (g Git) String() string {
 	return out.String()
 }
 
-func FindGitInfo() (Git, error) {
+func findGitInfo() (git, error) {
 	_, err := exec.LookPath("git")
 	if err != nil {
 		// git isn't present, so load from ENV vars:
 		return loadGitFromENV()
 	}
 
-	g := Git{}
+	g := git{}
 
 	cmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
 	out, err := cmd.Output()
@@ -55,9 +55,8 @@ func FindGitInfo() (Git, error) {
 	return g, nil
 }
 
-func loadGitFromENV() (Git, error) {
-	// TODO: find via other variables:
-	return Git{
+func loadGitFromENV() (git, error) {
+	return git{
 		Branch:      findVar(gitBranchVars),
 		CommitSHA:   findVar(gitCommitShaVars),
 		CommittedAt: findVar(gitCommittedAtVars),

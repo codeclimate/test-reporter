@@ -2,13 +2,13 @@ package env
 
 import "bytes"
 
-type CI struct {
+type ci struct {
 	Name     string
 	BuildID  string
 	BuildURL string
 }
 
-func (c CI) String() string {
+func (c ci) String() string {
 	out := &bytes.Buffer{}
 	out.WriteString("CI_NAME=")
 	out.WriteString(c.Name)
@@ -19,8 +19,8 @@ func (c CI) String() string {
 	return out.String()
 }
 
-func loadCIInfo() CI {
-	return CI{
+func loadCIInfo() ci {
+	return ci{
 		Name:     findVar(ciNameVars),
 		BuildID:  findVar(ciBuildIDVars),
 		BuildURL: findVar(ciBuildURLVars),

@@ -35,7 +35,7 @@ func Test_loadCIFromENV_Alt_Vars(t *testing.T) {
 
 func Test_CI_String(t *testing.T) {
 	r := require.New(t)
-	c := CI{
+	c := ci{
 		Name:     "codeclimate",
 		BuildID:  "a12345",
 		BuildURL: "http://example.net",

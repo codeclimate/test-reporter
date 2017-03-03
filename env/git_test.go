@@ -9,7 +9,7 @@ import (
 
 func Test_FindGitInfo(t *testing.T) {
 	r := require.New(t)
-	g, err := FindGitInfo()
+	g, err := findGitInfo()
 	r.NoError(err)
 	r.NotZero(g.Branch)
 	r.NotZero(g.CommitSHA)
@@ -46,7 +46,7 @@ func Test_loadGitFromENV_Alt_Vars(t *testing.T) {
 
 func Test_Git_String(t *testing.T) {
 	r := require.New(t)
-	g := Git{
+	g := git{
 		Branch:      "master",
 		CommitSHA:   "a12345",
 		CommittedAt: "12:45",

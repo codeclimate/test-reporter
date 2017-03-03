@@ -6,9 +6,10 @@ import (
 	"github.com/gobuffalo/envy"
 )
 
+// Environment represent the current testing environment
 type Environment struct {
-	Git Git
-	CI  CI
+	Git git
+	CI  ci
 }
 
 func (e Environment) String() string {
@@ -19,9 +20,14 @@ func (e Environment) String() string {
 	return out.String()
 }
 
+// New environment. If there are problems loading parts of
+// the environment an error will be returned. Validation errors
+// are not considered an "error" here, but should be checked
+// further down the chain, when validation of the environment
+// is required.
 func New() (Environment, error) {
 	e := Environment{}
-	git, err := FindGitInfo()
+	git, err := findGitInfo()
 	if err != nil {
 		return e, err
 	}
