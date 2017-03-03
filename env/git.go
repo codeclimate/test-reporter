@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"os/exec"
 	"strings"
-
-	"github.com/gobuffalo/envy"
 )
 
 type Git struct {
@@ -60,8 +58,14 @@ func FindGitInfo() (Git, error) {
 func loadGitFromENV() (Git, error) {
 	// TODO: find via other variables:
 	return Git{
-		Branch:      envy.Get("GIT_BRANCH", ""),
-		CommitSHA:   envy.Get("GIT_COMMIT_SHA", ""),
-		CommittedAt: envy.Get("GIT_COMMITTED_AT", ""),
+		Branch:      findVar(gitBranchVars),
+		CommitSHA:   findVar(gitCommitShaVars),
+		CommittedAt: findVar(gitCommittedAtVars),
 	}, nil
 }
+
+var gitBranchVars = []string{"GIT_BRANCH", "APPVEYOR_REPO_BRANCH", "BRANCH_NAME", "BUILDKITE_BRANCH", "CIRCLE_BRANCH", "CI_BRANCH", "CI_BUILD_REF_NAME", "TRAVIS_BRANCH", "WERCKER_GIT_BRANCH"}
+
+var gitCommitShaVars = []string{"GIT_COMMIT_SHA", "APPVEYOR_REPO_COMMIT", "BUILDKITE_COMMIT", "CIRCLE_SHA1", "CI_BUILD_REF", "CI_BUILD_SHA", "CI_COMMIT", "CI_COMMIT_ID", "GIT_COMMIT", "WERCKER_GIT_COMMIT"}
+
+var gitCommittedAtVars = []string{"GIT_COMMITTED_AT", "GIT_COMMITED_AT", "CI_COMMITTED_AT", "CI_COMMITED_AT"}

@@ -1,6 +1,10 @@
 package env
 
-import "bytes"
+import (
+	"bytes"
+
+	"github.com/gobuffalo/envy"
+)
 
 type CI struct {
 	Name     string
@@ -38,4 +42,14 @@ func New() (Environment, error) {
 
 func loadCIInfo() CI {
 	return CI{}
+}
+
+func findVar(names []string) string {
+	for _, n := range names {
+		v := envy.Get(n, "")
+		if v != "" {
+			return v
+		}
+	}
+	return ""
 }

@@ -24,12 +24,23 @@ func Test_loadGitFromENV(t *testing.T) {
 		envy.Set("GIT_COMMITTED_AT", "12:45")
 		g, err := loadGitFromENV()
 		r.NoError(err)
-		r.NotZero(g.Branch)
 		r.Equal(g.Branch, "master")
-		r.NotZero(g.CommitSHA)
 		r.Equal(g.CommitSHA, "a12345")
-		r.NotZero(g.CommittedAt)
 		r.Equal(g.CommittedAt, "12:45")
+	})
+}
+
+func Test_loadGitFromENV_Alt_Vars(t *testing.T) {
+	r := require.New(t)
+	envy.Temp(func() {
+		envy.Set("CIRCLE_BRANCH", "circle")
+		envy.Set("WERCKER_GIT_COMMIT", "b12345")
+		envy.Set("CI_COMMITED_AT", "13:45")
+		g, err := loadGitFromENV()
+		r.NoError(err)
+		r.Equal(g.Branch, "circle")
+		r.Equal(g.CommitSHA, "b12345")
+		r.Equal(g.CommittedAt, "13:45")
 	})
 }
 
