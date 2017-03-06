@@ -12,6 +12,11 @@ man man/cc-test-reporter.1
 - [Files](/examples/javascript)
 - [Project](https://github.com/codeclimate/javascript-test-reporter/tree/cb80deb6667f62b701dcfea47b9143ceea6c7c1d)
 
+### PHP
+
+- [File](/examples/clover.xml)
+- [Project](https://github.com/codeclimate/php-test-reporter/tree/e86f3e6105796dfc7a43b1eb7da5d1039388052c)
+
 ### Python
 
 - [File](/examples/.coverage)
