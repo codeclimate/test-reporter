@@ -22,6 +22,11 @@ man man/cc-test-reporter.1
 - [File](/examples/.coverage)
 - [Project](https://github.com/codeclimate/python-test-reporter/tree/dc5236b37fe5eac5604bd7b1384d382072e4fd43)
 
+### Ruby
+
+- [Files](/examples/ruby)
+- [Project](https://github.com/codeclimate/ruby-test-reporter/tree/1ec10f635414c70dc4e9c102825557b6510a8037)
+
 ## Coverage Payload
 
 This is the payload currently expected by `codeclimate.com/test_reports`.
