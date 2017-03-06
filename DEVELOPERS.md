@@ -7,6 +7,11 @@ man man/cc-test-reporter.1
 
 ## Sample Coverage Files
 
+### JavaScript
+
+- [Files](/examples/javascript)
+- [Project](https://github.com/codeclimate/javascript-test-reporter/tree/cb80deb6667f62b701dcfea47b9143ceea6c7c1d)
+
 ### Python
 
 - [File](/examples/.coverage)
