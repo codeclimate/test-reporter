@@ -3,9 +3,9 @@ package env
 import "bytes"
 
 type ci struct {
-	Name     string
-	BuildID  string
-	BuildURL string
+	Name     string `json:"name" structs:"name"`
+	BuildID  string `json:"build_id" structs:"build_id"`
+	BuildURL string `json:"build_url" structs:"build_url"`
 }
 
 func (c ci) String() string {

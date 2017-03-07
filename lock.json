@@ -1,12 +1,20 @@
 {
-    "memo": "e714107f0bd71c87a9153c48db65029675a096952020929f58e4539133159f26",
+    "memo": "340d343ca81ca1b5dd16dc026b0d6cac0050768cd38017be0fcdf16cf5139b26",
     "projects": [
         {
             "name": "github.com/davecgh/go-spew",
             "version": "v1.1.0",
-            "revision": "346938d642f2ec3594ed81d874461961cd0faa76",
+            "revision": "a7a0063072ed89d04285d3d3362aa590ed9f7878",
             "packages": [
                 "spew"
+            ]
+        },
+        {
+            "name": "github.com/fatih/structs",
+            "branch": "master",
+            "revision": "a720dfa8df582c51dee1b36feabb906bde1588bd",
+            "packages": [
+                "."
             ]
         },
         {
@@ -26,16 +34,15 @@
         },
         {
             "name": "github.com/markbates/pop",
-            "version": "v3.12.0",
-            "revision": "6b0384f4f88c480abc7f32cc162dd9f62c885a0f",
+            "branch": "master",
+            "revision": "11034a060d3cb83e86b76d28fb32d9630e87884d",
             "packages": [
                 "nulls"
             ]
         },
         {
             "name": "github.com/pkg/errors",
-            "version": "v0.8.0",
-            "revision": "645ef00459ed84a119197bfb8d8205042c6df63d",
+            "revision": "248dadf4e9068a0b3e79f02ed0a610d935de5302",
             "packages": [
                 "."
             ]

@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/spf13/cobra"
@@ -16,11 +18,21 @@ var envCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		fmt.Println(e.String())
+		f, err := cmd.Flags().GetString("format")
+		if err != nil {
+			return err
+		}
+		switch f {
+		case "json":
+			json.NewEncoder(os.Stdout).Encode(e)
+		default:
+			fmt.Println(e.String())
+		}
 		return nil
 	},
 }
 
 func init() {
+	envCmd.Flags().StringP("format", "f", "string", "formats the output")
 	RootCmd.AddCommand(envCmd)
 }

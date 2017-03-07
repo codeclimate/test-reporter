@@ -13,7 +13,6 @@ import (
 var cfgFile string
 var env string
 var version bool
-var connections map[string]*pop.Connection
 
 var RootCmd = &cobra.Command{
 	Use:     "soda",
@@ -43,12 +42,6 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "The configuration file you would like to use.")
 	RootCmd.PersistentFlags().StringVarP(&env, "env", "e", "development", "The environment you want to run migrations against. Will use $GO_ENV if set.")
 	RootCmd.PersistentFlags().BoolVarP(&pop.Debug, "debug", "d", false, "Use debug/verbose mode")
-
-	var err error
-	connections, err = pop.LoadConfig()
-	if err != nil {
-		panic(err)
-	}
 }
 
 func setConfigLocation() {
@@ -65,7 +58,7 @@ func setConfigLocation() {
 }
 
 func getConn() *pop.Connection {
-	conn := connections[env]
+	conn := pop.Connections[env]
 	if conn == nil {
 		fmt.Printf("There is no connection named %s defined!\n", env)
 		os.Exit(1)

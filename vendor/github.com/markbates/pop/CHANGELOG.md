@@ -1,5 +1,22 @@
 # Change Log
 
+## [v3.11.6](https://github.com/markbates/pop/tree/v3.11.6) (2017-03-06)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.11.5...v3.11.6)
+
+## [v3.11.5](https://github.com/markbates/pop/tree/v3.11.5) (2017-03-06)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.12.0...v3.11.5)
+
+**Closed issues:**
+
+- Panic running soda config [\#44](https://github.com/markbates/pop/issues/44)
+
+## [v3.12.0](https://github.com/markbates/pop/tree/v3.12.0) (2017-03-01)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.11.4...v3.12.0)
+
+**Merged pull requests:**
+
+- Xela rellum xela rellum/remove connections singleton 2 [\#42](https://github.com/markbates/pop/pull/42) ([markbates](https://github.com/markbates))
+
 ## [v3.11.4](https://github.com/markbates/pop/tree/v3.11.4) (2017-03-01)
 [Full Changelog](https://github.com/markbates/pop/compare/v3.11.3...v3.11.4)
 
@@ -108,13 +125,13 @@
 [Full Changelog](https://github.com/markbates/pop/compare/v3.5.1.1...v3.6.0)
 
 ## [v3.5.1.1](https://github.com/markbates/pop/tree/v3.5.1.1) (2016-08-26)
-[Full Changelog](https://github.com/markbates/pop/compare/v3.5.1...v3.5.1.1)
-
-## [v3.5.1](https://github.com/markbates/pop/tree/v3.5.1) (2016-08-26)
-[Full Changelog](https://github.com/markbates/pop/compare/v3.5.2...v3.5.1)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.5.2...v3.5.1.1)
 
 ## [v3.5.2](https://github.com/markbates/pop/tree/v3.5.2) (2016-08-26)
-[Full Changelog](https://github.com/markbates/pop/compare/v3.5.0...v3.5.2)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.5.1...v3.5.2)
+
+## [v3.5.1](https://github.com/markbates/pop/tree/v3.5.1) (2016-08-26)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.5.0...v3.5.1)
 
 ## [v3.5.0](https://github.com/markbates/pop/tree/v3.5.0) (2016-08-25)
 [Full Changelog](https://github.com/markbates/pop/compare/v3.4.1...v3.5.0)

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -26,59 +27,18 @@ func init() {
 	if ap != "" {
 		AddLookupPaths(ap)
 	}
+	LoadConfig()
 }
 
-// LoadConfig loads the configuration file and resets all of the connections pop knows about
-func LoadConfig() (map[string]*Connection, error) {
+func LoadConfig() {
 	path, err := findConfigPath()
-	if err != nil {
-		return nil, err
-	}
-
-	if Debug {
-		fmt.Printf("[POP]: Loading config file from %s\n", path)
-	}
-
-	b, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, errors.Wrapf(err, "couldn't read file %s", path)
-	}
-
-	tmpl := template.New("test")
-	tmpl.Funcs(map[string]interface{}{
-		"envOr": func(s1, s2 string) string {
-			return defaults.String(os.Getenv(s1), s2)
-		},
-		"env": func(s1 string) string {
-			return os.Getenv(s1)
-		},
-	})
-	t, err := tmpl.Parse(string(b))
-	if err != nil {
-		return nil, errors.Wrap(err, "couldn't parse config template")
-	}
-
-	var bb bytes.Buffer
-	err = t.Execute(&bb, nil)
-	if err != nil {
-		return nil, errors.Wrap(err, "couldn't execute config template")
-	}
-
-	deets := map[string]*ConnectionDetails{}
-	err = yaml.Unmarshal(bb.Bytes(), &deets)
-	if err != nil {
-		return nil, errors.Wrap(err, "couldn't unmarshal config to yaml")
-	}
-
-	connections = make(map[string]*Connection)
-	for n, d := range deets {
-		con, err := NewConnection(d)
+	if err == nil {
+		Connections = map[string]*Connection{}
+		err = loadConfig(path)
 		if err != nil {
-			return nil, err
+			log.Fatal(err)
 		}
-		connections[n] = con
 	}
-	return connections, nil
 }
 
 func LookupPaths() []string {
@@ -98,4 +58,48 @@ func findConfigPath() (string, error) {
 		}
 	}
 	return "", errors.New("[POP]: Tried to load configuration file, but couldn't find it.")
+}
+
+func loadConfig(path string) error {
+	if Debug {
+		fmt.Printf("[POP]: Loading config file from %s\n", path)
+	}
+	b, err := ioutil.ReadFile(path)
+	if err != nil {
+		return errors.Wrapf(err, "couldn't read file %s", path)
+	}
+
+	tmpl := template.New("test")
+	tmpl.Funcs(map[string]interface{}{
+		"envOr": func(s1, s2 string) string {
+			return defaults.String(os.Getenv(s1), s2)
+		},
+		"env": func(s1 string) string {
+			return os.Getenv(s1)
+		},
+	})
+	t, err := tmpl.Parse(string(b))
+	if err != nil {
+		return errors.Wrap(err, "couldn't parse config template")
+	}
+
+	var bb bytes.Buffer
+	err = t.Execute(&bb, nil)
+	if err != nil {
+		return errors.Wrap(err, "couldn't execute config template")
+	}
+
+	deets := map[string]*ConnectionDetails{}
+	err = yaml.Unmarshal(bb.Bytes(), &deets)
+	if err != nil {
+		return errors.Wrap(err, "couldn't unmarshal config to yaml")
+	}
+	for n, d := range deets {
+		con, err := NewConnection(d)
+		if err != nil {
+			return err
+		}
+		Connections[n] = con
+	}
+	return nil
 }

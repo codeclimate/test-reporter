@@ -10,6 +10,9 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Connections contains all of the available connections
+var Connections = map[string]*Connection{}
+
 // Connection represents all of the necessary details for
 // talking with a datastore
 type Connection struct {
@@ -53,26 +56,14 @@ func NewConnection(deets *ConnectionDetails) (*Connection, error) {
 	return c, nil
 }
 
-// map with all possible connections from a 'database.yml'.
-// Will be initialized once in 'Connect'
-var connections map[string]*Connection
-
 // Connect takes the name of a connection, default is "development", and will
-// return that connection from the available `connections` (which will be
-// read from 'database.yml' once on the first call of 'Connect').
-// If a connection with that name can not be found an error will be returned.
-// If a connection is found, and it has yet to open a connection with its
-// underlying datastore, a connection to that store will be opened.
+// return that connection from the available `Connections`. If a connection with
+// that name can not be found an error will be returned. If a connection is
+// found, and it has yet to open a connection with its underlying datastore,
+// a connection to that store will be opened.
 func Connect(e string) (*Connection, error) {
-	if connections == nil {
-		var err error
-		if connections, err = LoadConfig(); err != nil {
-			return nil, err
-		}
-	}
-
 	e = defaults.String(e, "development")
-	c := connections[e]
+	c := Connections[e]
 	if c == nil {
 		return c, errors.Errorf("Could not find connection named %s!", e)
 	}

@@ -7,9 +7,9 @@ import (
 )
 
 type git struct {
-	Branch      string
-	CommitSHA   string
-	CommittedAt string
+	Branch      string `json:"branch" structs:"branch"`
+	CommitSHA   string `json:"commit_sha" structs:"commit_sha"`
+	CommittedAt string `json:"committed_at" structs:"committed_at"`
 }
 
 func (g git) String() string {

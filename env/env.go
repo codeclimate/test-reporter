@@ -2,7 +2,9 @@ package env
 
 import (
 	"bytes"
+	"encoding/json"
 
+	"github.com/fatih/structs"
 	"github.com/gobuffalo/envy"
 )
 
@@ -10,6 +12,22 @@ import (
 type Environment struct {
 	Git git
 	CI  ci
+}
+
+func (e Environment) MarshalJSON() ([]byte, error) {
+	m := map[string]interface{}{}
+
+	g := structs.Map(e.Git)
+	for k, v := range g {
+		m[k] = v
+	}
+
+	g = structs.Map(e.CI)
+	for k, v := range g {
+		m[k] = v
+	}
+
+	return json.Marshal(m)
 }
 
 func (e Environment) String() string {

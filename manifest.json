@@ -1,7 +1,16 @@
 {
     "dependencies": {
+        "github.com/fatih/structs": {
+            "branch": "master"
+        },
         "github.com/gobuffalo/envy": {
             "branch": "master"
+        },
+        "github.com/markbates/pop": {
+            "branch": "master"
+        },
+        "github.com/pkg/errors": {
+            "revision": "248dadf4e9068a0b3e79f02ed0a610d935de5302"
         },
         "github.com/spf13/cobra": {
             "branch": "master"
