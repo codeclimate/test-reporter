@@ -4,7 +4,7 @@ import "bytes"
 
 type ci struct {
 	Name     string `json:"name" structs:"name"`
-	BuildID  string `json:"build_id" structs:"build_id"`
+	BuildID  string `json:"build_identifier" structs:"build_identifier"`
 	BuildURL string `json:"build_url" structs:"build_url"`
 }
 

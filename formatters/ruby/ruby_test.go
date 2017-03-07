@@ -19,14 +19,13 @@ func Test_Parse(t *testing.T) {
 	r.Equal("Unit Tests", tt.Name)
 	r.NotZero(tt.Timestamp)
 
-	r.Len(tt.Coverage, 7)
+	r.Len(tt.SourceFiles, 7)
 
-	cf := tt.Coverage[6]
+	cf := tt.SourceFiles[6]
 	r.Equal("./development/mygem/lib/mygem/wrap.rb", cf.Name)
-	r.Len(cf.Lines, 10)
+	r.Len(cf.Coverage, 10)
 	for i, x := range []interface{}{1, nil, 1, 17, 20, 16, 16, 12, nil, nil} {
-		l := cf.Lines[i]
-		r.Equal(i+1, l.Number)
-		r.Equal(x, l.Coverage.Interface())
+		l := cf.Coverage[i]
+		r.Equal(x, l.Interface())
 	}
 }

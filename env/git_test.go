@@ -46,7 +46,7 @@ func Test_loadGitFromENV_Alt_Vars(t *testing.T) {
 
 func Test_Git_String(t *testing.T) {
 	r := require.New(t)
-	g := git{
+	g := Git{
 		Branch:      "master",
 		CommitSHA:   "a12345",
 		CommittedAt: "12:45",

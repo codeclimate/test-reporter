@@ -28,22 +28,19 @@ func (f *Formatter) Parse() error {
 	f.Tests = make([]Test, 0, len(m))
 	for k, v := range m {
 		tt := Test{
-			Name:      k,
-			Timestamp: v.Timestamp.Time(),
-			Coverage:  make([]File, 0, len(v.Coverage)),
+			Name:        k,
+			Timestamp:   v.Timestamp.Time(),
+			SourceFiles: make([]SourceFile, 0, len(v.Coverage)),
 		}
 		for n, ls := range v.Coverage {
-			fe := File{
-				Name:  n,
-				Lines: make([]Line, 0, len(ls)),
+			fe := SourceFile{
+				Name:     n,
+				Coverage: ls,
 			}
-			for i, l := range ls {
-				fe.Lines = append(fe.Lines, Line{Number: i + 1, Coverage: l})
-			}
-			tt.Coverage = append(tt.Coverage, fe)
+			tt.SourceFiles = append(tt.SourceFiles, fe)
 		}
-		sort.Slice(tt.Coverage, func(a, b int) bool {
-			return tt.Coverage[a].Name < tt.Coverage[b].Name
+		sort.Slice(tt.SourceFiles, func(a, b int) bool {
+			return tt.SourceFiles[a].Name < tt.SourceFiles[b].Name
 		})
 		f.Tests = append(f.Tests, tt)
 	}
@@ -51,19 +48,9 @@ func (f *Formatter) Parse() error {
 }
 
 type Test struct {
-	Name      string
-	Timestamp time.Time
-	Coverage  []File
-}
-
-type File struct {
-	Name  string
-	Lines []Line
-}
-
-type Line struct {
-	Number   int
-	Coverage nulls.Int
+	Name        string
+	Timestamp   time.Time
+	SourceFiles []SourceFile
 }
 
 func New(path string) *Formatter {

@@ -10,7 +10,7 @@ import (
 
 // Environment represent the current testing environment
 type Environment struct {
-	Git git
+	Git Git
 	CI  ci
 }
 
