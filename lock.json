@@ -1,5 +1,5 @@
 {
-    "memo": "1058f6630a1f886beff693766f6d70f90833c424888dfb88c92b3310bb020eef",
+    "memo": "e714107f0bd71c87a9153c48db65029675a096952020929f58e4539133159f26",
     "projects": [
         {
             "name": "github.com/davecgh/go-spew",
@@ -20,6 +20,22 @@
         {
             "name": "github.com/inconshreveable/mousetrap",
             "revision": "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/markbates/pop",
+            "version": "v3.12.0",
+            "revision": "6b0384f4f88c480abc7f32cc162dd9f62c885a0f",
+            "packages": [
+                "nulls"
+            ]
+        },
+        {
+            "name": "github.com/pkg/errors",
+            "version": "v0.8.0",
+            "revision": "645ef00459ed84a119197bfb8d8205042c6df63d",
             "packages": [
                 "."
             ]

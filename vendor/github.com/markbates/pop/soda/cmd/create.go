@@ -1,0 +1,32 @@
+package cmd
+
+import (
+	"fmt"
+
+	"github.com/markbates/pop"
+	"github.com/spf13/cobra"
+)
+
+var createCmd = &cobra.Command{
+	Use:   "create",
+	Short: "Creates databases for you",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		var err error
+		if all {
+			for _, conn := range connections {
+				err = pop.CreateDB(conn)
+				if err != nil {
+					fmt.Println(err)
+				}
+			}
+		} else {
+			err = pop.CreateDB(getConn())
+		}
+		return err
+	},
+}
+
+func init() {
+	createCmd.Flags().BoolVarP(&all, "all", "a", false, "Creates all of the databases in the database.yml")
+	RootCmd.AddCommand(createCmd)
+}
