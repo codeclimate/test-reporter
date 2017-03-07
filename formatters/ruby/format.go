@@ -8,6 +8,7 @@ import (
 func (r Formatter) Format() (formatters.Report, error) {
 	rep := formatters.Report{
 		SourceFiles: []formatters.SourceFile{},
+		LineCounts:  formatters.LineCounts{},
 	}
 
 	env, err := env.New()
@@ -30,6 +31,9 @@ func (r Formatter) Format() (formatters.Report, error) {
 			sf.CoveredPercent = f.CoveragePercent()
 			covPer += sf.CoveredPercent
 			rep.SourceFiles = append(rep.SourceFiles, sf)
+			rep.LineCounts.Covered += sf.LineCounts.Covered
+			rep.LineCounts.Missed += sf.LineCounts.Missed
+			rep.LineCounts.Total += sf.LineCounts.Total
 		}
 	}
 
