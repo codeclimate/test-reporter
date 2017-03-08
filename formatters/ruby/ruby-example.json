@@ -1,7 +1,7 @@
 {
   "Unit Tests": {
     "coverage": {
-      "./development/mygem/lib/mygem/errors.rb": [
+      "development/mygem/lib/mygem/errors.rb": [
         1,
         null,
         1,
@@ -24,7 +24,7 @@
         null,
         null
       ],
-      "./development/mygem/lib/mygem/definition_manager.rb": [
+      "development/mygem/lib/mygem/definition_manager.rb": [
         1,
         1,
         1,
@@ -58,7 +58,7 @@
         null,
         null
       ],
-      "./development/mygem/lib/mygem/interface.rb": [
+      "development/mygem/lib/mygem/interface.rb": [
         1,
         null,
         1,
@@ -71,7 +71,7 @@
         null,
         null
       ],
-      "./development/mygem/lib/mygem/implements.rb": [
+      "development/mygem/lib/mygem/implements.rb": [
         1,
         null,
         1,
@@ -80,7 +80,7 @@
         null,
         null
       ],
-      "./development/mygem/lib/mygem/implementation_manager.rb": [
+      "development/mygem/lib/mygem/implementation_manager.rb": [
         1,
         1,
         1,
@@ -114,7 +114,7 @@
         null,
         null
       ],
-      "./development/mygem/lib/mygem/wrap.rb": [
+      "development/mygem/lib/mygem/wrap.rb": [
         1,
         null,
         1,
@@ -126,7 +126,7 @@
         null,
         null
       ],
-      "./development/mygem/lib/mygem/type_check.rb": [
+      "development/mygem/lib/mygem/type_check.rb": [
         1,
         null,
         1,

@@ -21,12 +21,12 @@ func Test_loadGitFromENV(t *testing.T) {
 	envy.Temp(func() {
 		envy.Set("GIT_BRANCH", "master")
 		envy.Set("GIT_COMMIT_SHA", "a12345")
-		envy.Set("GIT_COMMITTED_AT", "12:45")
+		envy.Set("GIT_COMMITTED_AT", "1234")
 		g, err := loadGitFromENV()
 		r.NoError(err)
 		r.Equal(g.Branch, "master")
 		r.Equal(g.CommitSHA, "a12345")
-		r.Equal(g.CommittedAt, "12:45")
+		r.Equal(g.CommittedAt, 1234)
 	})
 }
 
@@ -35,12 +35,12 @@ func Test_loadGitFromENV_Alt_Vars(t *testing.T) {
 	envy.Temp(func() {
 		envy.Set("CIRCLE_BRANCH", "circle")
 		envy.Set("WERCKER_GIT_COMMIT", "b12345")
-		envy.Set("CI_COMMITED_AT", "13:45")
+		envy.Set("CI_COMMITED_AT", "1345")
 		g, err := loadGitFromENV()
 		r.NoError(err)
 		r.Equal(g.Branch, "circle")
 		r.Equal(g.CommitSHA, "b12345")
-		r.Equal(g.CommittedAt, "13:45")
+		r.Equal(g.CommittedAt, 1345)
 	})
 }
 
@@ -49,10 +49,10 @@ func Test_Git_String(t *testing.T) {
 	g := Git{
 		Branch:      "master",
 		CommitSHA:   "a12345",
-		CommittedAt: "12:45",
+		CommittedAt: 1234,
 	}
 	exp := `GIT_BRANCH=master
 GIT_COMMIT_SHA=a12345
-GIT_COMMITTED_AT=12:45`
+GIT_COMMITTED_AT=1234`
 	r.Equal(exp, g.String())
 }

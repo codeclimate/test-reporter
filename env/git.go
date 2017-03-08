@@ -2,14 +2,16 @@ package env
 
 import (
 	"bytes"
+	"fmt"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
 type Git struct {
 	Branch      string `json:"branch" structs:"branch"`
 	CommitSHA   string `json:"commit_sha" structs:"commit_sha"`
-	CommittedAt string `json:"committed_at" structs:"committed_at"`
+	CommittedAt int    `json:"committed_at" structs:"committed_at"`
 }
 
 func (g Git) String() string {
@@ -19,7 +21,7 @@ func (g Git) String() string {
 	out.WriteString("\nGIT_COMMIT_SHA=")
 	out.WriteString(g.CommitSHA)
 	out.WriteString("\nGIT_COMMITTED_AT=")
-	out.WriteString(g.CommittedAt)
+	out.WriteString(fmt.Sprint(g.CommittedAt))
 	return out.String()
 }
 
@@ -39,28 +41,46 @@ func findGitInfo() (Git, error) {
 	}
 	g.Branch = strings.TrimSpace(string(out))
 
-	cmd = exec.Command("git", "log", "-1", "--pretty=format:'%H'")
+	cmd = exec.Command("git", "log", "-1", "--pretty=format:%H")
 	out, err = cmd.Output()
 	if err != nil {
 		return g, err
 	}
 	g.CommitSHA = strings.TrimSpace(string(out))
 
-	cmd = exec.Command("git", "log", "-1", "--pretty=format:'%ct'")
+	cmd = exec.Command("git", "log", "-1", "--pretty=format:%ct")
 	out, err = cmd.Output()
 	if err != nil {
 		return g, err
 	}
-	g.CommittedAt = strings.TrimSpace(string(out))
+	g.CommittedAt, err = strconv.Atoi(strings.TrimSpace(string(out)))
+	if err != nil {
+		return g, err
+	}
 	return g, nil
 }
 
+func GitSHA(path string) (string, error) {
+	args := []string{"log", "-1", "--follow", "--pretty=format:%H"}
+	if path != "" {
+		args = append(args, path)
+	}
+	cmd := exec.Command("git", args...)
+	out, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(out)), nil
+}
+
 func loadGitFromENV() (Git, error) {
-	return Git{
-		Branch:      findVar(gitBranchVars),
-		CommitSHA:   findVar(gitCommitShaVars),
-		CommittedAt: findVar(gitCommittedAtVars),
-	}, nil
+	g := Git{
+		Branch:    findVar(gitBranchVars),
+		CommitSHA: findVar(gitCommitShaVars),
+	}
+	var err error
+	g.CommittedAt, err = strconv.Atoi(findVar(gitCommittedAtVars))
+	return g, err
 }
 
 var gitBranchVars = []string{"GIT_BRANCH", "APPVEYOR_REPO_BRANCH", "BRANCH_NAME", "BUILDKITE_BRANCH", "CIRCLE_BRANCH", "CI_BRANCH", "CI_BUILD_REF_NAME", "TRAVIS_BRANCH", "WERCKER_GIT_BRANCH"}

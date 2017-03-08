@@ -16,8 +16,13 @@ var formatCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var in formatters.Formatter
-		in = ruby.New("./formatters/ruby/ruby-example.json")
-		err := in.Parse()
+		_, err := os.Stat("coverage/.resultset.json")
+		if err == nil {
+			in = ruby.New("coverage/.resultset.json")
+		} else {
+			in = ruby.New("./formatters/ruby/ruby-example.json")
+		}
+		err = in.Parse()
 		if err != nil {
 			return err
 		}
