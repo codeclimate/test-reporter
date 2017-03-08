@@ -1,0 +1,10 @@
+#!/bin/sh
+for project in /opt/cc/repos/*; do
+  (
+    cd "$project"
+    echo "Verify some stuff!"
+    echo "Possibly run the old reporter"
+    echo "Probably run the cc-test-reporter"
+    echo "Possibly curl payloads"
+  )
+done
