@@ -1,6 +1,12 @@
 package formatters
 
-import "github.com/codeclimate/test-reporter/env"
+import (
+	"fmt"
+	"os"
+	"strings"
+
+	"github.com/codeclimate/test-reporter/env"
+)
 
 type SourceFile struct {
 	BlobID          string        `json:"blob_id"`
@@ -12,6 +18,11 @@ type SourceFile struct {
 }
 
 func NewSourceFile(name string) SourceFile {
+	if pwd, err := os.Getwd(); err == nil {
+		pwd := fmt.Sprintf("%s%s", pwd, string(os.PathSeparator))
+		name = strings.TrimPrefix(name, pwd)
+	}
+
 	sf := SourceFile{Name: name}
 	sf.BlobID, _ = env.GitSHA(name)
 	return sf

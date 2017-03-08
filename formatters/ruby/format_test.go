@@ -22,7 +22,6 @@ func Test_Format(t *testing.T) {
 	env, err := env.New()
 	r.NoError(err)
 	r.Equal(env, rep.CIService)
-	r.Equal(env.Git, rep.Git)
 	r.Len(rep.SourceFiles, len(rb.Tests[0].SourceFiles))
 
 	lc := rep.LineCounts

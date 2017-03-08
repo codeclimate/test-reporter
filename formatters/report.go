@@ -14,12 +14,18 @@ import (
 type Report struct {
 	CIService       env.Environment `json:"ci_service"`
 	Environment     ccEnvironment   `json:"environment"`
-	Git             env.Git         `json:"git"`
+	Git             ccGit           `json:"git"`
 	CoveredPercent  float64         `json:"covered_percent"`
 	CoveredStrength int             `json:"covered_strength"`
 	LineCounts      LineCounts      `json:"line_counts"`
 	SourceFiles     []SourceFile    `json:"source_files"`
 	totalCoverage   float64
+}
+
+type ccGit struct {
+	Branch      string `json:"branch" structs:"branch"`
+	Head        string `json:"head" structs:"head"`
+	CommittedAt int    `json:"committed_at" structs:"committed_at"`
 }
 
 type ccEnvironment struct {
@@ -60,7 +66,11 @@ func NewReport() (Report, error) {
 		return rep, err
 	}
 	rep.CIService = e
-	rep.Git = e.Git
+	rep.Git = ccGit{
+		Branch:      e.Git.Branch,
+		Head:        e.Git.CommitSHA,
+		CommittedAt: e.Git.CommittedAt,
+	}
 
 	return rep, nil
 }
