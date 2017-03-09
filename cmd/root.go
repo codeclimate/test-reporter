@@ -9,8 +9,8 @@ import (
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "test-reporter",
-	Short: "A brief description of your application",
+	Use:   "cc-test-reporter",
+	Short: "Report information about tests to Code Climate",
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -19,7 +19,7 @@ var RootCmd = &cobra.Command{
 			return err
 		}
 		if v {
-			fmt.Printf("CodeClimate Test Reporter %s (%s @ %s)\n", Version, BuildVersion, BuildTime)
+			fmt.Printf("Code Climate Test Reporter %s (%s @ %s)\n", Version, BuildVersion, BuildTime)
 		}
 		return nil
 	},

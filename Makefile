@@ -16,4 +16,4 @@ test:
 	go test `go list ./... | grep -v /vendor/`
 
 build:
-	go build -v ${LDFLAGS} -o bin/test-reporter
+	go build -v ${LDFLAGS} -o bin/cc-test-reporter
