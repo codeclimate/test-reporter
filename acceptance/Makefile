@@ -9,7 +9,6 @@ repos:
 	@echo "now do Python"
 	@echo "now do PHP"
 
-
 files/bin/cc-test-reporter:
 	@echo "Build ../ and put the executable in ./files/bin"
 	touch files/bin/cc-test-reporter
