@@ -28,15 +28,14 @@ Output debug messages during operation.
 
 # COMMANDS
 
-The reporter exposes high and low-level commands. Currently, only one high-level
-command exists, *coverage*, which is a composition of other, low-level commands.
+The reporter exposes high and low-level commands. For more details, see their
+individual man-pages.
 
-For more details, see their individual man-pages.
+# HIGH-LEVEL COMMANDS
 
-## cc-test-reporter-coverage(1)
+TODO:
 
-Format coverage information from supported sources and upload the formatted
-payloads to Code Climate servers.
+# LOW-LEVEL COMMANDS
 
 ## cc-test-reporter-env(1)
 
@@ -45,6 +44,10 @@ Infer and print information about the environment where the reporter is running.
 ## cc-test-reporter-format-coverage(1)
 
 Format coverage information from supported sources into a valid payload.
+
+## cc-test-reporter-sum-coverage(1)
+
+Combine multiple coverage payloads into one.
 
 ## cc-test-reporter-upload-coverage(1)
 
