@@ -10,8 +10,9 @@ import (
 
 // Environment represent the current testing environment
 type Environment struct {
-	Git Git
-	CI  ci
+	Git       Git
+	CI        ci
+	RepoToken string `json:"-"`
 }
 
 func (e Environment) MarshalJSON() ([]byte, error) {
@@ -44,7 +45,9 @@ func (e Environment) String() string {
 // further down the chain, when validation of the environment
 // is required.
 func New() (Environment, error) {
-	e := Environment{}
+	e := Environment{
+		RepoToken: findVar([]string{"CC_REPO_TOKEN", "REPO_TOKEN"}),
+	}
 	git, err := findGitInfo()
 	if err != nil {
 		return e, err

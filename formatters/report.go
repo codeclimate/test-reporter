@@ -19,6 +19,7 @@ type Report struct {
 	CoveredStrength int             `json:"covered_strength"`
 	LineCounts      LineCounts      `json:"line_counts"`
 	SourceFiles     []SourceFile    `json:"source_files"`
+	RepoToken       string          `json:"repo_token"`
 	totalCoverage   float64
 }
 
@@ -71,6 +72,7 @@ func NewReport() (Report, error) {
 		Head:        e.Git.CommitSHA,
 		CommittedAt: e.Git.CommittedAt,
 	}
+	rep.RepoToken = e.RepoToken
 
 	return rep, nil
 }
