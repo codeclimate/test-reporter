@@ -2,7 +2,7 @@
 
 ```console
 make all
-man man/cc-test-reporter.1
+for x in man/*.1; do man "$x"; done
 ```
 
 ## Sample Coverage Files
