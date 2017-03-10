@@ -8,24 +8,36 @@ This is a sub-command of **cc-test-reporter**(1).
 
 # SYNOPSIS
 
-**cc-test-reporter-upload-coverage** [--input=\<path>]
+**cc-test-reporter-upload-coverage** [--input=\<path>] [--id=\<id>] [--endpoint=\<url\>]
 
 # DESCRIPTION
 
-Aggregate and upload formatted coverage payloads to Code Climate servers.
+Upload pre-formatted coverage payloads to Code Climate servers.
 
 # OPTIONS
 
 ## -i, --input *PATH*
 
-Read payload(s) from *PATH*. If a directory is given, payloads will be read from
-*PATH*/\*.json. If *-* is given, a single payload will be expected on *stdin*.
-Defaults to *coverage/*, a directory.
+Read payload from *PATH*. If *-* is given, the payload will be read from
+*stdin*. Defaults to *coverage/codeclimate.json*.
+
+## -r, --id *ID*
+
+The reporter identifier to use when reporting coverage information. The
+appropriate value can be found in your Repository Settings page on
+*codeclimate.com*. Defaults to the value in the **CC_TEST_REPORTER_ID**
+environment variable.
+
+The uploader will error if a value is not found.
+
+## -e, --endpoint *URL*
+
+The endpoint to upload coverage information to. Defaults to the value in the
+*CC_TEST_REPORTER_COVERAGE_ENDPOINT* environment variable, or a hard-coded
+default (currently *"https://codeclimate.com/test_reports"*).
 
 # ENVIRONMENT VARIABLES
 
-*CC_TEST_REPORTER_TOKEN* or *CODECLIMATE_REPO_TOKEN* (deprecated).
+*CC_TEST_REPORTER_ID*, *CC_TEST_REPORTER_COVERAGE_ENDPOINT*
 
-# SEE ALSO
-
-**cc-test-reporter-format-coverage**(1).
+The API endpoint to use

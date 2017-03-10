@@ -18,9 +18,8 @@ Locate, parse, and re-format supported coverage sources.
 
 ## -o, --output *PATH*
 
-Output to *PATH*. If a directory is given, content will be written to
-*PATH*/codeclimate.json. If *-* is given, content will be written to *stdout*.
-Defaults to *coverage/*, a directory.
+Output to *PATH*. If *-* is given, content will be written to *stdout*. Defaults
+to *coverage/codeclimate.json*.
 
 # SUPPORTED SOURCES
 
