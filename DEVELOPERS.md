@@ -2,7 +2,7 @@
 
 ```console
 make all
-man man/cc-test-reporter.1
+for x in man/*.1; do man "$x"; done
 ```
 
 ## Sample Coverage Files
@@ -81,6 +81,14 @@ This is the payload currently expected by `codeclimate.com/test_reports`.
     }
   ]
 }
+```
+
+## Usage Agent
+
+All uploads should occur with a user agent of:
+
+```
+TestReporter/{VERSION} (Code Climate, Inc.)
 ```
 
 ## Server-Side Notes
