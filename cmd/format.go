@@ -10,6 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var formatOptions = struct {
+	output string
+}{}
+
 // formatCmd represents the format command
 var formatCmd = &cobra.Command{
 	Use:   "format",
@@ -28,16 +32,11 @@ var formatCmd = &cobra.Command{
 			return err
 		}
 
-		output, err := cmd.Flags().GetString("output")
-		if err != nil {
-			return err
-		}
-
 		var out io.Writer
-		if output == "" {
+		if formatOptions.output == "" {
 			out = os.Stdout
 		} else {
-			out, err = os.Open(filepath.Join(output, "codeclimate.json"))
+			out, err = os.Create(filepath.Join(formatOptions.output, "codeclimate.json"))
 			if err != nil {
 				return err
 			}
@@ -53,6 +52,6 @@ var formatCmd = &cobra.Command{
 }
 
 func init() {
-	formatCmd.Flags().StringP("output", "o", "", "output path")
+	formatCmd.Flags().StringVarP(&formatOptions.output, "output", "o", "", "output path")
 	RootCmd.AddCommand(formatCmd)
 }
