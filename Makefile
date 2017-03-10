@@ -17,3 +17,6 @@ test:
 
 build:
 	go build -v ${LDFLAGS} -o bin/cc-test-reporter
+
+test-ruby:
+	docker build -f examples/ruby/Dockerfile .
