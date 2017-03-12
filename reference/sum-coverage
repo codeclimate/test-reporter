@@ -1,0 +1,99 @@
+#!/usr/bin/env stack
+-- stack --resolver lts-8.5 --install-ghc runghc
+-- |
+--
+-- This is a reference implementation for cc-test-reporter sum-coverage.
+--
+-- What is NOT shown here:
+--
+--   1. Attributes not involved in summation
+--   2. Line Counts, they're a function of summed coverage arrays
+--   4. Covered Percent, it's a function of summed line counts
+--   3. Covered Strength, it's a function of summed coverage arrays
+--
+module CC.TestReporter.Coverage.Sum where
+
+import Data.Function (on)
+import Data.List (groupBy, sortOn)
+
+--------------------------------------------------------------------------------
+-- Types
+--------------------------------------------------------------------------------
+
+data Payload = Payload { pSourceFiles :: [SourceFile] }
+
+data SourceFile = SourceFile
+    { sfName :: String
+    , sfCoverage :: Coverage
+    }
+    deriving Show
+
+type Coverage = [CoverageElement]
+
+data CoverageElement = Ignored | Missed | Covered Int
+
+instance Show CoverageElement where
+    show Ignored = "null"
+    show Missed = "0"
+    show (Covered n) = show n
+
+--------------------------------------------------------------------------------
+-- Algorithm
+--------------------------------------------------------------------------------
+
+sumCoverage :: [Payload] -> Payload
+sumCoverage = foldr1 combinePayloads
+
+combinePayloads :: Payload -> Payload -> Payload
+combinePayloads a b = Payload
+    { pSourceFiles =
+        -- Groups reduced by fold
+        map (foldr1 combineSourceFiles) $
+        -- Where each group is all with the same name
+        groupBy ((==) `on` sfName) $ sortOn sfName $
+        -- From both payloads
+        pSourceFiles a ++ pSourceFiles b
+    }
+
+combineSourceFiles :: SourceFile -> SourceFile -> SourceFile
+combineSourceFiles a b = SourceFile
+    { sfName = sfName a
+    , sfCoverage = zipWith combineCoverage (sfCoverage a) (sfCoverage b)
+    }
+
+combineCoverage :: CoverageElement -> CoverageElement -> CoverageElement
+combineCoverage (Covered x) (Covered y) = Covered $ x + y
+combineCoverage x Ignored = x
+combineCoverage Ignored y = y
+combineCoverage x Missed = x
+combineCoverage Missed y = y
+
+--------------------------------------------------------------------------------
+-- Example
+--------------------------------------------------------------------------------
+
+main :: IO ()
+main = do
+    let p1 = Payload
+            [ SourceFile "a" [Missed, Missed]
+            , SourceFile "b" [Ignored, Ignored]
+            , SourceFile "c" [Covered 1, Covered 2]
+            ]
+
+        p2 = Payload
+            [ SourceFile "b" [Ignored, Ignored]
+            , SourceFile "c" [Ignored, Covered 3]
+            , SourceFile "d" [Covered 2, Covered 1]
+            ]
+
+        p3 = Payload
+            [ SourceFile "a" [Ignored, Covered 1]
+            , SourceFile "b" [Ignored, Ignored]
+            , SourceFile "d" [Covered 1, Missed]
+            ]
+
+        p = sumCoverage [p1, p2, p3]
+
+    mapM_ (putStrLn . show) $ pSourceFiles p
+
+-- vim: ft=haskell
