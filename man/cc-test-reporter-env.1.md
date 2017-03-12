@@ -76,7 +76,6 @@ environment variables:
     APPVEYOR
     BUILDKITE
     CIRCLECI
-    CI_NAME
     GITLAB_CI
     JENKINS_URL
     SEMAPHORE
@@ -92,7 +91,6 @@ Chosen from the first of:
     BUILDKITE_JOB_ID
     BUILD_NUMBER
     CIRCLE_BUILD_NUM
-    CI_BUILD_ID
     CI_BUILD_NUMBER
     SEMAPHORE_BUILD_NUMBER
     TDDIUM_SESSION_ID
@@ -107,5 +105,4 @@ Chosen from the first of:
     BUILDKITE_BUILD_URL
     BUILD_URL
     CIRCLE_BUILD_NUM
-    CI_BUILD_URL
     WERCKER_BUILD_URL
