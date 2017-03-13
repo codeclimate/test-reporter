@@ -12,6 +12,7 @@ import (
 
 var formatOptions = struct {
 	output string
+	print  bool
 }{}
 
 // formatCmd represents the format command
@@ -33,10 +34,11 @@ var formatCmd = &cobra.Command{
 		}
 
 		var out io.Writer
-		if formatOptions.output == "" {
+		if formatOptions.print {
 			out = os.Stdout
 		} else {
-			out, err = os.Create(filepath.Join(formatOptions.output, "codeclimate.json"))
+			os.MkdirAll(filepath.Dir(formatOptions.output), 0755)
+			out, err = os.Create(formatOptions.output)
 			if err != nil {
 				return err
 			}
@@ -52,6 +54,7 @@ var formatCmd = &cobra.Command{
 }
 
 func init() {
-	formatCmd.Flags().StringVarP(&formatOptions.output, "output", "o", "", "output path")
+	formatCmd.Flags().BoolVarP(&formatOptions.print, "print", "p", false, "prints to standard out only")
+	formatCmd.Flags().StringVarP(&formatOptions.output, "output", "o", "codeclimate.json", "output path")
 	RootCmd.AddCommand(formatCmd)
 }
