@@ -95,5 +95,9 @@ main = do
         p = sumCoverage [p1, p2, p3]
 
     mapM_ (putStrLn . show) $ pSourceFiles p
+    -- SourceFile {sfName = "a", sfCoverage = [0,1]}
+    -- SourceFile {sfName = "b", sfCoverage = [null,null]}
+    -- SourceFile {sfName = "c", sfCoverage = [1,5]}
+    -- SourceFile {sfName = "d", sfCoverage = [3,1]}
 
 -- vim: ft=haskell
