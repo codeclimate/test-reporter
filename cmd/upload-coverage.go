@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -28,6 +29,9 @@ var uploadCoverageCmd = &cobra.Command{
 }
 
 func (u Uploader) Upload() error {
+	if u.ReporterID == "" {
+		return errors.New("you must supply a CC_TEST_REPORTER_ID ENV variable or pass it via the -r flag")
+	}
 	f, err := os.Open(u.Input)
 	if err != nil {
 		return err
