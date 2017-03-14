@@ -2,6 +2,7 @@
 .DS_Store
 doc
 tmp
+pkg
 *.gem
 *.pid
 coverage
@@ -22,8 +23,6 @@ jhw.*
 node_modules/
 dist/
 generated/
+.vendor/
 bin/*
 gin-bin
-man/*
-!man/*.md
-.vscode/
