@@ -10,23 +10,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type Formatter struct {
+type CoverageFormatter struct {
 	Output string
 	Print  bool
 }
 
-var formatOptions = Formatter{}
+var formatOptions = CoverageFormatter{}
 
-// formatCmd represents the format command
-var formatCmd = &cobra.Command{
-	Use:   "format",
+// formatCoverageCmd represents the format command
+var formatCoverageCmd = &cobra.Command{
+	Use:   "format-coverage",
 	Short: "A brief description of your command",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return formatOptions.Save()
 	},
 }
 
-func (f Formatter) Save() error {
+func (f CoverageFormatter) Save() error {
 	var in formatters.Formatter
 	_, err := os.Stat("coverage/.resultset.json")
 	if err == nil {
@@ -60,7 +60,7 @@ func (f Formatter) Save() error {
 }
 
 func init() {
-	formatCmd.Flags().BoolVarP(&formatOptions.Print, "print", "p", false, "prints to standard out only")
-	formatCmd.Flags().StringVarP(&formatOptions.Output, "output", "o", "codeclimate.json", "output path")
-	RootCmd.AddCommand(formatCmd)
+	formatCoverageCmd.Flags().BoolVarP(&formatOptions.Print, "print", "p", false, "prints to standard out only")
+	formatCoverageCmd.Flags().StringVarP(&formatOptions.Output, "output", "o", "codeclimate.json", "output path")
+	RootCmd.AddCommand(formatCoverageCmd)
 }

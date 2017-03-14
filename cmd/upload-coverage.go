@@ -18,9 +18,9 @@ type Uploader struct {
 
 var uploadOptions = Uploader{}
 
-// uploadCmd represents the upload command
-var uploadCmd = &cobra.Command{
-	Use:   "upload",
+// uploadCoverageCmd represents the upload command
+var uploadCoverageCmd = &cobra.Command{
+	Use:   "upload-coverage",
 	Short: "A brief description of your command",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return uploadOptions.Upload()
@@ -50,8 +50,8 @@ func (u Uploader) Upload() error {
 }
 
 func init() {
-	uploadCmd.Flags().StringVarP(&uploadOptions.Input, "input", "i", "codeclimate.json", "input path")
-	uploadCmd.Flags().StringVarP(&uploadOptions.ReporterID, "id", "r", os.Getenv("CC_TEST_REPORTER_ID"), "reporter identifier")
-	uploadCmd.Flags().StringVarP(&uploadOptions.EndpointURL, "endpoint", "e", "https://codeclimate.com/test_reports", "endpoint to upload coverage information to")
-	RootCmd.AddCommand(uploadCmd)
+	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.Input, "input", "i", "codeclimate.json", "input path")
+	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.ReporterID, "id", "r", os.Getenv("CC_TEST_REPORTER_ID"), "reporter identifier")
+	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.EndpointURL, "endpoint", "e", "https://codeclimate.com/test_reports", "endpoint to upload coverage information to")
+	RootCmd.AddCommand(uploadCoverageCmd)
 }
