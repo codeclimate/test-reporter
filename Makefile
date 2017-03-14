@@ -18,5 +18,10 @@ test:
 build:
 	go build -v ${LDFLAGS} -o bin/cc-test-reporter
 
+build-all:
+	docker build -t cc-builder .
+	mkdir -p $(shell pwd)/bin
+	docker run -v $(shell pwd)/bin:/artifacts cc-builder
+
 test-ruby:
 	docker build -f examples/ruby/Dockerfile .
