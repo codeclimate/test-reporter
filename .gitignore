@@ -23,10 +23,8 @@ jhw.*
 node_modules/
 dist/
 generated/
-.vendor/
 bin/*
 gin-bin
 man/*
 !man/*.md
 .vscode/
-test-reporter
