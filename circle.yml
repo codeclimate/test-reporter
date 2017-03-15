@@ -18,7 +18,7 @@ deployment:
     branch: master
     commands:
       - make build-all VERSION=head
-      - make release
+      - make publish
 
 notify:
   webhooks:
