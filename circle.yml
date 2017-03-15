@@ -1,0 +1,18 @@
+machine:
+  environment:
+    # Avoid --rm on CI
+    DOCKER_RUN: "docker run"
+  services:
+    - docker
+
+dependencies:
+  override:
+    - echo "skip"
+
+test:
+  override:
+    - make test-docker
+
+notify:
+  webhooks:
+    - url: https://cc-slack-proxy.herokuapp.com/circle
