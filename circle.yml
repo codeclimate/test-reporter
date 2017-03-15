@@ -7,11 +7,18 @@ machine:
 
 dependencies:
   override:
-    - echo "skip"
+    - pip install awscli
 
 test:
   override:
     - make test-docker
+
+deployment:
+  s3:
+    branch: master
+    commands:
+      - make build-all VERSION=head
+      - make release
 
 notify:
   webhooks:
