@@ -16,7 +16,7 @@ test:
 	go test `go list ./... | grep -v /vendor/`
 
 build:
-	go build -v ${LDFLAGS} -o bin/cc-test-reporter
+	go build -v ${LDFLAGS} -o $(PREFIX)bin/test-reporter$(BINARY_SUFFIX)
 
 build-all:
 	docker build -t cc-builder .
