@@ -27,3 +27,4 @@ gin-bin
 man/*
 !man/*.md
 .vscode/
+artifacts/
