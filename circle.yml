@@ -11,14 +11,7 @@ dependencies:
 
 test:
   override:
-    - make test-docker build-all
-
-deployment:
-  registry:
-    branch: master
-    owner: codeclimate
-    commands:
-      - echo "Upload artifacts/bin/* to S3"
+    - make test-docker
 
 notify:
   webhooks:
