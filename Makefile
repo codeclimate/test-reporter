@@ -9,6 +9,7 @@ BUILD_VERSION = `git log -1 --pretty=format:'%H'`
 BUILD_TIME = `date +%FT%T%z`
 LDFLAGS = -ldflags "-X github.com/codeclimate/test-reporter/cmd.Version=${VERSION} -X github.com/codeclimate/test-reporter/cmd.BuildVersion=${BUILD_VERSION} -X github.com/codeclimate/test-reporter/cmd.BuildTime=${BUILD_TIME}"
 
+AWS ?= aws
 DOCKER_RUN ?= docker run --rm
 PROJECT = /src/github.com/codeclimate/test-reporter
 
@@ -48,6 +49,9 @@ build-docker:
 
 test-ruby:
 	docker build -f examples/ruby/Dockerfile .
+
+release: build-all
+	$(AWS) s3 sync --acl public-read artifacts/bin s3://codeclimate/test-reporter
 
 clean:
 	sudo $(RM) -r ./artifacts
