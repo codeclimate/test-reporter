@@ -1,0 +1,23 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - echo "skip"
+
+test:
+  override:
+    - make all
+    - echo "Upload artifacts/bin/* to S3"
+
+deployment:
+  registry:
+    branch: master
+    owner: codeclimate
+    commands:
+      - echo "Create/update \"-latest\" (or un-suffixed) version on S3"
+
+notify:
+  webhooks:
+    - url: https://cc-slack-proxy.herokuapp.com/circle
