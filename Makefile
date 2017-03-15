@@ -4,14 +4,14 @@ PANDOC = $(shell which pandoc)
 MAN_FILES = $(wildcard man/*.md)
 MAN_PAGES = $(patsubst man/%.md,man/%,$(MAN_FILES))
 
+PROJECT = github.com/codeclimate/test-reporter
 VERSION = 0.1.0-rc
 BUILD_VERSION = `git log -1 --pretty=format:'%H'`
 BUILD_TIME = `date +%FT%T%z`
-LDFLAGS = -ldflags "-X github.com/codeclimate/test-reporter/cmd.Version=${VERSION} -X github.com/codeclimate/test-reporter/cmd.BuildVersion=${BUILD_VERSION} -X github.com/codeclimate/test-reporter/cmd.BuildTime=${BUILD_TIME}"
+LDFLAGS = -ldflags "-X $(PROJECT)/cmd.Version=${VERSION} -X $(PROJECT)/cmd.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/cmd.BuildTime=${BUILD_TIME}"
 
 AWS ?= aws
 DOCKER_RUN ?= docker run --rm
-PROJECT = /src/github.com/codeclimate/test-reporter
 
 man/%: man/%.md
 	$(PANDOC) -s -t man $< -o $@
@@ -31,8 +31,8 @@ build-all:
 test-docker:
 	$(DOCKER_RUN) \
 	  --env GOPATH=/ \
-	  --volume "$(PWD)":"$(PROJECT)":ro \
-	  --workdir "$(PROJECT)" \
+	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
+	  --workdir "/src/$(PROJECT)" \
 	  golang:1.8 make test
 
 build-docker:
@@ -43,8 +43,8 @@ build-docker:
 	  --env GOOS \
 	  --env GOPATH=/ \
 	  --volume "$(PWD)"/artifacts:/artifacts \
-	  --volume "$(PWD)":"$(PROJECT)":ro \
-	  --workdir "$(PROJECT)" \
+	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
+	  --workdir "/src/$(PROJECT)" \
 	  golang:1.8 make build
 
 test-ruby:
