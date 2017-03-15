@@ -8,7 +8,7 @@ MAN_FILES = $(wildcard man/*.md)
 MAN_PAGES = $(patsubst man/%.md,man/%,$(MAN_FILES))
 
 PROJECT = github.com/codeclimate/test-reporter
-VERSION = 0.1.0-rc
+VERSION ?= 0.1.0-rc
 BUILD_VERSION = $(shell git log -1 --pretty=format:'%H')
 BUILD_TIME = $(shell date +%FT%T%z)
 LDFLAGS = -ldflags "-X $(PROJECT)/cmd.Version=${VERSION} -X $(PROJECT)/cmd.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/cmd.BuildTime=${BUILD_TIME}"
@@ -50,7 +50,7 @@ build-docker:
 test-ruby:
 	docker build -f examples/ruby/Dockerfile .
 
-release: build-all
+publish:
 	$(AWS) s3 sync --acl public-read artifacts/bin s3://codeclimate/test-reporter
 
 clean:
