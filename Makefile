@@ -9,8 +9,8 @@ MAN_PAGES = $(patsubst man/%.md,man/%,$(MAN_FILES))
 
 PROJECT = github.com/codeclimate/test-reporter
 VERSION = 0.1.0-rc
-BUILD_VERSION = `git log -1 --pretty=format:'%H'`
-BUILD_TIME = `date +%FT%T%z`
+BUILD_VERSION = $(shell git log -1 --pretty=format:'%H')
+BUILD_TIME = $(shell date +%FT%T%z)
 LDFLAGS = -ldflags "-X $(PROJECT)/cmd.Version=${VERSION} -X $(PROJECT)/cmd.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/cmd.BuildTime=${BUILD_TIME}"
 
 man/%: man/%.md
@@ -19,7 +19,7 @@ man/%: man/%.md
 all: test-docker build-all $(MAN_PAGES)
 
 test:
-	go test `go list ./... | grep -v /vendor/`
+	go test $(shell go list ./... | grep -v /vendor/)
 
 build:
 	go build -v ${LDFLAGS} -o $(PREFIX)bin/test-reporter$(BINARY_SUFFIX)
