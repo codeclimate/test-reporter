@@ -1,6 +1,9 @@
 .PHONY: test-docker build-docker build-all
 
-PANDOC = $(shell which pandoc)
+AWS ?= $(shell which aws)
+DOCKER_RUN ?= $(shell which docker) run --rm
+PANDOC ?= $(shell which pandoc)
+
 MAN_FILES = $(wildcard man/*.md)
 MAN_PAGES = $(patsubst man/%.md,man/%,$(MAN_FILES))
 
@@ -9,9 +12,6 @@ VERSION = 0.1.0-rc
 BUILD_VERSION = `git log -1 --pretty=format:'%H'`
 BUILD_TIME = `date +%FT%T%z`
 LDFLAGS = -ldflags "-X $(PROJECT)/cmd.Version=${VERSION} -X $(PROJECT)/cmd.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/cmd.BuildTime=${BUILD_TIME}"
-
-AWS ?= aws
-DOCKER_RUN ?= docker run --rm
 
 man/%: man/%.md
 	$(PANDOC) -s -t man $< -o $@
