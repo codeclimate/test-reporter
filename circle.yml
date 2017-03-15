@@ -1,4 +1,7 @@
 machine:
+  environment:
+    # Avoid --rm on CI
+    DOCKER_RUN: "docker run"
   services:
     - docker
 

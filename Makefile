@@ -9,6 +9,7 @@ BUILD_VERSION = `git log -1 --pretty=format:'%H'`
 BUILD_TIME = `date +%FT%T%z`
 LDFLAGS = -ldflags "-X github.com/codeclimate/test-reporter/cmd.Version=${VERSION} -X github.com/codeclimate/test-reporter/cmd.BuildVersion=${BUILD_VERSION} -X github.com/codeclimate/test-reporter/cmd.BuildTime=${BUILD_TIME}"
 
+DOCKER_RUN ?= docker run --rm
 PROJECT = /src/github.com/codeclimate/test-reporter
 
 man/%: man/%.md
@@ -27,14 +28,14 @@ build-all:
 	$(MAKE) build-docker GOOS=linux GOARCH=amd64
 
 test-docker:
-	docker run --rm \
+	$(DOCKER_RUN) \
 	  --env GOPATH=/ \
 	  --volume "$(PWD)":"$(PROJECT)":ro \
 	  --workdir "$(PROJECT)" \
 	  golang:1.8 make test
 
 build-docker:
-	docker run --rm \
+	$(DOCKER_RUN) \
 	  --env PREFIX=/artifacts/ \
 	  --env BINARY_SUFFIX=-$(VERSION)-$$GOOS-$$GOARCH \
 	  --env GOARCH \
