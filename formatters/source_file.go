@@ -19,6 +19,47 @@ type SourceFile struct {
 	Name            string     `json:"name"`
 }
 
+func (a SourceFile) Merge(b SourceFile) SourceFile {
+	prime := a
+	second := b
+	if len(a.Coverage) < len(b.Coverage) {
+		prime = b
+		second = a
+	}
+
+	// go through the shorter or the two:
+	for i, c := range second.Coverage {
+		if x, ok := c.(int); ok {
+			// the secondary is a number
+			if y, ok := prime.Coverage[i].(int); ok {
+				// the primary is also a number
+				prime.Coverage[i] = x + y
+				continue
+			}
+			// set to the secondary:
+			prime.Coverage[i] = x
+		}
+	}
+	prime.CalcLineCounts()
+	return prime
+}
+
+func (sf *SourceFile) CalcLineCounts() {
+	lc := LineCounts{
+		Total: len(sf.Coverage),
+	}
+
+	for _, c := range sf.Coverage {
+		if _, ok := c.(int); ok {
+			lc.Covered++
+			continue
+		}
+		lc.Missed++
+	}
+
+	sf.LineCounts = lc
+}
+
 func NewSourceFile(name string) SourceFile {
 	if pwd, err := os.Getwd(); err == nil {
 		pwd := fmt.Sprintf("%s%s", pwd, string(os.PathSeparator))

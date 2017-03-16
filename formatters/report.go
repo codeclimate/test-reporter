@@ -18,9 +18,8 @@ type Report struct {
 	CoveredPercent  float64         `json:"covered_percent"`
 	CoveredStrength int             `json:"covered_strength"`
 	LineCounts      LineCounts      `json:"line_counts"`
-	SourceFiles     []SourceFile    `json:"source_files"`
+	SourceFiles     SourceFiles     `json:"source_files"`
 	RepoToken       string          `json:"repo_token"`
-	totalCoverage   float64
 }
 
 type ccGit struct {
@@ -57,7 +56,7 @@ func newCCEnvironment() ccEnvironment {
 
 func NewReport() (Report, error) {
 	rep := Report{
-		SourceFiles: []SourceFile{},
+		SourceFiles: SourceFiles{},
 		LineCounts:  LineCounts{},
 		Environment: newCCEnvironment(),
 	}
@@ -77,13 +76,38 @@ func NewReport() (Report, error) {
 	return rep, nil
 }
 
+func (a *Report) Merge(reps ...*Report) {
+	for _, r := range reps {
+		for _, sf := range r.SourceFiles {
+			a.AddSourceFile(sf)
+		}
+	}
+}
+
+type SourceFiles map[string]SourceFile
+
+func (sf SourceFiles) MarshalJSON() ([]byte, error) {
+	files := []SourceFile{}
+	for _, s := range sf {
+		files = append(files, s)
+	}
+	return json.Marshal(files)
+}
+
 func (rep *Report) AddSourceFile(sf SourceFile) {
-	rep.SourceFiles = append(rep.SourceFiles, sf)
-	rep.LineCounts.Covered += sf.LineCounts.Covered
-	rep.LineCounts.Missed += sf.LineCounts.Missed
-	rep.LineCounts.Total += sf.LineCounts.Total
-	rep.totalCoverage += sf.CoveredPercent
-	rep.CoveredPercent = rep.totalCoverage / float64(len(rep.SourceFiles))
+	if s, ok := rep.SourceFiles[sf.Name]; ok {
+		sf = s.Merge(sf)
+	}
+	rep.SourceFiles[sf.Name] = sf
+
+	lc := LineCounts{}
+	for _, s := range rep.SourceFiles {
+		lc.Covered += s.LineCounts.Covered
+		lc.Missed += s.LineCounts.Missed
+		lc.Total += s.LineCounts.Total
+	}
+	rep.LineCounts = lc
+	rep.CoveredPercent = rep.LineCounts.CoveredPercent()
 }
 
 func (r Report) Save(w io.Writer) error {
