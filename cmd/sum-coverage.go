@@ -21,7 +21,7 @@ var summerOptions = CoverageSummer{}
 
 var sumCoverageCmd = &cobra.Command{
 	Use:   "sum-coverage",
-	Short: "A brief description of your command",
+	Short: "Combine (sum) multiple pre-formatted coverage payloads into one.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			return errors.New("you must pass in one or more files to be summarized")
