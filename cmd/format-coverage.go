@@ -20,7 +20,7 @@ var formatOptions = CoverageFormatter{}
 // formatCoverageCmd represents the format command
 var formatCoverageCmd = &cobra.Command{
 	Use:   "format-coverage",
-	Short: "A brief description of your command",
+	Short: "Locate, parse, and re-format supported coverage sources.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return formatOptions.Save()
 	},
@@ -61,6 +61,6 @@ func (f CoverageFormatter) Save() error {
 
 func init() {
 	formatCoverageCmd.Flags().BoolVarP(&formatOptions.Print, "print", "p", false, "prints to standard out only")
-	formatCoverageCmd.Flags().StringVarP(&formatOptions.Output, "output", "o", "codeclimate.json", "output path")
+	formatCoverageCmd.Flags().StringVarP(&formatOptions.Output, "output", "o", "coverage/codeclimate.json", "output path")
 	RootCmd.AddCommand(formatCoverageCmd)
 }
