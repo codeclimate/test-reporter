@@ -52,6 +52,8 @@ func newCCEnvironment() ccEnvironment {
 		cc.GemVersion = strings.TrimSpace(string(out))
 	}
 
+	cc.ReporterVersion = envy.Get("CC_REPORTER_VERSION", "unknown")
+
 	return cc
 }
 

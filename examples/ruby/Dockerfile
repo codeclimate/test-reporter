@@ -31,5 +31,5 @@ RUN bundle exec rake; exit 0
 ENV REPO_TOKEN=c4881e09870b0fac1291c93339b36ffe36210a2645c1ad25e52d8fda3943fb4d
 ENV CC_TEST_REPORTER_ID=$REPO_TOKEN
 RUN test-reporter format-coverage
-RUN cat codeclimate.json
+RUN cat coverage/codeclimate.json
 RUN test-reporter upload-coverage
