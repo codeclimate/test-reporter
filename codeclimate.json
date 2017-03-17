@@ -1,0 +1,273 @@
+{
+  "ci_service": {
+    "branch": "sum",
+    "build_identifier": "",
+    "build_url": "",
+    "commit_sha": "871f72724c7951cf953b79533d2abea23868a3fe",
+    "committed_at": 1489695670,
+    "name": ""
+  },
+  "environment": {
+    "gem_version": "2.5.1",
+    "package_version": "",
+    "pwd": "/Users/markbates/Dropbox/development/gocode/src/github.com/codeclimate/test-reporter",
+    "rails_root": "",
+    "reporter_version": "",
+    "simplecov_root": ""
+  },
+  "git": {
+    "branch": "sum",
+    "head": "871f72724c7951cf953b79533d2abea23868a3fe",
+    "committed_at": 1489695670
+  },
+  "covered_percent": 88.92405063291139,
+  "covered_strength": 0,
+  "line_counts": {
+    "missed": 70,
+    "covered": 562,
+    "total": 632
+  },
+  "source_files": [
+    {
+      "blob_id": "129ecc5e456b9cf8a1a9294b75a09b72b29ccd11",
+      "coverage": "[]",
+      "covered_percent": 100,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 0,
+        "covered": 23,
+        "total": 23
+      },
+      "name": "spec/code_climate/test_reporter/client_spec.rb"
+    },
+    {
+      "blob_id": "74816a246c9667176e67d879a08a87c7a88fbb79",
+      "coverage": "[]",
+      "covered_percent": 100,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 0,
+        "covered": 20,
+        "total": 20
+      },
+      "name": "lib/code_climate/test_reporter/calculate_blob.rb"
+    },
+    {
+      "blob_id": "5f8607ead964f2d9693e278396a6711d38cd6745",
+      "coverage": "[]",
+      "covered_percent": 100,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 0,
+        "covered": 29,
+        "total": 29
+      },
+      "name": "lib/code_climate/test_reporter/configuration.rb"
+    },
+    {
+      "blob_id": "7b087b6e902258a926bd922f7fcb5d12b414b7d0",
+      "coverage": "[]",
+      "covered_percent": 62.06896551724138,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 11,
+        "covered": 18,
+        "total": 29
+      },
+      "name": "lib/code_climate/test_reporter/ci.rb"
+    },
+    {
+      "blob_id": "52760d13430865c0cfc3618fae09f3c815939c73",
+      "coverage": "[]",
+      "covered_percent": 38.88888888888889,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 11,
+        "covered": 7,
+        "total": 18
+      },
+      "name": "lib/code_climate/test_reporter/post_results.rb"
+    },
+    {
+      "blob_id": "129ecc5e456b9cf8a1a9294b75a09b72b29ccd11",
+      "coverage": "[]",
+      "covered_percent": 100,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 0,
+        "covered": 23,
+        "total": 23
+      },
+      "name": "spec/code_climate/test_reporter_spec.rb"
+    },
+    {
+      "blob_id": "865169aa2913561aec14c113bffed4d682b0319a",
+      "coverage": "[]",
+      "covered_percent": 100,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 0,
+        "covered": 13,
+        "total": 13
+      },
+      "name": "lib/code_climate/test_reporter/shorten_filename.rb"
+    },
+    {
+      "blob_id": "129ecc5e456b9cf8a1a9294b75a09b72b29ccd11",
+      "coverage": "[]",
+      "covered_percent": 100,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 0,
+        "covered": 9,
+        "total": 9
+      },
+      "name": "spec/code_climate/test_reporter/ci_spec.rb"
+    },
+    {
+      "blob_id": "925d5b2fd9e64964ac6f92685642018f29cf72f4",
+      "coverage": "[]",
+      "covered_percent": 100,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 0,
+        "covered": 33,
+        "total": 33
+      },
+      "name": "lib/code_climate/test_reporter/payload_validator.rb"
+    },
+    {
+      "blob_id": "129ecc5e456b9cf8a1a9294b75a09b72b29ccd11",
+      "coverage": "[]",
+      "covered_percent": 100,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 0,
+        "covered": 31,
+        "total": 31
+      },
+      "name": "spec/code_climate/test_reporter/shorten_filename_spec.rb"
+    },
+    {
+      "blob_id": "a3ab2463a1ef42c927799c66022b64ef70e7304e",
+      "coverage": "[]",
+      "covered_percent": 90.69767441860465,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 4,
+        "covered": 39,
+        "total": 43
+      },
+      "name": "lib/code_climate/test_reporter/formatter.rb"
+    },
+    {
+      "blob_id": "d4023368b8d7464e4bc8e7b285aa0ea05c544657",
+      "coverage": "[]",
+      "covered_percent": 100,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 0,
+        "covered": 43,
+        "total": 43
+      },
+      "name": "lib/code_climate/test_reporter/git.rb"
+    },
+    {
+      "blob_id": "52760d13430865c0cfc3618fae09f3c815939c73",
+      "coverage": "[]",
+      "covered_percent": 100,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 0,
+        "covered": 10,
+        "total": 10
+      },
+      "name": "lib/codeclimate-test-reporter.rb"
+    },
+    {
+      "blob_id": "74816a246c9667176e67d879a08a87c7a88fbb79",
+      "coverage": "[]",
+      "covered_percent": 41.66666666666667,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 21,
+        "covered": 15,
+        "total": 36
+      },
+      "name": "lib/code_climate/test_reporter/exception_message.rb"
+    },
+    {
+      "blob_id": "925d5b2fd9e64964ac6f92685642018f29cf72f4",
+      "coverage": "[]",
+      "covered_percent": 93.75,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 1,
+        "covered": 15,
+        "total": 16
+      },
+      "name": "spec/code_climate/test_reporter/formatter_spec.rb"
+    },
+    {
+      "blob_id": "ce96fe5a83f724bbb1751d7e31700937e49efb0a",
+      "coverage": "[]",
+      "covered_percent": 62.857142857142854,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 13,
+        "covered": 22,
+        "total": 35
+      },
+      "name": "lib/code_climate/test_reporter.rb"
+    },
+    {
+      "blob_id": "d4023368b8d7464e4bc8e7b285aa0ea05c544657",
+      "coverage": "[]",
+      "covered_percent": 98.36065573770492,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 1,
+        "covered": 60,
+        "total": 61
+      },
+      "name": "spec/code_climate/test_reporter/git_spec.rb"
+    },
+    {
+      "blob_id": "925d5b2fd9e64964ac6f92685642018f29cf72f4",
+      "coverage": "[]",
+      "covered_percent": 100,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 0,
+        "covered": 52,
+        "total": 52
+      },
+      "name": "spec/code_climate/test_reporter/payload_validator_spec.rb"
+    },
+    {
+      "blob_id": "52760d13430865c0cfc3618fae09f3c815939c73",
+      "coverage": "[]",
+      "covered_percent": 87.87878787878788,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 8,
+        "covered": 58,
+        "total": 66
+      },
+      "name": "lib/code_climate/test_reporter/client.rb"
+    },
+    {
+      "blob_id": "129ecc5e456b9cf8a1a9294b75a09b72b29ccd11",
+      "coverage": "[]",
+      "covered_percent": 100,
+      "covered_strength": 0,
+      "line_counts": {
+        "missed": 0,
+        "covered": 42,
+        "total": 42
+      },
+      "name": "spec/code_climate/test_reporter/configuration_spec.rb"
+    }
+  ],
+  "repo_token": ""
+}

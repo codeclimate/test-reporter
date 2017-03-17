@@ -29,15 +29,5 @@ func (f SourceFile) LineCounts() formatters.LineCounts {
 }
 
 func (f SourceFile) CoveragePercent() float64 {
-	var lc float64
-	var hc float64
-	for _, x := range f.Coverage {
-		if x.Valid {
-			lc++
-			if x.Int > 0 {
-				hc++
-			}
-		}
-	}
-	return (hc / lc) * 100
+	return f.LineCounts().CoveredPercent()
 }

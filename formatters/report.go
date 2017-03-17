@@ -2,6 +2,7 @@ package formatters
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"os"
 	"os/exec"
@@ -18,9 +19,8 @@ type Report struct {
 	CoveredPercent  float64         `json:"covered_percent"`
 	CoveredStrength int             `json:"covered_strength"`
 	LineCounts      LineCounts      `json:"line_counts"`
-	SourceFiles     []SourceFile    `json:"source_files"`
+	SourceFiles     SourceFiles     `json:"source_files"`
 	RepoToken       string          `json:"repo_token"`
-	totalCoverage   float64
 }
 
 type ccGit struct {
@@ -57,7 +57,7 @@ func newCCEnvironment() ccEnvironment {
 
 func NewReport() (Report, error) {
 	rep := Report{
-		SourceFiles: []SourceFile{},
+		SourceFiles: SourceFiles{},
 		LineCounts:  LineCounts{},
 		Environment: newCCEnvironment(),
 	}
@@ -77,13 +77,40 @@ func NewReport() (Report, error) {
 	return rep, nil
 }
 
-func (rep *Report) AddSourceFile(sf SourceFile) {
-	rep.SourceFiles = append(rep.SourceFiles, sf)
-	rep.LineCounts.Covered += sf.LineCounts.Covered
-	rep.LineCounts.Missed += sf.LineCounts.Missed
-	rep.LineCounts.Total += sf.LineCounts.Total
-	rep.totalCoverage += sf.CoveredPercent
-	rep.CoveredPercent = rep.totalCoverage / float64(len(rep.SourceFiles))
+func (a *Report) Merge(reps ...*Report) error {
+	for _, r := range reps {
+		if a.Git.Head != r.Git.Head {
+			return errors.New("git heads do not match")
+		}
+		for _, sf := range r.SourceFiles {
+			err := a.AddSourceFile(sf)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (rep *Report) AddSourceFile(sf SourceFile) error {
+	var err error
+	if s, ok := rep.SourceFiles[sf.Name]; ok {
+		sf, err = s.Merge(sf)
+		if err != nil {
+			return err
+		}
+	}
+	rep.SourceFiles[sf.Name] = sf
+
+	lc := LineCounts{}
+	for _, s := range rep.SourceFiles {
+		lc.Covered += s.LineCounts.Covered
+		lc.Missed += s.LineCounts.Missed
+		lc.Total += s.LineCounts.Total
+	}
+	rep.LineCounts = lc
+	rep.CoveredPercent = rep.LineCounts.CoveredPercent()
+	return nil
 }
 
 func (r Report) Save(w io.Writer) error {
