@@ -1,15 +1,66 @@
 package formatters
 
 import (
+	"encoding/json"
+	"os"
 	"testing"
 
 	"github.com/markbates/pop/nulls"
 	"github.com/stretchr/testify/require"
 )
 
+func Test_Report_Merge_Bad_GitHead(t *testing.T) {
+	r := require.New(t)
+	a := &Report{
+		Git: ccGit{
+			Head: "a",
+		},
+	}
+	b := &Report{
+		Git: ccGit{
+			Head: "b",
+		},
+	}
+	err := a.Merge(b)
+	r.Error(err)
+	r.Equal("git heads do not match", err.Error())
+}
+
+func Test_Report_Merge_MismatchedCoverageLength(t *testing.T) {
+	r := require.New(t)
+	a := &Report{
+		Git: ccGit{
+			Head: "a",
+		},
+		SourceFiles: SourceFiles{
+			"a.go": {
+				Name:     "a.go",
+				Coverage: Coverage{1},
+			},
+		},
+	}
+	b := &Report{
+		Git: ccGit{
+			Head: "a",
+		},
+		SourceFiles: SourceFiles{
+			"a.go": {
+				Name:     "a.go",
+				Coverage: Coverage{1, 2},
+			},
+		},
+	}
+	err := a.Merge(b)
+	r.Error(err)
+	r.Equal("coverage length mismatch for a.go", err.Error())
+}
+
 func Test_Report_Merge(t *testing.T) {
 	r := require.New(t)
 	a := &Report{
+		Git: ccGit{
+			Head: "a",
+		},
 		CoveredPercent: 62.5,
 		SourceFiles:    SourceFiles{},
 	}
@@ -23,6 +74,9 @@ func Test_Report_Merge(t *testing.T) {
 	})
 
 	b := &Report{
+		Git: ccGit{
+			Head: "a",
+		},
 		CoveredPercent: 50,
 		LineCounts:     LineCounts{Missed: 2, Covered: 2, Total: 4},
 		SourceFiles:    SourceFiles{},
@@ -33,6 +87,9 @@ func Test_Report_Merge(t *testing.T) {
 	})
 
 	c := &Report{
+		Git: ccGit{
+			Head: "a",
+		},
 		CoveredPercent: 66.6,
 		LineCounts:     LineCounts{Missed: 2, Covered: 4, Total: 6},
 		SourceFiles:    SourceFiles{},
@@ -56,4 +113,27 @@ func Test_Report_Merge(t *testing.T) {
 	r.Equal(4, lc.Total)
 
 	r.InDelta(75, lc.CoveredPercent(), 1.0)
+}
+
+func Test_Report_JSON_Unmarshal(t *testing.T) {
+	r := require.New(t)
+	f, err := os.Open("../examples/codeclimate.json")
+	r.NoError(err)
+
+	rep, err := NewReport()
+	r.NoError(err)
+	err = json.NewDecoder(f).Decode(&rep)
+	r.NoError(err)
+
+	r.Equal(20, len(rep.SourceFiles))
+	r.Equal("/go/src/github.com/codeclimate/test-reporter/ruby-test-reporter", rep.Environment.PWD)
+
+	sf := rep.SourceFiles["lib/code_climate/test_reporter/client.rb"]
+	r.NotNil(sf)
+	r.InDelta(87.87, sf.CoveredPercent, 1)
+
+	lc := sf.LineCounts
+	r.Equal(8, lc.Missed)
+	r.Equal(58, lc.Covered)
+	r.Equal(66, lc.Total)
 }

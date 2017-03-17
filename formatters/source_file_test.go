@@ -15,12 +15,13 @@ func Test_SourceFile_Merge(t *testing.T) {
 	}
 	b := SourceFile{
 		BlobID:   "b",
-		Coverage: Coverage{1, nulls.Int{}, 3, nulls.Int{}, 5},
+		Coverage: Coverage{1, nulls.Int{}, 3, nulls.Int{}},
 	}
 
-	c := a.Merge(b)
-	r.Equal("b", c.BlobID)
-	r.Equal(5, len(c.Coverage))
-	r.Equal(Coverage{1, 2, 6, nulls.Int{}, 5}, c.Coverage)
-	r.Equal(LineCounts{Total: 5, Missed: 1, Covered: 4}, c.LineCounts)
+	c, err := a.Merge(b)
+	r.NoError(err)
+	r.Equal("a", c.BlobID)
+	r.Equal(4, len(c.Coverage))
+	r.Equal(Coverage{1, 2, 6, nulls.Int{}}, c.Coverage)
+	r.Equal(LineCounts{Total: 4, Missed: 1, Covered: 3}, c.LineCounts)
 }

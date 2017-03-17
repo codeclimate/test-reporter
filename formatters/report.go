@@ -2,6 +2,7 @@ package formatters
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"os"
 	"os/exec"
@@ -76,27 +77,28 @@ func NewReport() (Report, error) {
 	return rep, nil
 }
 
-func (a *Report) Merge(reps ...*Report) {
+func (a *Report) Merge(reps ...*Report) error {
 	for _, r := range reps {
+		if a.Git.Head != r.Git.Head {
+			return errors.New("git heads do not match")
+		}
 		for _, sf := range r.SourceFiles {
-			a.AddSourceFile(sf)
+			err := a.AddSourceFile(sf)
+			if err != nil {
+				return err
+			}
 		}
 	}
+	return nil
 }
 
-type SourceFiles map[string]SourceFile
-
-func (sf SourceFiles) MarshalJSON() ([]byte, error) {
-	files := []SourceFile{}
-	for _, s := range sf {
-		files = append(files, s)
-	}
-	return json.Marshal(files)
-}
-
-func (rep *Report) AddSourceFile(sf SourceFile) {
+func (rep *Report) AddSourceFile(sf SourceFile) error {
+	var err error
 	if s, ok := rep.SourceFiles[sf.Name]; ok {
-		sf = s.Merge(sf)
+		sf, err = s.Merge(sf)
+		if err != nil {
+			return err
+		}
 	}
 	rep.SourceFiles[sf.Name] = sf
 
@@ -108,6 +110,7 @@ func (rep *Report) AddSourceFile(sf SourceFile) {
 	}
 	rep.LineCounts = lc
 	rep.CoveredPercent = rep.LineCounts.CoveredPercent()
+	return nil
 }
 
 func (r Report) Save(w io.Writer) error {
