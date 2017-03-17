@@ -53,6 +53,7 @@ func New() (Environment, error) {
 		return e, err
 	}
 	e.Git = git
+	e.CI = loadCIInfo()
 	return e, nil
 }
 
