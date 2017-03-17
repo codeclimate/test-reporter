@@ -32,16 +32,13 @@ func (f CoverageFormatter) Save() error {
 	if err == nil {
 		in = ruby.New("coverage/.resultset.json")
 	}
-	// } else {
-	// 	in = ruby.New("./formatters/ruby/ruby-example.json")
-	// }
 	err = in.Parse()
 	if err != nil {
 		return err
 	}
 
 	var out io.Writer
-	if formatOptions.Print {
+	if formatOptions.Print || formatOptions.Output == "-" {
 		out = os.Stdout
 	} else {
 		os.MkdirAll(filepath.Dir(formatOptions.Output), 0755)
