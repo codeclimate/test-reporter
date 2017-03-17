@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/codeclimate/test-reporter/version"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +20,7 @@ var RootCmd = &cobra.Command{
 			return err
 		}
 		if v {
-			fmt.Printf("Code Climate Test Reporter %s (%s @ %s)\n", Version, BuildVersion, BuildTime)
+			fmt.Printf("Code Climate Test Reporter %s\n", version.FormattedVersion())
 		}
 		return nil
 	},

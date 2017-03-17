@@ -1,9 +1,7 @@
-package cmd
+package version
 
 import (
 	"fmt"
-
-	"github.com/gobuffalo/envy"
 )
 
 // Version number of the command (1.x)
@@ -15,6 +13,9 @@ var BuildVersion = ""
 // BuildTime is the time the binary was built
 var BuildTime = ""
 
-func init() {
-	envy.Set("CC_REPORTER_VERSION", fmt.Sprintf("%s (%s @ %s)\n", Version, BuildVersion, BuildTime))
+func FormattedVersion() string {
+	if Version == "" {
+		return "unknown"
+	}
+	return fmt.Sprintf("%s (%s @ %s)\n", Version, BuildVersion, BuildTime)
 }
