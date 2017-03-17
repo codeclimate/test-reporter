@@ -12,7 +12,7 @@ import (
 // envCmd represents the env command
 var envCmd = &cobra.Command{
 	Use:   "env",
-	Short: "A brief description of your command",
+	Short: "Infer and output information about the environment the reporter is running in.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		e, err := env.New()
 		if err != nil {

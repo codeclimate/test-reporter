@@ -22,7 +22,7 @@ var uploadOptions = Uploader{}
 // uploadCoverageCmd represents the upload command
 var uploadCoverageCmd = &cobra.Command{
 	Use:   "upload-coverage",
-	Short: "A brief description of your command",
+	Short: "Upload pre-formatted coverage payloads to Code Climate servers.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return uploadOptions.Upload()
 	},

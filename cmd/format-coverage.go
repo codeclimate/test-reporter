@@ -20,7 +20,7 @@ var formatOptions = CoverageFormatter{}
 // formatCoverageCmd represents the format command
 var formatCoverageCmd = &cobra.Command{
 	Use:   "format-coverage",
-	Short: "A brief description of your command",
+	Short: "Locate, parse, and re-format supported coverage sources.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return formatOptions.Save()
 	},
