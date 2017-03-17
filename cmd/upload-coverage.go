@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -33,15 +34,22 @@ func (u Uploader) Upload() error {
 	if u.ReporterID == "" {
 		return errors.New("you must supply a CC_TEST_REPORTER_ID ENV variable or pass it via the -r flag")
 	}
-	f, err := os.Open(u.Input)
-	if err != nil {
-		return err
+
+	var err error
+	var in io.Reader
+	if u.Input == "-" {
+		in = os.Stdin
+	} else {
+		in, err = os.Open(u.Input)
+		if err != nil {
+			return err
+		}
 	}
 
 	c := http.Client{
 		Timeout: 30 * time.Second,
 	}
-	res, err := c.Post(u.EndpointURL, "application/json", f)
+	res, err := c.Post(u.EndpointURL, "application/json", in)
 	if err != nil {
 		return err
 	}
