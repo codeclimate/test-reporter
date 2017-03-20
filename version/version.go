@@ -17,5 +17,5 @@ func FormattedVersion() string {
 	if Version == "" {
 		return "unknown"
 	}
-	return fmt.Sprintf("%s (%s @ %s)\n", Version, BuildVersion, BuildTime)
+	return fmt.Sprintf("%s (%s @ %s)", Version, BuildVersion, BuildTime)
 }
