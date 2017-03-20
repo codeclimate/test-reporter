@@ -54,7 +54,7 @@ func (u Uploader) Upload() error {
 	if err != nil {
 		return err
 	}
-	req.Header.Set("User-Agent", fmt.Sprintf("TestReporter/%s (Code Climate, Inc.)", version.FormattedVersion()))
+	req.Header.Set("User-Agent", fmt.Sprintf("TestReporter/%s (Code Climate, Inc.)", version.Version))
 	req.Header.Set("Content-Type", "application/json")
 
 	res, err := c.Do(req)
