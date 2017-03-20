@@ -42,7 +42,7 @@ type ccEnvironment struct {
 func newCCEnvironment() ccEnvironment {
 	cc := ccEnvironment{
 		RailsRoot:       envy.Get("RAILS_ROOT", ""),
-		ReporterVersion: version.FormattedVersion(),
+		ReporterVersion: version.Version,
 	}
 
 	pwd, _ := os.Getwd()

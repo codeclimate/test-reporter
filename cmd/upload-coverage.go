@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/codeclimate/test-reporter/version"
 	"github.com/gobuffalo/envy"
 	"github.com/spf13/cobra"
 )
@@ -49,7 +50,14 @@ func (u Uploader) Upload() error {
 	c := http.Client{
 		Timeout: 30 * time.Second,
 	}
-	res, err := c.Post(u.EndpointURL, "application/json", in)
+	req, err := http.NewRequest("POST", u.EndpointURL, in)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("User-Agent", fmt.Sprintf("TestReporter/%s (Code Climate, Inc.)", version.FormattedVersion()))
+	req.Header.Set("Content-Type", "application/json")
+
+	res, err := c.Do(req)
 	if err != nil {
 		return err
 	}
