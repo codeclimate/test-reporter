@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/codeclimate/test-reporter/env"
+	"github.com/codeclimate/test-reporter/version"
 	"github.com/gobuffalo/envy"
 )
 
@@ -40,16 +41,20 @@ type ccEnvironment struct {
 
 func newCCEnvironment() ccEnvironment {
 	cc := ccEnvironment{
-		RailsRoot: envy.Get("RAILS_ROOT", ""),
+		RailsRoot:       envy.Get("RAILS_ROOT", ""),
+		ReporterVersion: version.FormattedVersion(),
 	}
 
 	pwd, _ := os.Getwd()
 	cc.PWD = pwd
 
-	cmd := exec.Command("gem", "--version")
-	out, err := cmd.Output()
+	_, err := exec.LookPath("gem")
 	if err == nil {
-		cc.GemVersion = strings.TrimSpace(string(out))
+		cmd := exec.Command("gem", "--version")
+		out, err := cmd.Output()
+		if err == nil {
+			cc.GemVersion = strings.TrimSpace(string(out))
+		}
 	}
 
 	return cc

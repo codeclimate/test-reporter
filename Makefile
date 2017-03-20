@@ -11,7 +11,7 @@ PROJECT = github.com/codeclimate/test-reporter
 VERSION ?= 0.1.0-rc
 BUILD_VERSION = $(shell git log -1 --pretty=format:'%H')
 BUILD_TIME = $(shell date +%FT%T%z)
-LDFLAGS = -ldflags "-X $(PROJECT)/cmd.Version=${VERSION} -X $(PROJECT)/cmd.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/cmd.BuildTime=${BUILD_TIME}"
+LDFLAGS = -ldflags "-X $(PROJECT)/version.Version=${VERSION} -X $(PROJECT)/version.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/version.BuildTime=${BUILD_TIME}"
 
 man/%: man/%.md
 	$(PANDOC) -s -t man $< -o $@
