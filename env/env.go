@@ -46,7 +46,7 @@ func (e Environment) String() string {
 // is required.
 func New() (Environment, error) {
 	e := Environment{
-		RepoToken: findVar([]string{"CC_REPO_TOKEN", "REPO_TOKEN", "CC_TEST_REPORTER_ID"}),
+		RepoToken: findVar([]string{"CC_TEST_REPORTER_ID"}),
 	}
 	git, err := findGitInfo()
 	if err != nil {

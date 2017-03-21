@@ -28,8 +28,7 @@ RUN git add ignore.me
 RUN git commit -m "testing"
 RUN bundle exec rake; exit 0
 
-ENV REPO_TOKEN=c4881e09870b0fac1291c93339b36ffe36210a2645c1ad25e52d8fda3943fb4d
-ENV CC_TEST_REPORTER_ID=$REPO_TOKEN
+ENV CC_TEST_REPORTER_ID=c4881e09870b0fac1291c93339b36ffe36210a2645c1ad25e52d8fda3943fb4d
 RUN test-reporter format-coverage
 RUN cat coverage/codeclimate.json
 RUN test-reporter upload-coverage
