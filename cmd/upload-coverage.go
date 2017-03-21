@@ -1,16 +1,17 @@
 package cmd
 
 import (
-	"errors"
+	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/codeclimate/test-reporter/version"
 	"github.com/gobuffalo/envy"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -43,31 +44,61 @@ func (u Uploader) Upload() error {
 	} else {
 		in, err = os.Open(u.Input)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 	}
+
+	// we need to read in the JSON file
+	// and set the repo_token to whatever
+	// is being set at upload time.
+	rep, err := formatters.NewReport()
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	err = json.NewDecoder(in).Decode(&rep)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	rep.RepoToken = uploadOptions.ReporterID
+
+	pr, pw := io.Pipe()
+	go func() {
+		defer pw.Close()
+		json.NewEncoder(pw).Encode(rep)
+	}()
 
 	c := http.Client{
 		Timeout: 30 * time.Second,
 	}
-	req, err := http.NewRequest("POST", u.EndpointURL, in)
+
+	req, err := u.newRequest(pr)
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
-	req.Header.Set("User-Agent", fmt.Sprintf("TestReporter/%s (Code Climate, Inc.)", version.Version))
-	req.Header.Set("Content-Type", "application/json")
 
 	res, err := c.Do(req)
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
-	b, _ := ioutil.ReadAll(res.Body)
+
+	io.Copy(os.Stdout, res.Body)
+
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
-		return fmt.Errorf("response from %s was %d: %s", u.EndpointURL, res.StatusCode, string(b))
+		return fmt.Errorf("response from %s was %d", u.EndpointURL, res.StatusCode)
 	}
 	fmt.Printf("Status: %d\n", res.StatusCode)
-	fmt.Println(string(b))
 	return nil
+}
+
+func (u Uploader) newRequest(in io.Reader) (*http.Request, error) {
+	req, err := http.NewRequest("POST", u.EndpointURL, in)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	req.Header.Set("User-Agent", fmt.Sprintf("TestReporter/%s (Code Climate, Inc.)", version.Version))
+	req.Header.Set("Content-Type", "application/json")
+	return req, err
 }
 
 func init() {
