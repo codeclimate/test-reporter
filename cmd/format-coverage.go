@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"io"
 	"os"
 	"path/filepath"
@@ -31,6 +32,9 @@ func (f CoverageFormatter) Save() error {
 	_, err := os.Stat("coverage/.resultset.json")
 	if err == nil {
 		in = ruby.New("coverage/.resultset.json")
+	}
+	if in == nil {
+		return errors.New("no coverage found to format")
 	}
 	err = in.Parse()
 	if err != nil {
