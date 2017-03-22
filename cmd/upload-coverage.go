@@ -102,7 +102,7 @@ func (u Uploader) newRequest(in io.Reader) (*http.Request, error) {
 }
 
 func init() {
-	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.Input, "input", "i", "coverage/codeclimate.json", "input path")
+	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.Input, "input", "i", ccJSONLocation, "input path")
 	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.ReporterID, "id", "r", os.Getenv("CC_TEST_REPORTER_ID"), "reporter identifier")
 	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.EndpointURL, "endpoint", "e", envy.Get("CC_TEST_REPORTER_COVERAGE_ENDPOINT", "https://codeclimate.com/test_reports"), "endpoint to upload coverage information to")
 	RootCmd.AddCommand(uploadCoverageCmd)
