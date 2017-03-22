@@ -69,6 +69,6 @@ func (f CoverageFormatter) Save() error {
 
 func init() {
 	formatCoverageCmd.Flags().BoolVarP(&formatOptions.Print, "print", "p", false, "prints to standard out only")
-	formatCoverageCmd.Flags().StringVarP(&formatOptions.Output, "output", "o", "coverage/codeclimate.json", "output path")
+	formatCoverageCmd.Flags().StringVarP(&formatOptions.Output, "output", "o", ccJSONLocation, "output path")
 	RootCmd.AddCommand(formatCoverageCmd)
 }

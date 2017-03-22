@@ -69,6 +69,6 @@ var sumCoverageCmd = &cobra.Command{
 
 func init() {
 	sumCoverageCmd.Flags().BoolVarP(&summerOptions.Print, "print", "p", false, "prints to standard out only")
-	sumCoverageCmd.Flags().StringVarP(&summerOptions.Output, "output", "o", "coverage/codeclimate.json", "output path")
+	sumCoverageCmd.Flags().StringVarP(&summerOptions.Output, "output", "o", ccJSONLocation, "output path")
 	RootCmd.AddCommand(sumCoverageCmd)
 }
