@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const ccJSONLocation = "coverage/codeclimate.json"
+const ccDefaultCoveragePath = "coverage/codeclimate.json"
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
