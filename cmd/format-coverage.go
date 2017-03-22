@@ -1,13 +1,13 @@
 package cmd
 
 import (
-	"errors"
 	"io"
 	"os"
 	"path/filepath"
 
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/codeclimate/test-reporter/formatters/ruby"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -38,26 +38,33 @@ func (f CoverageFormatter) Save() error {
 	}
 	err = in.Parse()
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 
 	var out io.Writer
 	if formatOptions.Print || formatOptions.Output == "-" {
 		out = os.Stdout
 	} else {
-		os.MkdirAll(filepath.Dir(formatOptions.Output), 0755)
+		err = os.MkdirAll(filepath.Dir(formatOptions.Output), 0755)
+		if err != nil {
+			return errors.WithStack(err)
+		}
 		out, err = os.Create(formatOptions.Output)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 	}
 
 	rep, err := in.Format()
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 
-	return rep.Save(out)
+	err = rep.Save(out)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
 }
 
 func init() {

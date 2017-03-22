@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"strings"
+
+	"github.com/markbates/pop/nulls"
 )
 
-type Coverage []interface{}
+type Coverage []nulls.Int
 
 // MarshalJSON marshals the coverage into JSON. Since the Code Climate
 // API requires this as a string "[1,2,null]" and not just a straight
@@ -28,7 +30,7 @@ func (c *Coverage) UnmarshalJSON(text []byte) error {
 	q := []byte("\"")
 	text = bytes.TrimPrefix(text, q)
 	text = bytes.TrimSuffix(text, q)
-	cc := []interface{}{}
+	cc := []nulls.Int{}
 	err := json.Unmarshal(text, &cc)
 	if err != nil {
 		return err

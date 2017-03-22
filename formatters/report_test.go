@@ -2,6 +2,7 @@ package formatters
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
 
@@ -35,7 +36,7 @@ func Test_Report_Merge_MismatchedCoverageLength(t *testing.T) {
 		SourceFiles: SourceFiles{
 			"a.go": {
 				Name:     "a.go",
-				Coverage: Coverage{1},
+				Coverage: Coverage{nulls.NewInt(1)},
 			},
 		},
 	}
@@ -46,7 +47,7 @@ func Test_Report_Merge_MismatchedCoverageLength(t *testing.T) {
 		SourceFiles: SourceFiles{
 			"a.go": {
 				Name:     "a.go",
-				Coverage: Coverage{1, 2},
+				Coverage: Coverage{nulls.NewInt(1), nulls.NewInt(2)},
 			},
 		},
 	}
@@ -57,62 +58,35 @@ func Test_Report_Merge_MismatchedCoverageLength(t *testing.T) {
 
 func Test_Report_Merge(t *testing.T) {
 	r := require.New(t)
-	a := &Report{
-		Git: ccGit{
-			Head: "a",
-		},
-		CoveredPercent: 62.5,
-		SourceFiles:    SourceFiles{},
-	}
-	a.AddSourceFile(SourceFile{
-		Name:     "a.go",
-		Coverage: Coverage{nulls.Int{}, 2, 3, nulls.Int{}},
-	})
-	a.AddSourceFile(SourceFile{
-		Name:     "b.go",
-		Coverage: Coverage{1, 2, 3, nulls.Int{}},
-	})
+	reps := []*Report{}
+	for i := 0; i < 4; i++ {
+		rep, err := NewReport()
+		r.NoError(err)
 
-	b := &Report{
-		Git: ccGit{
-			Head: "a",
-		},
-		CoveredPercent: 50,
-		LineCounts:     LineCounts{Missed: 2, Covered: 2, Total: 4},
-		SourceFiles:    SourceFiles{},
-	}
-	b.AddSourceFile(SourceFile{
-		Name:     "b.go",
-		Coverage: Coverage{1, nulls.Int{}, 3, nulls.Int{}},
-	})
+		f, err := os.Open(fmt.Sprintf("../examples/codeclimate.%d.json", i))
+		r.NoError(err)
+		err = json.NewDecoder(f).Decode(&rep)
+		r.NoError(err)
 
-	c := &Report{
-		Git: ccGit{
-			Head: "a",
-		},
-		CoveredPercent: 66.6,
-		LineCounts:     LineCounts{Missed: 2, Covered: 4, Total: 6},
-		SourceFiles:    SourceFiles{},
+		sf := rep.SourceFiles["config/initializers/resque.rb"]
+		r.NotNil(sf)
+		r.Equal(14, sf.LineCounts.Total)
+
+		reps = append(reps, &rep)
 	}
-	c.AddSourceFile(SourceFile{
-		Name:     "b.go",
-		Coverage: Coverage{1, 2, 3, nulls.Int{}},
-	})
-	c.AddSourceFile(SourceFile{
-		Name:     "c.go",
-		Coverage: Coverage{nulls.Int{}, nulls.Int{}},
-	})
-	a.Merge(b, c)
-	// 3 files
-	r.Equal(3, len(a.SourceFiles))
-	sf := a.SourceFiles["b.go"]
+	main := reps[0]
+	main.Merge(reps[1:]...)
+	r.Equal(19379, main.LineCounts.Total)
+	r.Equal(2564, main.LineCounts.Missed)
+	r.Equal(16815, main.LineCounts.Covered)
+	r.InDelta(86.76, main.LineCounts.CoveredPercent(), 1)
+
+	sf := main.SourceFiles["config/initializers/resque.rb"]
 	r.NotNil(sf)
-	lc := sf.LineCounts
-	r.Equal(3, lc.Covered)
-	r.Equal(1, lc.Missed)
-	r.Equal(4, lc.Total)
-
-	r.InDelta(75, lc.CoveredPercent(), 1.0)
+	r.Equal(14, sf.LineCounts.Total)
+	r.Equal(5, sf.LineCounts.Missed)
+	r.Equal(9, sf.LineCounts.Covered)
+	r.InDelta(64.28, sf.CoveredPercent, 1)
 }
 
 func Test_Report_JSON_Unmarshal(t *testing.T) {

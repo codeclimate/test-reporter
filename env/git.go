@@ -6,6 +6,8 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 type Git struct {
@@ -37,25 +39,25 @@ func findGitInfo() (Git, error) {
 	cmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
 	out, err := cmd.Output()
 	if err != nil {
-		return g, err
+		return g, errors.WithStack(err)
 	}
 	g.Branch = strings.TrimSpace(string(out))
 
 	cmd = exec.Command("git", "log", "-1", "--pretty=format:%H")
 	out, err = cmd.Output()
 	if err != nil {
-		return g, err
+		return g, errors.WithStack(err)
 	}
 	g.CommitSHA = strings.TrimSpace(string(out))
 
 	cmd = exec.Command("git", "log", "-1", "--pretty=format:%ct")
 	out, err = cmd.Output()
 	if err != nil {
-		return g, err
+		return g, errors.WithStack(err)
 	}
 	g.CommittedAt, err = strconv.Atoi(strings.TrimSpace(string(out)))
 	if err != nil {
-		return g, err
+		return g, errors.WithStack(err)
 	}
 	return g, nil
 }
@@ -68,7 +70,7 @@ func GitSHA(path string) (string, error) {
 	cmd := exec.Command("git", args...)
 	out, err := cmd.Output()
 	if err != nil {
-		return "", err
+		return "", errors.WithStack(err)
 	}
 	return strings.TrimSpace(string(out)), nil
 }

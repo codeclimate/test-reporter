@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/codeclimate/test-reporter/env"
+	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
 
@@ -24,33 +25,42 @@ func (a SourceFile) Merge(b SourceFile) (SourceFile, error) {
 		return a, errors.Errorf("coverage length mismatch for %s", a.Name)
 	}
 
-	for i, c := range b.Coverage {
-		if x, ok := c.(int); ok {
-			// the secondary is a number
-			if y, ok := a.Coverage[i].(int); ok {
-				// the primary is also a number
-				a.Coverage[i] = x + y
-				continue
-			}
-			// set to the secondary:
-			a.Coverage[i] = x
+	for i, bc := range b.Coverage {
+		ac := a.Coverage[i]
+		if ac.Valid && bc.Valid {
+			// they're both valid numbers so add them:
+			a.Coverage[i] = nulls.NewInt(ac.Int + bc.Int)
+			continue
 		}
+
+		if !bc.Valid {
+			//default is to nothing and use the ac value
+			continue
+		}
+
+		// ac is null and bc isn't so use bc
+		if !ac.Valid {
+			a.Coverage[i] = bc
+		}
+
 	}
 	a.CalcLineCounts()
 	return a, nil
 }
 
 func (sf *SourceFile) CalcLineCounts() {
-	lc := LineCounts{
-		Total: len(sf.Coverage),
-	}
+	lc := LineCounts{}
 
 	for _, c := range sf.Coverage {
-		if _, ok := c.(int); ok {
-			lc.Covered++
+		if !c.Valid {
 			continue
 		}
-		lc.Missed++
+		lc.Total++
+		if c.Int == 0 {
+			lc.Missed++
+			continue
+		}
+		lc.Covered++
 	}
 
 	sf.LineCounts = lc
