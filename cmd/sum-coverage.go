@@ -49,7 +49,10 @@ var sumCoverageCmd = &cobra.Command{
 		if summerOptions.Print {
 			out = os.Stdout
 		} else {
-			os.MkdirAll(filepath.Dir(summerOptions.Output), 0755)
+			err = os.MkdirAll(filepath.Dir(summerOptions.Output), 0755)
+			if err != nil {
+				return errors.WithStack(err)
+			}
 			out, err = os.Create(summerOptions.Output)
 			if err != nil {
 				return errors.WithStack(err)
@@ -66,6 +69,6 @@ var sumCoverageCmd = &cobra.Command{
 
 func init() {
 	sumCoverageCmd.Flags().BoolVarP(&summerOptions.Print, "print", "p", false, "prints to standard out only")
-	sumCoverageCmd.Flags().StringVarP(&summerOptions.Output, "output", "o", "codeclimate.json", "output path")
+	sumCoverageCmd.Flags().StringVarP(&summerOptions.Output, "output", "o", "coverage/codeclimate.json", "output path")
 	RootCmd.AddCommand(sumCoverageCmd)
 }
