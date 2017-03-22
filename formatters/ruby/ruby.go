@@ -6,7 +6,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/markbates/pop/nulls"
+	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/pkg/errors"
 )
 
@@ -67,6 +67,6 @@ func (rt rubyTime) Time() time.Time {
 }
 
 type input struct {
-	Timestamp rubyTime               `json:"timestamp"`
-	Coverage  map[string][]nulls.Int `json:"coverage"`
+	Timestamp rubyTime                       `json:"timestamp"`
+	Coverage  map[string]formatters.Coverage `json:"coverage"`
 }

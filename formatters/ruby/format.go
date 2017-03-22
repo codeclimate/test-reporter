@@ -14,9 +14,7 @@ func (r Formatter) Format() (formatters.Report, error) {
 		for _, f := range tt.SourceFiles {
 			sf := formatters.NewSourceFile(f.Name)
 			sf.LineCounts = f.LineCounts()
-			for _, i := range f.Coverage {
-				sf.Coverage = append(sf.Coverage, i.Interface())
-			}
+			sf.Coverage = f.Coverage
 			sf.CoveredPercent = f.CoveragePercent()
 			rep.AddSourceFile(sf)
 		}
