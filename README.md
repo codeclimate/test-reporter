@@ -1,8 +1,10 @@
 # cc-test-reporter
 
-TODO: details
+Report information about your CI builds to Code Climate.
 
-## Common Usage
+## Installation & Usage
+
+**NOTE**: this is *proposed* usage, we've not built this yet.
 
 Most CI systems allow configuration of commands to run as part of setup, before,
 and after a test build. Using Circle CI as an example:
@@ -25,29 +27,52 @@ test:
     - ./cc-test-reporter after-build --exit-code $CIRCLE_EXIT_CODE
 ```
 
-*TODO*: the above is DRAFT content.
+## Code Climate: Enterprise
+
+To report coverage to your locally-hosted *Code Climate: Enterprise* instance,
+export the `CC_TEST_REPORTER_COVERAGE_ENDPOINT` variable, or pass the
+`--coverage-endpoint` option to `after-build`.
+
+```sh
+CC_TEST_REPORTER_COVERAGE_ENDPOINT=https://codeclimate.my-domain.com/test_reports
+```
 
 ## Low-level Usage
 
-See the [man-pages](man).
+The test reporter is implemented as a composition of lower-level commands, which
+may themselves be useful. See the [man-pages](man) for details of these
+commands.
 
-## Client-Side Aggregation (i.e Parallel Test Coverage)
+## Parallel Tests
 
-TODO: describe further
+Code Climate doesn't yet support receiving partial payloads from (e.g.) parallel
+test runs and summing them together server-side. However, the reporter does
+support summing them together client-side.
 
-1. After each test:
+This requires you store the partial payloads yourself after each test, then
+download them to one location before using the reporter to upload a summed
+payload.
 
+For example:
+
+1. After *each* test:
+
+   ```sh
+   ./cc-test-reporter format-coverage --output "coverage/codeclimate.$N.json"
+   aws s3 sync coverage/ "s3://my-bucket/coverage/$SHA"
    ```
-   eval $(cc-test-reporter env)
-   cc-test-reporter format-coverage --out "coverage/codeclimate.$N.json"
-   aws s3 sync coverage/ "s3://my-bucket/coverage/$GIT_COMMIT_SHA"
-   ```
 
-1. After all tests:
+   Where:
 
-   ```
-   eval $(cc-test-reporter env)
-   aws s3 sync "s3://my-bucket/coverage/$GIT_COMMIT_SHA" coverage/
+   - `$N` should be a unique identifier for that batch of tests
+   - `$SHA` should be the commit for which the coverage was generated; you can
+     use an existing, CI-provided variable or `./cc-test-reporter env` to infer
+     `$GIT_COMMIT_SHA` and use that.
+
+1. After *all* tests:
+
+   ```sh
+   aws s3 sync "s3://my-bucket/coverage/$SHA" coverage/
    cc-test-reporter sum-coverage --output - coverage/codeclimate.*.json | \
      cc-test-reporter upload-coverage --input -
    ```
