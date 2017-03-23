@@ -66,15 +66,16 @@ func (sf *SourceFile) CalcLineCounts() {
 	sf.LineCounts = lc
 }
 
-func NewSourceFile(name string) SourceFile {
+func NewSourceFile(name string) (SourceFile, error) {
 	if pwd, err := os.Getwd(); err == nil {
 		pwd := fmt.Sprintf("%s%s", pwd, string(os.PathSeparator))
 		name = strings.TrimPrefix(name, pwd)
 	}
 
 	sf := SourceFile{Name: name}
-	sf.BlobID, _ = env.GitSHA(name)
-	return sf
+	var err error
+	sf.BlobID, err = env.GitBlob(name)
+	return sf, err
 }
 
 type SourceFiles map[string]SourceFile

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -75,6 +76,24 @@ func GitSHA(path string) (string, error) {
 	return strings.TrimSpace(string(out)), nil
 }
 
+var GitBlob = func(path string) (string, error) {
+	sha, err := GitSHA(path)
+	if err != nil {
+		return "", errors.WithStack(err)
+	}
+	cmd := exec.Command("git", "ls-tree", sha, "--", path)
+	out, err := cmd.Output()
+	if err != nil {
+		return "", errors.WithStack(err)
+	}
+	res := strings.TrimSpace(string(out))
+	matches := blobRegex.FindStringSubmatch(res)
+	if len(matches) == 0 {
+		return "", errors.Errorf("could not find blob id for file %s in %s", path, res)
+	}
+	return matches[1], nil
+}
+
 func loadGitFromENV() (Git, error) {
 	g := Git{
 		Branch:    findVar(gitBranchVars),
@@ -90,3 +109,5 @@ var gitBranchVars = []string{"GIT_BRANCH", "APPVEYOR_REPO_BRANCH", "BRANCH_NAME"
 var gitCommitShaVars = []string{"GIT_COMMIT_SHA", "APPVEYOR_REPO_COMMIT", "BUILDKITE_COMMIT", "CIRCLE_SHA1", "CI_BUILD_REF", "CI_BUILD_SHA", "CI_COMMIT", "CI_COMMIT_ID", "GIT_COMMIT", "WERCKER_GIT_COMMIT"}
 
 var gitCommittedAtVars = []string{"GIT_COMMITTED_AT", "GIT_COMMITED_AT", "CI_COMMITTED_AT", "CI_COMMITED_AT"}
+
+var blobRegex = regexp.MustCompile(`^\d.+\s+blob\s(\w+)`)
