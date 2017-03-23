@@ -45,9 +45,9 @@ commands.
 
 ## Parallel Tests
 
-Code Climate doesn't yet support receiving partial payloads from (e.g.) parallel
-test runs and summing them together server-side. However, the reporter does
-support summing them together client-side.
+The test reporter supports aggregating multiple test coverage reports from, for example, parallel runs
+together into a single report. After aggregation, the test reporter can send up the single aggregated
+report to Code Climate.
 
 This requires you store the partial payloads yourself after each test, then
 download them to one location before using the reporter to upload a summed
@@ -76,6 +76,10 @@ For example:
    cc-test-reporter sum-coverage --output - coverage/codeclimate.*.json | \
      cc-test-reporter upload-coverage --input -
    ```
+
+## Multiple Suites
+
+Coverage from multiple suites can be sent to Code Climate by aggregating each suite's results into one final report. To accomplish this, follow the instructions for [Parallel Tests](#parallel-tests) above. If the suites produce reports in the same location on disk, you can omit any steps that involve uploading and downloading partial reports.
 
 ## Copyright
 
