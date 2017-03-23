@@ -24,3 +24,11 @@ func Test_SourceFile_Merge(t *testing.T) {
 	r.Equal(4, len(c.Coverage))
 	r.Equal(LineCounts{Total: 4, Missed: 1, Covered: 3}, c.LineCounts)
 }
+
+func Test_SourceFile_BlobID(t *testing.T) {
+	r := require.New(t)
+	sf, err := NewSourceFile("./coverage.go")
+	r.NoError(err)
+	r.NotZero(sf.BlobID)
+	r.NotContains(sf.BlobID, "blob")
+}

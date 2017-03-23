@@ -2,6 +2,7 @@ package ruby
 
 import (
 	"github.com/codeclimate/test-reporter/formatters"
+	"github.com/pkg/errors"
 )
 
 func (r Formatter) Format() (formatters.Report, error) {
@@ -12,7 +13,10 @@ func (r Formatter) Format() (formatters.Report, error) {
 
 	for _, tt := range r.Tests {
 		for _, f := range tt.SourceFiles {
-			sf := formatters.NewSourceFile(f.Name)
+			sf, err := formatters.NewSourceFile(f.Name)
+			if err != nil {
+				return rep, errors.WithStack(err)
+			}
 			sf.LineCounts = f.LineCounts()
 			sf.Coverage = f.Coverage
 			sf.CoveredPercent = f.CoveragePercent()

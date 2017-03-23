@@ -8,6 +8,12 @@ import (
 )
 
 func Test_Format(t *testing.T) {
+	gb := env.GitBlob
+	defer func() { env.GitBlob = gb }()
+	env.GitBlob = func(s string) (string, error) {
+		return s, nil
+	}
+
 	r := require.New(t)
 
 	rb := New("./ruby-example.json")
