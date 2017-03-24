@@ -45,17 +45,23 @@ commands.
 
 ## Parallel Tests
 
-The test reporter supports aggregating multiple test coverage reports from, for example, parallel runs
-together into a single report. After aggregation, the test reporter can send up the single aggregated
-report to Code Climate.
+Code Climate supports parallel test setups using sub-commands provided by the
+test reporter.  Specifically, the test reporter has sub-commands to:
 
-This requires you store the partial payloads yourself after each test, then
-download them to one location before using the reporter to upload a summed
-payload.
+1. format partial results (`format-coverage`)
+1. sum partial results into a single result (`sum-coverage`) and
+1. upload the single result to Code Climate (`upload-coverage`)
+
+To make use of these commands, parallel test support requires:
+
+1. the ability to run commands after *each* batch of tests has completed (most CI systems support this)
+1. the ability to run commands after *all* tests have completed (most CI systems support this)
+1. uploading and downloading partial test coverage data to/from shared storage
+(using AWS S3, for example)
 
 For example:
 
-1. After *each* test:
+1. After *each* batch of tests:
 
    ```sh
    ./cc-test-reporter format-coverage --output "coverage/codeclimate.$N.json"
@@ -79,7 +85,21 @@ For example:
 
 ## Multiple Suites
 
-Coverage from multiple suites can be sent to Code Climate by aggregating each suite's results into one final report. To accomplish this, follow the instructions for [Parallel Tests](#parallel-tests) above. If the suites produce reports in the same location on disk, you can omit any steps that involve uploading and downloading partial reports.
+Coverage from multiple suites can be sent to Code Climate by aggregating each
+suite's results into one final report.
+
+1. After each test suite, run:
+
+  ```sh
+  ./cc-test-reporter format-coverage --output coverage/codeclimate.$SUITE.json
+  ```
+
+1. After all test suites, run:
+
+  ```sh
+  ./cc-test-reporter sum-coverage coverage/codeclimate.*.json | \
+    ./cc-test-reporter upload-coverage
+  ```
 
 ## Copyright
 
