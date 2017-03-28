@@ -47,8 +47,8 @@ build-docker:
 	  --workdir "/src/$(PROJECT)" \
 	  golang:1.8 make build
 
-test-ruby:
-	docker build -f examples/ruby/Dockerfile .
+test-simplecov:
+	docker build -f examples/simplecov/Dockerfile .
 
 publish:
 	$(AWS) s3 sync --acl public-read artifacts/bin s3://codeclimate/test-reporter
