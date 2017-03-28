@@ -1,4 +1,4 @@
-package ruby
+package simplecov
 
 import (
 	"testing"

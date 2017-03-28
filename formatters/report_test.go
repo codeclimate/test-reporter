@@ -100,7 +100,7 @@ func Test_Report_JSON_Unmarshal(t *testing.T) {
 	r.NoError(err)
 
 	r.Equal(20, len(rep.SourceFiles))
-	r.Equal("/go/src/github.com/codeclimate/test-reporter/ruby-test-reporter", rep.Environment.PWD)
+	r.Equal("/go/src/github.com/codeclimate/test-reporter/simplecov-test-reporter", rep.Environment.PWD)
 
 	sf := rep.SourceFiles["lib/code_climate/test_reporter/client.rb"]
 	r.NotNil(sf)

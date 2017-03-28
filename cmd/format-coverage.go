@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/codeclimate/test-reporter/formatters"
-	"github.com/codeclimate/test-reporter/formatters/ruby"
+	"github.com/codeclimate/test-reporter/formatters/simplecov"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -31,7 +31,7 @@ func (f CoverageFormatter) Save() error {
 	var in formatters.Formatter
 	_, err := os.Stat("coverage/.resultset.json")
 	if err == nil {
-		in = ruby.New("coverage/.resultset.json")
+		in = simplecov.New("coverage/.resultset.json")
 	}
 	if in == nil {
 		return errors.New("no coverage found to format")

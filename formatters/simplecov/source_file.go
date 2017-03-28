@@ -1,4 +1,4 @@
-package ruby
+package simplecov
 
 import (
 	"github.com/codeclimate/test-reporter/formatters"

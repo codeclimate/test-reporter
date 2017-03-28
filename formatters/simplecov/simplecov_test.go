@@ -1,4 +1,4 @@
-package ruby
+package simplecov
 
 import (
 	"testing"
@@ -9,7 +9,7 @@ import (
 func Test_Parse(t *testing.T) {
 	r := require.New(t)
 
-	f := New("./ruby-example.json")
+	f := New("./simplecov-example.json")
 	err := f.Parse()
 	r.NoError(err)
 
