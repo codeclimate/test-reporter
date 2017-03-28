@@ -10,7 +10,7 @@
   "environment": {
     "gem_version": "2.6.10",
     "package_version": "",
-    "pwd": "/go/src/github.com/codeclimate/test-reporter/ruby-test-reporter",
+    "pwd": "/go/src/github.com/codeclimate/test-reporter/simplecov-test-reporter",
     "rails_root": "",
     "reporter_version": "",
     "simplecov_root": ""

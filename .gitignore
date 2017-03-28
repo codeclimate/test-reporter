@@ -28,3 +28,4 @@ man/*
 !man/*.md
 .vscode/
 artifacts/
+.idea/
