@@ -1,0 +1,216 @@
+{
+  "id": "http://api.codeclimate.com/test-coverage-schema#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+
+  "title": "Test Coverage",
+  "description": "Schema that describes the format of the test coverage payload sent to Code Climate",
+  "type": "object",
+  "properties": {
+    "covered_percent": {
+      "description": "Overall coverage percentage as reported by underlying coverage tool if available",
+      "$ref": "#/definitions/covered_percent"
+    },
+    "covered_strength": {
+      "description": "Hits/Line as reporter by underlying coverage tool if available",
+      "$ref": "#/definitions/covered_strength"
+    },
+    "partial": {
+      "description": "If the coverage reported only represents some of the total coverage (deprecated)",
+      "type": "boolean"
+    },
+    "repo_token": {
+      "description": "The per-repository identifier supplied by Code Climate",
+      "type": "string",
+    },
+    "run_at": {
+      "description": "UNIX timestamp of when coverage was processed",
+      "$ref": "#/definitions/timestamp",
+    },
+    "source_files": {
+      "description": "Collection of source files containing coverage data",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/source_file"
+      },
+    },
+    "environment": {
+      "description": "Information and context related to the environment where tests are run",
+      "$ref": "#/definitions/environment"
+    },
+    "git": {
+      "description": "Git data about the source code under test",
+      "$ref": "#/definitions/git"
+    },
+    "line_counts": {
+      "description": "Total line counts if available",
+      "$ref": "#/definitions/line_counts",
+    },
+    "ci_service": {
+      "description": "Build related data as reported by CI service which ran tests",
+      "$ref": "#/definitions/ci_service"
+    }
+  },
+  "required": ["source_files", "git"],
+  "definitions": {
+    "source_file": {
+      "description": "Meta-data and coverage information for source file under test.",
+      "type": "object",
+      "properties": {
+        "blob_id": {
+          "description": "Blob SHA as reported by git",
+          "$ref": "#/definitions/git_sha"
+        },
+        "coverage": {
+          "description": "Actual line by line coverage data, represented as a string for safety. A null represents not coverable, and a 0-n represents the number of times the line is covered.",
+          "type": "string",
+          "pattern": "^\\[\\s*((\\d+|null),\\s*)*(\\d+|null),?\\s*\\]$", // https://regex101.com/r/urhEhA/1
+        },
+        "name": {
+          "description": "Path to source file under test",
+          "type": "string",
+          "pattern": "^[^/]",
+        },
+        "covered_percent": {
+          "$ref": "#/definitions/covered_percent"
+        },
+        "covered_strength": {
+          "$ref": "#/definitions/covered_strength"
+        },
+        "line_counts": {
+          "$ref": "#/definitions/line_counts"
+        }
+      },
+      "required": ["name", "blob_id", "coverage"],
+    },
+
+    "environment": {
+      "type": "object",
+      "properties": {
+        "pwd": {
+          "description": "Working directory where test reporter is executed from",
+          "type": "string",
+          "pattern": "^/"
+        },
+        "rails_root": {
+          "description": "Root of Rails repository as reported by Rails",
+          "type": "string",
+        },
+        "reporter_version": {
+          "description": "Version of Code Climate test reporter tool as reported by python and javascript clients",
+          "type": "string",
+        },
+        "simplecov_root": {
+          "description": "Simplecov root as reported by Simplecov",
+          "type": "string",
+        },
+      },
+    },
+
+    "git": {
+      "type": "object",
+      "properties": {
+        "branch": {
+          "description": "Current git branch",
+          "type": "string"
+        },
+        "committed_at": {
+          "description": "UNIX timestamp when HEAD committed",
+          "$ref": "#/definitions/timestamp"
+        },
+        "head": {
+          "description": "Commit sha of HEAD",
+          "$ref": "#/definitions/git_sha"
+        }
+      },
+      "required": ["branch", "committed_at", "head"],
+    },
+
+    "ci_service": {
+      "type": "object",
+      "properties": {
+        "branch": {
+          "description": "Branch of code under test",
+          "type": "string",
+        },
+        "build_identifier": {
+          "description": "Unique id of build",
+          "type": "string",
+        },
+        "build_url": {
+          "description": "URL to build on CI service",
+          "type": "string",
+        },
+        "commit_sha": {
+          "description": "Git commit sha checked out for test",
+          "$ref": "#/definitions/git_sha"
+        },
+        "committed_at": {
+          "description": "UNIX timestamp when HEAD committed",
+          "$ref": "#/definitions/timestamp"
+        },
+        "name": {
+          "description": "Name of CI service which ran build",
+          "type": "string",
+        },
+        "pull_request": {
+          "description": "Number of pull request related to build if applicable",
+          "type": "number"
+        },
+        "worker_id": {
+          "description": "For deprecated version of parallel test support",
+          "type": "string",
+        },
+      },
+    },
+
+    "line_counts": {
+      "type": "object",
+      "properties": {
+        "covered": {
+          "description": "Number of covered lines of code",
+          "type": "number",
+          "minimum": 0,
+        },
+        "missed": {
+          "description": "Number of uncovered lines of code",
+          "type": "number",
+          "minimum": 0,
+        },
+        "total": {
+          "description": "Total lines of code",
+          "type": "number",
+          "minimum": 0,
+        },
+      },
+      "required": ["covered", "missed", "total"],
+    },
+
+    "git_sha": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]{40}$",
+    },
+
+    "timestamp": {
+      "type": "number",
+      "minimum": 0,
+    },
+
+    "semantic_version": {
+      "type": "string",
+      "pattern": "^\\d{1,}\\.\\d{1,}\\.\\d{1,}",
+    },
+
+    "covered_percent": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+    },
+
+    "covered_strength": {
+      "type": "number",
+      "minimum": 0,
+    },
+  },
+}

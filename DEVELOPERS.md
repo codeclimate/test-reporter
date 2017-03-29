@@ -29,59 +29,9 @@ for x in man/*.1; do man "$x"; done
 
 ## Coverage Payload
 
-This is the payload currently expected by `codeclimate.com/test_reports`.
-
-```json
-{
-  "ci_service": {
-    "branch": "",
-    "build_identifier": "",
-    "build_url": "",
-    "commit_sha": "",
-    "committed_at": "",
-    "name": "",
-    "pull_request": "",
-    "worker_id": ""
-  },
-  "covered_percent": 100,
-  "covered_strength": 1,
-  "environment": {
-    "gem_version": "",
-    "package_version": "",
-    "pwd": "",
-    "rails_root": "",
-    "reporter_version": "",
-    "simplecov_root": ""
-  },
-  "git": {
-    "branch": "",
-    "committed_at": 1234567,
-    "head": "",
-  },
-  "line_counts": {
-    "covered": 1,
-    "missed": 1,
-    "total": 1
-  },
-  "partial": false,
-  "repo_token": "",
-  "run_at": 1234567,
-  "source_files": [
-    {
-      "blob_id": "",
-      "coverage": "[null, 0, 1]",
-      "covered_percent": 100,
-      "covered_strength": 1,
-      "line_counts": {
-        "covered": 1,
-        "missed": 1,
-        "total": 1
-      },
-      "name": ""
-    }
-  ]
-}
-```
+The coverage payload expected by Code Climate is defined canonically by
+schema.json in the root of this repository. Examples can be found in the examples
+folder.
 
 ## Usage Agent
 
