@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"bytes"
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -95,12 +97,20 @@ func (u Uploader) Upload() error {
 }
 
 func (u Uploader) newRequest(in io.Reader) (*http.Request, error) {
-	req, err := http.NewRequest("POST", u.EndpointURL, in)
+	bb := &bytes.Buffer{}
+	gw := gzip.NewWriter(bb)
+	_, err := io.Copy(gw, in)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+	req, err := http.NewRequest("POST", u.EndpointURL, bb)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	req.Header.Set("Content-Encoding", "gzip")
 	req.Header.Set("User-Agent", fmt.Sprintf("TestReporter/%s (Code Climate, Inc.)", version.Version))
 	req.Header.Set("Content-Type", "application/json")
+	fmt.Println(req.Header)
 	return req, err
 }
 
