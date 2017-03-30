@@ -27,7 +27,7 @@ func (f *Formatter) Search(paths ...string) (string, error) {
 		}
 	}
 
-	return "", errors.WithStack(errors.Errorf("could not find a valid file for the simplecov formatter. search paths: %s", strings.Join(paths, ", ")))
+	return "", errors.WithStack(errors.Errorf("could not find any files in search paths for simplecov. search paths were: %s", strings.Join(paths, ", ")))
 }
 
 func (f *Formatter) Parse() error {
