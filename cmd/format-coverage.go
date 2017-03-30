@@ -53,7 +53,7 @@ var formatCoverageCmd = &cobra.Command{
 		}
 
 		if formatOptions.In == nil {
-			return errors.WithStack(errors.New("could not find any viable formatter"))
+			return errors.WithStack(errors.Errorf("could not find any viable formatter. available formatters: %s", strings.Join(formatterList, ", ")))
 		}
 
 		return formatOptions.Save()
