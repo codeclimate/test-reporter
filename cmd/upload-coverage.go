@@ -18,10 +18,11 @@ import (
 )
 
 type Uploader struct {
-	Input       string
-	ReporterID  string
-	EndpointURL string
-	Debug       bool
+	Input          string
+	ReporterID     string
+	EndpointURL    string
+	Debug          bool
+	UseCompression bool
 }
 
 var uploadOptions = Uploader{}
@@ -97,20 +98,31 @@ func (u Uploader) Upload() error {
 }
 
 func (u Uploader) newRequest(in io.Reader) (*http.Request, error) {
-	bb := &bytes.Buffer{}
-	gw := gzip.NewWriter(bb)
-	_, err := io.Copy(gw, in)
-	if err != nil {
-		return nil, errors.WithStack(err)
+	var req *http.Request
+	var err error
+
+	if u.UseCompression {
+		bb := &bytes.Buffer{}
+		gw := gzip.NewWriter(bb)
+		_, err := io.Copy(gw, in)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		req, err = http.NewRequest("POST", u.EndpointURL, bb)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		req.Header.Set("Content-Encoding", "gzip")
+	} else {
+		req, err = http.NewRequest("POST", u.EndpointURL, in)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
 	}
-	req, err := http.NewRequest("POST", u.EndpointURL, bb)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-	req.Header.Set("Content-Encoding", "gzip")
+
 	req.Header.Set("User-Agent", fmt.Sprintf("TestReporter/%s (Code Climate, Inc.)", version.Version))
 	req.Header.Set("Content-Type", "application/json")
-	fmt.Println(req.Header)
+
 	return req, err
 }
 
@@ -119,5 +131,6 @@ func init() {
 	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.Input, "input", "i", ccDefaultCoveragePath, "input path")
 	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.ReporterID, "id", "r", os.Getenv("CC_TEST_REPORTER_ID"), "reporter identifier")
 	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.EndpointURL, "endpoint", "e", envy.Get("CC_TEST_REPORTER_COVERAGE_ENDPOINT", "https://codeclimate.com/test_reports"), "endpoint to upload coverage information to")
+	uploadCoverageCmd.Flags().BoolVar(&uploadOptions.UseCompression, "no-compression", true, "skip using gzip compression")
 	RootCmd.AddCommand(uploadCoverageCmd)
 }
