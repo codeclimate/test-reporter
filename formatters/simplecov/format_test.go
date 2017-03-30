@@ -16,9 +16,7 @@ func Test_Format(t *testing.T) {
 
 	r := require.New(t)
 
-	rb := Formatter{
-		Path: "./simplecov-example.json",
-	}
+	rb := New("./simplecov-example.json")
 	err := rb.Parse()
 	r.NoError(err)
 
