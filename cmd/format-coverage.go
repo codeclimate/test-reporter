@@ -95,6 +95,6 @@ func (f CoverageFormatter) Save() error {
 func init() {
 	formatCoverageCmd.Flags().BoolVarP(&formatOptions.Print, "print", "p", false, "prints to standard out only")
 	formatCoverageCmd.Flags().StringVarP(&formatOptions.Output, "output", "o", ccDefaultCoveragePath, "output path")
-	formatCoverageCmd.Flags().StringVarP(&formatOptions.InputType, "input-type", "i", "", fmt.Sprintf("type of input source to use [%s]", strings.Join(formatterList, ", ")))
+	formatCoverageCmd.Flags().StringVarP(&formatOptions.InputType, "input-type", "t", "", fmt.Sprintf("type of input source to use [%s]", strings.Join(formatterList, ", ")))
 	RootCmd.AddCommand(formatCoverageCmd)
 }
