@@ -4,39 +4,18 @@ import (
 	"encoding/json"
 	"os"
 	"sort"
-	"strings"
 	"time"
 
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/pkg/errors"
 )
 
-var searchPaths = []string{"coverage/.resultset.json"}
-
 type Formatter struct {
 	Path  string
 	Tests []Test
 }
 
-func (f *Formatter) Search(paths ...string) (string, error) {
-	paths = append(paths, searchPaths...)
-	for _, p := range paths {
-		if _, err := os.Stat(p); err == nil {
-			f.Path = p
-			return p, nil
-		}
-	}
-
-	return "", errors.WithStack(errors.Errorf("could not find a valid file for the simplecov formatter. search paths: %s", strings.Join(paths, ", ")))
-}
-
 func (f *Formatter) Parse() error {
-	if f.Path == "" {
-		_, err := f.Search()
-		if err != nil {
-			return errors.WithStack(err)
-		}
-	}
 	jf, err := os.Open(f.Path)
 	if err != nil {
 		return errors.WithStack(err)
@@ -72,6 +51,13 @@ type Test struct {
 	Name        string
 	Timestamp   time.Time
 	SourceFiles []SourceFile
+}
+
+func New(path string) *Formatter {
+	return &Formatter{
+		Path:  path,
+		Tests: []Test{},
+	}
 }
 
 type rubyTime int64

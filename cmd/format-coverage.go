@@ -1,11 +1,9 @@
 package cmd
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/codeclimate/test-reporter/formatters/simplecov"
@@ -14,54 +12,31 @@ import (
 )
 
 type CoverageFormatter struct {
-	In        formatters.Formatter
-	InputType string
-	Output    string
-	Print     bool
+	Output string
+	Print  bool
 }
 
 var formatOptions = CoverageFormatter{}
-
-// a prioritized list of the formatters to use
-var formatterList = []string{"simplecov"}
-
-// a map of the formatters to use
-var formatterMap = map[string]formatters.Formatter{
-	"simplecov": &simplecov.Formatter{},
-}
 
 // formatCoverageCmd represents the format command
 var formatCoverageCmd = &cobra.Command{
 	Use:   "format-coverage",
 	Short: "Locate, parse, and re-format supported coverage sources.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// if a type is specified use that
-		if formatOptions.InputType != "" {
-			if f, ok := formatterMap[formatOptions.InputType]; ok {
-				formatOptions.In = f
-			} else {
-				return errors.WithStack(errors.Errorf("could not find a formatter of type %s", formatOptions.InputType))
-			}
-		} else {
-			// else start searching for files:
-			for _, f := range formatterMap {
-				if _, err := f.Search(); err == nil {
-					formatOptions.In = f
-					break
-				}
-			}
-		}
-
-		if formatOptions.In == nil {
-			return errors.WithStack(errors.New("could not find any viable formatter"))
-		}
-
 		return formatOptions.Save()
 	},
 }
 
 func (f CoverageFormatter) Save() error {
-	err := f.In.Parse()
+	var in formatters.Formatter
+	_, err := os.Stat("coverage/.resultset.json")
+	if err == nil {
+		in = simplecov.New("coverage/.resultset.json")
+	}
+	if in == nil {
+		return errors.New("no coverage found to format")
+	}
+	err = in.Parse()
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -80,7 +55,7 @@ func (f CoverageFormatter) Save() error {
 		}
 	}
 
-	rep, err := f.In.Format()
+	rep, err := in.Format()
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -95,6 +70,5 @@ func (f CoverageFormatter) Save() error {
 func init() {
 	formatCoverageCmd.Flags().BoolVarP(&formatOptions.Print, "print", "p", false, "prints to standard out only")
 	formatCoverageCmd.Flags().StringVarP(&formatOptions.Output, "output", "o", ccDefaultCoveragePath, "output path")
-	formatCoverageCmd.Flags().StringVarP(&formatOptions.InputType, "input-type", "i", "", fmt.Sprintf("type of input source to use [%s]", strings.Join(formatterList, ", ")))
 	RootCmd.AddCommand(formatCoverageCmd)
 }
