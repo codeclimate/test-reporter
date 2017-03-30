@@ -9,7 +9,9 @@ import (
 func Test_Parse(t *testing.T) {
 	r := require.New(t)
 
-	f := New("./simplecov-example.json")
+	f := Formatter{
+		Path: "./simplecov-example.json",
+	}
 	err := f.Parse()
 	r.NoError(err)
 
