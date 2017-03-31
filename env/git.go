@@ -3,7 +3,9 @@ package env
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -38,6 +40,7 @@ func findGitInfo() (Git, error) {
 	g := Git{}
 
 	cmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
+	cmd.Stderr = os.Stderr
 	out, err := cmd.Output()
 	if err != nil {
 		return g, errors.WithStack(err)
@@ -45,6 +48,7 @@ func findGitInfo() (Git, error) {
 	g.Branch = strings.TrimSpace(string(out))
 
 	cmd = exec.Command("git", "log", "-1", "--pretty=format:%H")
+	cmd.Stderr = os.Stderr
 	out, err = cmd.Output()
 	if err != nil {
 		return g, errors.WithStack(err)
@@ -52,6 +56,7 @@ func findGitInfo() (Git, error) {
 	g.CommitSHA = strings.TrimSpace(string(out))
 
 	cmd = exec.Command("git", "log", "-1", "--pretty=format:%ct")
+	cmd.Stderr = os.Stderr
 	out, err = cmd.Output()
 	if err != nil {
 		return g, errors.WithStack(err)
@@ -66,9 +71,14 @@ func findGitInfo() (Git, error) {
 func GitSHA(path string) (string, error) {
 	args := []string{"log", "-1", "--follow", "--pretty=format:%H"}
 	if path != "" {
+		if pwd, err := os.Getwd(); err == nil {
+			path = strings.TrimPrefix(path, pwd)
+			path = filepath.Join(".", path)
+		}
 		args = append(args, path)
 	}
 	cmd := exec.Command("git", args...)
+	cmd.Stderr = os.Stderr
 	out, err := cmd.Output()
 	if err != nil {
 		return "", errors.WithStack(err)
@@ -82,6 +92,7 @@ var GitBlob = func(path string) (string, error) {
 		return "", errors.WithStack(err)
 	}
 	cmd := exec.Command("git", "ls-tree", sha, "--", path)
+	cmd.Stderr = os.Stderr
 	out, err := cmd.Output()
 	if err != nil {
 		return "", errors.WithStack(err)
