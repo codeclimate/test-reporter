@@ -1,4 +1,4 @@
-.PHONY: test-docker build-docker build-all
+.PHONY: test-docker build-docker build-all build-all-latest release
 
 AWS ?= $(shell which aws)
 DOCKER_RUN ?= $(shell which docker) run --rm
@@ -8,7 +8,7 @@ MAN_FILES = $(wildcard man/*.md)
 MAN_PAGES = $(patsubst man/%.md,man/%,$(MAN_FILES))
 
 PROJECT = github.com/codeclimate/test-reporter
-VERSION ?= 0.1.0-rc
+VERSION ?= 0.1.0
 BUILD_VERSION = $(shell git log -1 --pretty=format:'%H')
 BUILD_TIME = $(shell date +%FT%T%z)
 LDFLAGS = -ldflags "-X $(PROJECT)/version.Version=${VERSION} -X $(PROJECT)/version.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/version.BuildTime=${BUILD_TIME}"
@@ -27,6 +27,9 @@ build:
 build-all:
 	$(MAKE) build-docker GOOS=darwin GOARCH=amd64
 	$(MAKE) build-docker GOOS=linux GOARCH=amd64
+
+build-all-latest:
+	$(MAKE) build-all VERSION=latest
 
 test-docker:
 	$(DOCKER_RUN) \
@@ -51,8 +54,10 @@ test-simplecov:
 	docker build -f examples/simplecov/Dockerfile .
 
 publish:
-	$(AWS) s3 sync --acl public-read artifacts/bin s3://codeclimate/test-reporter
+	$(AWS) s3 cp --acl public-read --recursive artifacts/bin/ s3://codeclimate/test-reporter/ --exclude "*" --include "test-reporter-$(VERSION)*" --include "test-reporter-latest*"
 
 clean:
 	sudo $(RM) -r ./artifacts
 	$(RM) $(MAN_PAGES)
+
+release: build-all build-all-latest publish

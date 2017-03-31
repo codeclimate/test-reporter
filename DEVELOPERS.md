@@ -87,3 +87,16 @@ and `constant` (by source file) records.
 #### Rendering Coverage Info on api.codeclimate.com
 
 TODO
+
+## Releasing
+
+To release a new version,
+
+* Update VERSION in Makefile
+* Run
+  ```
+    make release
+  ```
+
+This command will build the binaries for the given version and update the binaries
+for _latest_.
