@@ -105,6 +105,7 @@ func (rep *Report) AddSourceFile(sf SourceFile) error {
 			return err
 		}
 	}
+	sf.CalcLineCounts()
 	rep.SourceFiles[sf.Name] = sf
 
 	lc := LineCounts{}
