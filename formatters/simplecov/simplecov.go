@@ -51,13 +51,14 @@ func (f *Formatter) Parse() error {
 		tt := Test{
 			Name:        k,
 			Timestamp:   v.Timestamp.Time(),
-			SourceFiles: make([]SourceFile, 0, len(v.Coverage)),
+			SourceFiles: make([]formatters.SourceFile, 0, len(v.Coverage)),
 		}
 		for n, ls := range v.Coverage {
-			fe := SourceFile{
-				Name:     n,
-				Coverage: ls,
+			fe, err := formatters.NewSourceFile(n)
+			if err != nil {
+				return errors.WithStack(err)
 			}
+			fe.Coverage = ls
 			tt.SourceFiles = append(tt.SourceFiles, fe)
 		}
 		sort.Slice(tt.SourceFiles, func(a, b int) bool {
@@ -71,7 +72,7 @@ func (f *Formatter) Parse() error {
 type Test struct {
 	Name        string
 	Timestamp   time.Time
-	SourceFiles []SourceFile
+	SourceFiles []formatters.SourceFile
 }
 
 type rubyTime int64

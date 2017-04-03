@@ -53,6 +53,9 @@ build-docker:
 test-simplecov:
 	docker build -f examples/simplecov/Dockerfile .
 
+test-lcov:
+	docker build -f examples/lcov/Dockerfile .
+
 publish:
 	$(AWS) s3 cp --acl public-read --recursive artifacts/bin/ s3://codeclimate/test-reporter/ --exclude "*" --include "test-reporter-$(VERSION)*" --include "test-reporter-latest*"
 

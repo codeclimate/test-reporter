@@ -3,10 +3,19 @@ package simplecov
 import (
 	"testing"
 
+	"github.com/codeclimate/test-reporter/env"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_Parse(t *testing.T) {
+	ogb := env.GitBlob
+	defer func() {
+		env.GitBlob = ogb
+	}()
+	env.GitBlob = func(s string) (string, error) {
+		return s, nil
+	}
+
 	r := require.New(t)
 
 	f := Formatter{

@@ -62,7 +62,6 @@ func (sf *SourceFile) CalcLineCounts() {
 		}
 		lc.Covered++
 	}
-
 	sf.LineCounts = lc
 }
 
@@ -83,6 +82,7 @@ type SourceFiles map[string]SourceFile
 func (sf SourceFiles) MarshalJSON() ([]byte, error) {
 	files := []SourceFile{}
 	for _, s := range sf {
+		s.CalcLineCounts()
 		files = append(files, s)
 	}
 	return json.Marshal(files)
