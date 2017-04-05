@@ -63,6 +63,7 @@ func (sf *SourceFile) CalcLineCounts() {
 		lc.Covered++
 	}
 	sf.LineCounts = lc
+	sf.CoveredPercent = lc.CoveredPercent()
 }
 
 func NewSourceFile(name string) (SourceFile, error) {

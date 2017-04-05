@@ -32,6 +32,9 @@ func Test_Format(t *testing.T) {
 	r.Equal(env, rep.CIService)
 	r.Len(rep.SourceFiles, len(rb.SourceFiles))
 
+	sf := rb.SourceFiles[0]
+	r.InDelta(90.19, sf.CoveredPercent, 1)
+
 	lc := rep.LineCounts
 	r.Equal(47, lc.Covered)
 	r.Equal(5, lc.Missed)
