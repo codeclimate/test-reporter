@@ -59,6 +59,7 @@ func (f *Formatter) Parse() error {
 				return errors.WithStack(err)
 			}
 			fe.Coverage = ls
+			fe.CalcLineCounts()
 			tt.SourceFiles = append(tt.SourceFiles, fe)
 		}
 		sort.Slice(tt.SourceFiles, func(a, b int) bool {

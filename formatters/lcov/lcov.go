@@ -56,6 +56,7 @@ func (f *Formatter) Parse() error {
 			}
 			for ln-curLine >= 1 {
 				sf.Coverage = append(sf.Coverage, nulls.Int{})
+				sf.CalcLineCounts()
 				curLine++
 			}
 			lh, err := strconv.Atoi(string(lineInfo[1]))
