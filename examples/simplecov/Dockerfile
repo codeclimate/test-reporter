@@ -31,4 +31,4 @@ RUN bundle exec rake; exit 0
 ENV CC_TEST_REPORTER_ID=c4881e09870b0fac1291c93339b36ffe36210a2645c1ad25e52d8fda3943fb4d
 RUN test-reporter format-coverage
 RUN cat coverage/codeclimate.json
-RUN test-reporter upload-coverage --no-compression
+RUN test-reporter upload-coverage -d
