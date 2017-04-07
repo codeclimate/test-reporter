@@ -31,8 +31,9 @@ var RootCmd = &cobra.Command{
 		}
 		if v {
 			fmt.Printf("Code Climate Test Reporter %s\n", version.FormattedVersion())
+			return nil
 		}
-		return nil
+		return cmd.Help()
 	},
 }
 
