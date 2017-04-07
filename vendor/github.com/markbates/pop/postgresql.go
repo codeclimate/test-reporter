@@ -2,17 +2,21 @@ package pop
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 	"sync"
 
 	_ "github.com/lib/pq"
-	"github.com/markbates/going/clam"
 	. "github.com/markbates/pop/columns"
 	"github.com/markbates/pop/fizz"
 	"github.com/markbates/pop/fizz/translators"
 	"github.com/pkg/errors"
 )
+
+var _ dialect = &postgresql{}
 
 type postgresql struct {
 	translateCache    map[string]string
@@ -71,19 +75,32 @@ func (p *postgresql) CreateDB() error {
 	// createdb -h db -p 5432 -U postgres enterprise_development
 	deets := p.ConnectionDetails
 	cmd := exec.Command("createdb", "-e", "-h", deets.Host, "-p", deets.Port, "-U", deets.User, deets.Database)
-	err := clam.RunAndListen(cmd, func(s string) {
-		fmt.Println(s)
-	})
-	return errors.Wrapf(err, "error creating PostgreSQL database %s", deets.Database)
+	Log(strings.Join(cmd.Args, " "))
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stderr
+	cmd.Stdout = os.Stdout
+	err := cmd.Run()
+	if err != nil {
+		return errors.Wrapf(err, "error creating PostgreSQL database %s", deets.Database)
+	}
+
+	fmt.Printf("created database %s\n", deets.Database)
+	return nil
 }
 
 func (p *postgresql) DropDB() error {
 	deets := p.ConnectionDetails
 	cmd := exec.Command("dropdb", "-e", "-h", deets.Host, "-p", deets.Port, "-U", deets.User, deets.Database)
-	err := clam.RunAndListen(cmd, func(s string) {
-		fmt.Println(s)
-	})
-	return errors.Wrapf(err, "error dropping PostgreSQL database %s", deets.Database)
+	Log(strings.Join(cmd.Args, " "))
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stderr
+	cmd.Stdout = os.Stdout
+	err := cmd.Run()
+	if err != nil {
+		return errors.Wrapf(err, "error dropping PostgreSQL database %s", deets.Database)
+	}
+	fmt.Printf("dropped database %s\n", deets.Database)
+	return nil
 }
 
 func (m *postgresql) URL() string {
@@ -133,6 +150,49 @@ func (p *postgresql) Lock(fn func() error) error {
 	return fn()
 }
 
+func (p *postgresql) DumpSchema(w io.Writer) error {
+	cmd := exec.Command("pg_dump", "-s", fmt.Sprintf("--dbname=%s", p.URL()))
+	Log(strings.Join(cmd.Args, " "))
+	cmd.Stdout = w
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("dumped schema for %s\n", p.Details().Database)
+	return nil
+}
+
+func (p *postgresql) LoadSchema(r io.Reader) error {
+	cmd := exec.Command("psql", p.URL())
+	in, err := cmd.StdinPipe()
+	if err != nil {
+		return err
+	}
+	go func() {
+		defer in.Close()
+		io.Copy(in, r)
+	}()
+	Log(strings.Join(cmd.Args, " "))
+	err = cmd.Start()
+	if err != nil {
+		return err
+	}
+	err = cmd.Wait()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("loaded schema for %s\n", p.Details().Database)
+	return nil
+}
+
+func (p *postgresql) TruncateAll(tx *Connection) error {
+	return tx.RawQuery(pgTruncate).Exec()
+}
+
 func newPostgreSQL(deets *ConnectionDetails) dialect {
 	cd := &postgresql{
 		ConnectionDetails: deets,
@@ -141,3 +201,16 @@ func newPostgreSQL(deets *ConnectionDetails) dialect {
 	}
 	return cd
 }
+
+const pgTruncate = `DO
+$func$
+BEGIN
+   EXECUTE
+  (SELECT 'TRUNCATE TABLE '
+       || string_agg(quote_ident(schemaname) || '.' || quote_ident(tablename), ', ')
+       || ' CASCADE'
+   FROM   pg_tables
+   WHERE  schemaname = 'public'
+   );
+END
+$func$;`

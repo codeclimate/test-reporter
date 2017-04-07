@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/codeclimate/test-reporter/version"
 	"github.com/gobuffalo/envy"
@@ -19,7 +20,6 @@ type Uploader struct {
 	Input       string
 	ReporterID  string
 	EndpointURL string
-	Debug       bool
 }
 
 var uploadOptions = Uploader{}
@@ -83,14 +83,10 @@ func (u Uploader) Upload() error {
 		return errors.WithStack(err)
 	}
 
-	if u.Debug {
-		io.Copy(os.Stdout, res.Body)
-	}
-
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		return fmt.Errorf("response from %s was %d", u.EndpointURL, res.StatusCode)
 	}
-	fmt.Printf("Status: %d\n", res.StatusCode)
+	logrus.Infof("Status: %d", res.StatusCode)
 	return nil
 }
 
@@ -105,7 +101,6 @@ func (u Uploader) newRequest(in io.Reader) (*http.Request, error) {
 }
 
 func init() {
-	uploadCoverageCmd.Flags().BoolVarP(&uploadOptions.Debug, "debug", "d", false, "debug")
 	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.Input, "input", "i", ccDefaultCoveragePath, "input path")
 	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.ReporterID, "id", "r", os.Getenv("CC_TEST_REPORTER_ID"), "reporter identifier")
 	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.EndpointURL, "endpoint", "e", envy.Get("CC_TEST_REPORTER_COVERAGE_ENDPOINT", "https://codeclimate.com/test_reports"), "endpoint to upload coverage information to")

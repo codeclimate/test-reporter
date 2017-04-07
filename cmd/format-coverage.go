@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/codeclimate/test-reporter/formatters/lcov"
 	"github.com/codeclimate/test-reporter/formatters/simplecov"
@@ -40,14 +41,18 @@ var formatCoverageCmd = &cobra.Command{
 		// if a type is specified use that
 		if formatOptions.InputType != "" {
 			if f, ok := formatterMap[formatOptions.InputType]; ok {
+				logrus.Debugf("using formatter %s", formatOptions.InputType)
 				formatOptions.In = f
 			} else {
 				return errors.WithStack(errors.Errorf("could not find a formatter of type %s", formatOptions.InputType))
 			}
 		} else {
+			logrus.Debug("searching for a formatter to use")
 			// else start searching for files:
-			for _, f := range formatterMap {
-				if _, err := f.Search(); err == nil {
+			for n, f := range formatterMap {
+				logrus.Debugf("checking %s formatter", n)
+				if p, err := f.Search(); err == nil {
+					logrus.Debugf("found file %s for %s formatter", p, n)
 					formatOptions.In = f
 					break
 				}

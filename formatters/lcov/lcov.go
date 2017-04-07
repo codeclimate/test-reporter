@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
@@ -22,6 +23,7 @@ type Formatter struct {
 func (f *Formatter) Search(paths ...string) (string, error) {
 	paths = append(paths, searchPaths...)
 	for _, p := range paths {
+		logrus.Debugf("checking search path %s for lcov formatter", p)
 		if _, err := os.Stat(p); err == nil {
 			f.Path = p
 			return p, nil

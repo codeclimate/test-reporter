@@ -3,6 +3,7 @@ package pop
 import (
 	"encoding/gob"
 	"fmt"
+	"io"
 
 	. "github.com/markbates/pop/columns"
 	"github.com/markbates/pop/fizz"
@@ -26,8 +27,11 @@ type dialect interface {
 	SelectMany(store, *Model, Query) error
 	CreateDB() error
 	DropDB() error
+	DumpSchema(io.Writer) error
+	LoadSchema(io.Reader) error
 	FizzTranslator() fizz.Translator
 	Lock(func() error) error
+	TruncateAll(*Connection) error
 }
 
 func genericCreate(s store, model *Model, cols Columns) error {
