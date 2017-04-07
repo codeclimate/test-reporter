@@ -62,3 +62,19 @@ func Test_Temp(t *testing.T) {
 	_, err = envy.MustGet("BAR")
 	r.Error(err)
 }
+
+func Test_GoPath(t *testing.T) {
+	r := require.New(t)
+	envy.Temp(func() {
+		envy.Set("GOPATH", "/foo")
+		r.Equal("/foo", envy.GoPath())
+	})
+}
+
+func Test_GoPaths(t *testing.T) {
+	r := require.New(t)
+	envy.Temp(func() {
+		envy.Set("GOPATH", "/foo:/bar")
+		r.Equal([]string{"/foo", "/bar"}, envy.GoPaths())
+	})
+}

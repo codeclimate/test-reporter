@@ -9,14 +9,10 @@ var pgConfig = `development:
   pool: 5
 
 test:
-  dialect: postgres
-  database: {{.name}}_test
-  user: postgres
-  password: postgres
-  host: 127.0.0.1
+  url: {{"{{"}}envOr "TEST_DATABASE_URL" "postgres://postgres:postgres@127.0.0.1:5432/{{.name}}_test?sslmode=disable"}}
 
 production:
-  url: {{"{{"}}envOr "DATABASE_URL" "postgres://postgres:postgres@127.0.0.1:5432/{{.name}}_production"}}`
+  url: {{"{{"}}envOr "DATABASE_URL" "postgres://postgres:postgres@127.0.0.1:5432/{{.name}}_production?sslmode=disable"}}`
 
 var mysqlConfig = `development:
   dialect: "mysql"
@@ -27,27 +23,22 @@ var mysqlConfig = `development:
   password: "root"
 
 test:
-  dialect: "mysql"
-  database: "{{.name}}_test"
-  host: "localhost"
-  port: "3306"
-  user: "root"
-  password: "root"
+  url: {{"{{"}}envOr "TEST_DATABASE_URL" "mysql://root:root@localhost:3306/{{.name}}_test"}}
 
 production:
-  url: {{"{{"}}envOr "DATABASE_URL" "mysql://root:root@(localhost:3306)/{{.name}}_production"}}`
+  url: {{"{{"}}envOr "DATABASE_URL" "mysql://root:root@localhost:3306/{{.name}}_production"}}`
 
 var sqliteConfig = `development:
   dialect: "sqlite3"
-  database: "./{{.name}}_development.sqlite"
+  database: {{"{{"}}env "GOPATH" {{"}}"}}/{{.packagePath}}/{{.name}}_development.sqlite
 
 test:
   dialect: "sqlite3"
-  database: "./{{.name}}_test.sqlite"
+  database: {{"{{"}}env "GOPATH" {{"}}"}}/{{.packagePath}}/{{.name}}_test.sqlite
 
 production:
   dialect: "sqlite3"
-  database: "./{{.name}}_production.sqlite"`
+  database: {{"{{"}}env "GOPATH" {{"}}"}}/{{.packagePath}}/{{.name}}_production.sqlite`
 
 var configTemplates = map[string]string{
 	"postgres":   pgConfig,

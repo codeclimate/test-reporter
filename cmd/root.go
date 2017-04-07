@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/version"
 	"github.com/spf13/cobra"
 )
+
+var debug bool
 
 const ccDefaultCoveragePath = "coverage/codeclimate.json"
 
@@ -16,6 +19,11 @@ var RootCmd = &cobra.Command{
 	Short: "Report information about tests to Code Climate",
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		if debug {
+			logrus.SetLevel(logrus.DebugLevel)
+		}
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		v, err := cmd.Flags().GetBool("version")
 		if err != nil {
@@ -37,5 +45,7 @@ func Execute() {
 }
 
 func init() {
+	RootCmd.PersistentFlags().BoolVarP(&debug, "debug", "d", false, "run in debug mode")
 	RootCmd.Flags().BoolP("version", "v", false, "Show version information")
+	logrus.SetLevel(logrus.WarnLevel)
 }

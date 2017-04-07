@@ -1,10 +1,17 @@
 {
-    "memo": "340d343ca81ca1b5dd16dc026b0d6cac0050768cd38017be0fcdf16cf5139b26",
+    "memo": "67ddcae624443b7e066abe4494cccfbcd085d4708839ccb935114072745431fe",
     "projects": [
+        {
+            "name": "github.com/Sirupsen/logrus",
+            "revision": "a437dfd2463eaedbec3dfe443e477d3b0a810b3f",
+            "packages": [
+                "."
+            ]
+        },
         {
             "name": "github.com/davecgh/go-spew",
             "version": "v1.1.0",
-            "revision": "a7a0063072ed89d04285d3d3362aa590ed9f7878",
+            "revision": "346938d642f2ec3594ed81d874461961cd0faa76",
             "packages": [
                 "spew"
             ]
@@ -20,7 +27,7 @@
         {
             "name": "github.com/gobuffalo/envy",
             "branch": "master",
-            "revision": "5056ec9ebe876e444296d535fcf01fb2ddb8a802",
+            "revision": "f9545cd7564a92b306df0be590567ff5bae5750c",
             "packages": [
                 "."
             ]
@@ -35,9 +42,17 @@
         {
             "name": "github.com/markbates/pop",
             "branch": "master",
-            "revision": "11034a060d3cb83e86b76d28fb32d9630e87884d",
+            "revision": "2f3bb2b80ba0fc7cebb6d48a5b51beae936010b3",
             "packages": [
                 "nulls"
+            ]
+        },
+        {
+            "name": "github.com/mitchellh/go-homedir",
+            "branch": "master",
+            "revision": "b8bc1bf767474819792c23f32d8286a45736f1c6",
+            "packages": [
+                "."
             ]
         },
         {
@@ -58,7 +73,7 @@
         {
             "name": "github.com/spf13/cobra",
             "branch": "master",
-            "revision": "fcd0c5a1df88f5d6784cb4feead962c3f3d0b66c",
+            "revision": "7aeaa2cce6ae7e18d2a6ee597b60ee137e999bd9",
             "packages": [
                 "."
             ]
@@ -66,7 +81,7 @@
         {
             "name": "github.com/spf13/pflag",
             "branch": "master",
-            "revision": "9ff6c6923cfffbcd502984b8e0c80539a94968b7",
+            "revision": "d16db1e50e33dff1b6cdf37596cef36742128670",
             "packages": [
                 "."
             ]
@@ -77,6 +92,14 @@
             "revision": "69483b4bd14f5845b5a1e55bca19e954e827f1d0",
             "packages": [
                 "require"
+            ]
+        },
+        {
+            "name": "golang.org/x/sys",
+            "branch": "master",
+            "revision": "493114f68206f85e7e333beccfabc11e98cba8dd",
+            "packages": [
+                "unix"
             ]
         }
     ]

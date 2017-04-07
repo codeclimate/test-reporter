@@ -3,14 +3,30 @@ package envy
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
+
+	homedir "github.com/mitchellh/go-homedir"
 )
 
 var gil = &sync.Mutex{}
 var env = map[string]string{}
 
 func init() {
+	v := runtime.Version()
+	// set the GOPATH if using >= 1.8 and the GOPATH isn't set
+	if v >= "go1.8" && os.Getenv("GOPATH") == "" {
+		home, err := homedir.Dir()
+		if err == nil {
+			home, err := homedir.Expand(home)
+			if err == nil {
+				os.Setenv("GOPATH", filepath.Join(home, "go"))
+			}
+		}
+	}
+
 	for _, e := range os.Environ() {
 		pair := strings.Split(e, "=")
 		env[pair[0]] = os.Getenv(pair[0])
@@ -80,4 +96,22 @@ func Temp(f func()) {
 	}
 	defer func() { env = oenv }()
 	f()
+}
+
+// GoPath returns the first GOPATH that is set
+func GoPath() string {
+	paths := GoPaths()
+	if len(paths) > 0 {
+		return paths[0]
+	}
+	return ""
+}
+
+// GoPaths returns all possible GOPATHS that are set.
+func GoPaths() []string {
+	gp := Get("GOPATH", "")
+	if runtime.GOOS == "windows" {
+		return strings.Split(gp, ";") // Windows uses a different separator
+	}
+	return strings.Split(gp, ":")
 }

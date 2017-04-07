@@ -1,5 +1,78 @@
 # Change Log
 
+## [v3.13.7](https://github.com/markbates/pop/tree/v3.13.7) (2017-04-04)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.13.6...v3.13.7)
+
+**Closed issues:**
+
+- count is currently taking order sql [\#56](https://github.com/markbates/pop/issues/56)
+- Add model generation example [\#19](https://github.com/markbates/pop/issues/19)
+
+## [v3.13.6](https://github.com/markbates/pop/tree/v3.13.6) (2017-03-29)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.13.5...v3.13.6)
+
+**Closed issues:**
+
+- allow raw sql for default value [\#53](https://github.com/markbates/pop/issues/53)
+- Generated model with an already plural name fails to compile [\#37](https://github.com/markbates/pop/issues/37)
+- model generation fails to compile [\#32](https://github.com/markbates/pop/issues/32)
+
+## [v3.13.5](https://github.com/markbates/pop/tree/v3.13.5) (2017-03-28)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.13.4...v3.13.5)
+
+**Merged pull requests:**
+
+- fix migrate down to correctly step down [\#54](https://github.com/markbates/pop/pull/54) ([u007](https://github.com/u007))
+
+## [v3.13.4](https://github.com/markbates/pop/tree/v3.13.4) (2017-03-27)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.13.3...v3.13.4)
+
+**Closed issues:**
+
+- migration down roll back all? [\#47](https://github.com/markbates/pop/issues/47)
+
+**Merged pull requests:**
+
+- add uuid support for sqlite [\#52](https://github.com/markbates/pop/pull/52) ([u007](https://github.com/u007))
+
+## [v3.13.3](https://github.com/markbates/pop/tree/v3.13.3) (2017-03-24)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.13.2...v3.13.3)
+
+## [v3.13.2](https://github.com/markbates/pop/tree/v3.13.2) (2017-03-21)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.13.1...v3.13.2)
+
+**Closed issues:**
+
+- transaction with destroy: error committing or rolling back transaction: sql: Transaction has already been committed or rolled back [\#48](https://github.com/markbates/pop/issues/48)
+
+**Merged pull requests:**
+
+- Changed config templates to use env in test case [\#51](https://github.com/markbates/pop/pull/51) ([stanislas-m](https://github.com/stanislas-m))
+
+## [v3.13.1](https://github.com/markbates/pop/tree/v3.13.1) (2017-03-19)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.13.0...v3.13.1)
+
+## [v3.13.0](https://github.com/markbates/pop/tree/v3.13.0) (2017-03-19)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.12.1...v3.13.0)
+
+## [v3.12.1](https://github.com/markbates/pop/tree/v3.12.1) (2017-03-17)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.11.7...v3.12.1)
+
+**Merged pull requests:**
+
+- Dump load [\#50](https://github.com/markbates/pop/pull/50) ([markbates](https://github.com/markbates))
+
+## [v3.11.7](https://github.com/markbates/pop/tree/v3.11.7) (2017-03-17)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.11.6...v3.11.7)
+
+**Closed issues:**
+
+- reflect: call of reflect.Value.Elem on struct Value [\#45](https://github.com/markbates/pop/issues/45)
+
+**Merged pull requests:**
+
+- set default migrate down to run only single migration. [\#49](https://github.com/markbates/pop/pull/49) ([u007](https://github.com/u007))
+
 ## [v3.11.6](https://github.com/markbates/pop/tree/v3.11.6) (2017-03-06)
 [Full Changelog](https://github.com/markbates/pop/compare/v3.11.5...v3.11.6)
 

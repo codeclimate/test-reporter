@@ -220,15 +220,3 @@ Migrations can also be run in reverse to rollback the schema.
 ```bash
 $ soda migrate down
 ```
-
-## Contributors
-
-* Mark Bates
-* Tim Raymond
-* Marcelo Magallon
-* lumost
-* Todd Rafferty
-* Johnny Boursiquot
-* Jean Niklas L'orange
-* Ken Pepple
-* Slava Vishnyakov

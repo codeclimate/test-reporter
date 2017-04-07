@@ -1,5 +1,8 @@
 {
     "dependencies": {
+        "github.com/Sirupsen/logrus": {
+            "revision": "a437dfd2463eaedbec3dfe443e477d3b0a810b3f"
+        },
         "github.com/fatih/structs": {
             "branch": "master"
         },
