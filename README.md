@@ -16,7 +16,7 @@ machine:
 
 dependencies:
   post:
-    - curl -L https://tools.codeclimate.com/test-reporter/test-reporter-latest > ./cc-test-reporter
+    - curl -L https://s3.amazonaws.com/codeclimate/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     - chmod +x ./cc-test-reporter
 
 test:
