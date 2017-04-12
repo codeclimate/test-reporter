@@ -28,12 +28,12 @@ func exampleReport() (formatters.Report, error) {
 	return rep, nil
 }
 
-func Test_newData(t *testing.T) {
+func Test_NewTestReport(t *testing.T) {
 	r := require.New(t)
 
 	rep, err := exampleReport()
 	r.NoError(err)
-	data := newData(rep)
+	data := NewTestReport(rep)
 	r.Equal("test_reports", data.Type)
 
 	at := data.Attributes
@@ -57,4 +57,6 @@ func Test_newData(t *testing.T) {
 	r.Equal("/rails", env.RailsRoot)
 	r.Equal("1", env.ReporterVersion)
 	r.Equal("/scov", env.SimplecovRoot)
+
+	r.Len(data.SourceFiles.SourceFiles, 20)
 }

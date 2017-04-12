@@ -1,14 +1,50 @@
 package upload
 
-import "github.com/codeclimate/test-reporter/formatters"
+import (
+	"time"
+
+	"github.com/codeclimate/test-reporter/formatters"
+)
 
 func NewTestReport(rep formatters.Report) *TestReport {
 	tr := &TestReport{
-		Data: newData(rep),
+		Type: "test_reports",
+		Attributes: Attributes{
+			CIBranch:          rep.Git.Branch,
+			CIBuildIdentifier: rep.CIService.BuildIdentifier,
+			CIBuildURL:        rep.CIService.BuildURL,
+			CICommitSha:       rep.Git.Head,
+			CIServiceName:     rep.CIService.Name,
+			CICommittedAt:     rep.CIService.CommittedAt,
+			GitBranch:         rep.Git.Branch,
+			CommitSha:         rep.Git.Head,
+			CommittedAt:       rep.Git.CommittedAt,
+			RunAt:             time.Now().Unix(),
+			CoveredPercent:    rep.CoveredPercent,
+			CoveredStrength:   rep.CoveredStrength,
+			LineCounts:        rep.LineCounts,
+			Environment:       rep.Environment,
+		},
+		SourceFiles: SourceFiles{
+			Type:        "test_file_reports",
+			SourceFiles: []SourceFile{},
+		},
+	}
+	for _, sf := range rep.SourceFiles {
+		tr.SourceFiles.SourceFiles = append(tr.SourceFiles.SourceFiles, SourceFile{
+			BlobID:          sf.BlobID,
+			Coverage:        Coverage(sf.Coverage),
+			CoveredPercent:  sf.CoveredPercent,
+			CoveredStrength: sf.CoveredStrength,
+			LineCounts:      sf.LineCounts,
+			Path:            sf.Name,
+		})
 	}
 	return tr
 }
 
 type TestReport struct {
-	Data Data `json:"data"`
+	Type        string      `json:"type"`
+	Attributes  Attributes  `json:"attributes"`
+	SourceFiles SourceFiles `json:"-"`
 }
