@@ -25,13 +25,10 @@ func NewTestReport(rep formatters.Report) *TestReport {
 			LineCounts:        rep.LineCounts,
 			Environment:       rep.Environment,
 		},
-		SourceFiles: SourceFiles{
-			Type:        "test_file_reports",
-			SourceFiles: []SourceFile{},
-		},
+		SourceFiles: []SourceFile{},
 	}
 	for _, sf := range rep.SourceFiles {
-		tr.SourceFiles.SourceFiles = append(tr.SourceFiles.SourceFiles, SourceFile{
+		tr.SourceFiles = append(tr.SourceFiles, SourceFile{
 			BlobID:          sf.BlobID,
 			Coverage:        Coverage(sf.Coverage),
 			CoveredPercent:  sf.CoveredPercent,
@@ -44,7 +41,7 @@ func NewTestReport(rep formatters.Report) *TestReport {
 }
 
 type TestReport struct {
-	Type        string      `json:"type"`
-	Attributes  Attributes  `json:"attributes"`
-	SourceFiles SourceFiles `json:"-"`
+	Type        string       `json:"type"`
+	Attributes  Attributes   `json:"attributes"`
+	SourceFiles []SourceFile `json:"-"`
 }
