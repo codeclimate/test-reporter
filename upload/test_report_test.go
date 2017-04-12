@@ -58,5 +58,5 @@ func Test_NewTestReport(t *testing.T) {
 	r.Equal("1", env.ReporterVersion)
 	r.Equal("/scov", env.SimplecovRoot)
 
-	r.Len(data.SourceFiles.SourceFiles, 20)
+	r.Len(data.SourceFiles, 20)
 }

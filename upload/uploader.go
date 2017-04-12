@@ -18,6 +18,7 @@ type Uploader struct {
 	Input       string
 	ReporterID  string
 	EndpointURL string
+	BatchSize   int
 }
 
 func (u Uploader) Upload() error {
@@ -36,53 +37,114 @@ func (u Uploader) Upload() error {
 		}
 	}
 
-	// we need to read in the JSON file
-	// and set the repo_token to whatever
-	// is being set at upload time.
 	rep, err := formatters.NewReport()
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	rep.RepoToken = u.ReporterID
 
 	err = json.NewDecoder(in).Decode(&rep)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
+	testReport := NewTestReport(rep)
+
 	pr, pw := io.Pipe()
 	go func() {
 		defer pw.Close()
-		json.NewEncoder(pw).Encode(rep)
+		json.NewEncoder(pw).Encode(JSONWraper{Data: testReport})
 	}()
 
+	res, err := u.doRequest(pr, u.EndpointURL)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	batchLinks := struct {
+		Links struct {
+			PostBatch string `json:"post_batch"`
+		} `json:"links"`
+	}{}
+
+	err = json.NewDecoder(res.Body).Decode(&batchLinks)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	return u.SendBatches(testReport, batchLinks.Links.PostBatch)
+}
+
+func (u Uploader) SendBatches(rep *TestReport, url string) error {
+	batch := [][]SourceFile{}
+
+	pos := 0
+	count := len(rep.SourceFiles) / u.BatchSize
+	remainder := len(rep.SourceFiles) % u.BatchSize
+	for i := 0; i < count; i++ {
+		end := pos + u.BatchSize
+		batch = append(batch, rep.SourceFiles[pos:end])
+		pos = end
+	}
+	if remainder > 0 {
+		batch = append(batch, rep.SourceFiles[pos:])
+	}
+
+	for i, b := range batch {
+		sf := SourceFiles{
+			Type:        "test_report_files",
+			SourceFiles: b,
+		}
+
+		pr, pw := io.Pipe()
+		go func() {
+			defer pw.Close()
+			json.NewEncoder(pw).Encode(JSONWraper{
+				Data: sf,
+				Meta: map[string]int{
+					"current": i + 1,
+					"total":   len(batch),
+				},
+			})
+		}()
+		_, err := u.doRequest(pr, url)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+	}
+
+	return nil
+}
+
+func (u Uploader) doRequest(in io.Reader, url string) (*http.Response, error) {
 	c := http.Client{
 		Timeout: 30 * time.Second,
 	}
 
-	req, err := u.newRequest(pr)
+	req, err := u.newRequest(in, url)
 	if err != nil {
-		return errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 
+	logrus.Debugf("posting request to %s", url)
 	res, err := c.Do(req)
 	if err != nil {
-		return errors.WithStack(err)
+		return res, errors.WithStack(err)
 	}
 
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
-		return fmt.Errorf("response from %s was %d", u.EndpointURL, res.StatusCode)
+		return res, fmt.Errorf("response from %s was %d", url, res.StatusCode)
 	}
-	logrus.Infof("Status: %d", res.StatusCode)
-	return nil
+	return res, nil
 }
 
-func (u Uploader) newRequest(in io.Reader) (*http.Request, error) {
-	req, err := http.NewRequest("POST", u.EndpointURL, in)
+func (u Uploader) newRequest(in io.Reader, url string) (*http.Request, error) {
+	req, err := http.NewRequest("POST", url, in)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 	req.Header.Set("User-Agent", fmt.Sprintf("TestReporter/%s (Code Climate, Inc.)", version.Version))
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-CC-Test-Reporter-Id", u.ReporterID)
+	req.Header.Set("Accept", "application/vnd.api+json")
 	return req, err
 }
