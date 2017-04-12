@@ -27,9 +27,6 @@ func Test_Format(t *testing.T) {
 
 	r.InDelta(90.38, rep.CoveredPercent, 1)
 
-	env, err := env.New()
-	r.NoError(err)
-	r.Equal(env, rep.CIService)
 	r.Len(rep.SourceFiles, len(rb.SourceFiles))
 
 	sf := rb.SourceFiles[0]
