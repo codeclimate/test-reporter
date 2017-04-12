@@ -1,19 +1,19 @@
 {
   "ci_service": {
     "branch": "master",
-    "build_identifier": "",
-    "build_url": "",
+    "build_identifier": "3",
+    "build_url": "4",
     "commit_sha": "700e63d964e0ca1c22fdb11b806109836ca77365",
     "committed_at": 1489695537,
-    "name": ""
+    "name": "travis"
   },
   "environment": {
     "gem_version": "2.6.10",
-    "package_version": "",
+    "package_version": "42",
     "pwd": "/go/src/github.com/codeclimate/test-reporter/simplecov-test-reporter",
-    "rails_root": "",
-    "reporter_version": "",
-    "simplecov_root": ""
+    "rails_root": "/rails",
+    "reporter_version": "1",
+    "simplecov_root": "/scov"
   },
   "git": {
     "branch": "master",

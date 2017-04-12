@@ -14,14 +14,23 @@ import (
 )
 
 type Report struct {
-	CIService       env.Environment `json:"ci_service"`
-	Environment     ccEnvironment   `json:"environment"`
-	Git             ccGit           `json:"git"`
-	CoveredPercent  float64         `json:"covered_percent"`
-	CoveredStrength int             `json:"covered_strength"`
-	LineCounts      LineCounts      `json:"line_counts"`
-	SourceFiles     SourceFiles     `json:"source_files"`
-	RepoToken       string          `json:"repo_token"`
+	CIService       ccCIService `json:"ci_service"`
+	Environment     Environment `json:"environment"`
+	Git             ccGit       `json:"git"`
+	CoveredPercent  float64     `json:"covered_percent"`
+	CoveredStrength int         `json:"covered_strength"`
+	LineCounts      LineCounts  `json:"line_counts"`
+	SourceFiles     SourceFiles `json:"source_files"`
+	RepoToken       string      `json:"repo_token"`
+}
+
+type ccCIService struct {
+	Branch          string `json:"branch"`
+	BuildIdentifier string `json:"build_identifier"`
+	BuildURL        string `json:"build_url"`
+	CommitSHA       string `json:"commit_sha"`
+	CommittedAt     int    `json:"committed_at"`
+	Name            string `json:"name"`
 }
 
 type ccGit struct {
@@ -30,7 +39,7 @@ type ccGit struct {
 	CommittedAt int    `json:"committed_at" structs:"committed_at"`
 }
 
-type ccEnvironment struct {
+type Environment struct {
 	GemVersion      string `json:"gem_version"`
 	PackageVersion  string `json:"package_version"`
 	PWD             string `json:"pwd"`
@@ -39,8 +48,8 @@ type ccEnvironment struct {
 	SimplecovRoot   string `json:"simplecov_root"`
 }
 
-func newCCEnvironment() ccEnvironment {
-	cc := ccEnvironment{
+func newEnvironment() Environment {
+	cc := Environment{
 		RailsRoot:       envy.Get("RAILS_ROOT", ""),
 		ReporterVersion: version.Version,
 	}
@@ -64,19 +73,29 @@ func NewReport() (Report, error) {
 	rep := Report{
 		SourceFiles: SourceFiles{},
 		LineCounts:  LineCounts{},
-		Environment: newCCEnvironment(),
+		Environment: newEnvironment(),
 	}
 
 	e, err := env.New()
 	if err != nil {
 		return rep, err
 	}
-	rep.CIService = e
+
 	rep.Git = ccGit{
 		Branch:      e.Git.Branch,
 		Head:        e.Git.CommitSHA,
 		CommittedAt: e.Git.CommittedAt,
 	}
+
+	rep.CIService = ccCIService{
+		Branch:          e.Git.Branch,
+		BuildURL:        e.CI.BuildURL,
+		BuildIdentifier: e.CI.BuildID,
+		CommitSHA:       e.Git.CommitSHA,
+		CommittedAt:     e.Git.CommittedAt,
+		Name:            e.CI.Name,
+	}
+
 	rep.RepoToken = e.RepoToken
 
 	return rep, nil
