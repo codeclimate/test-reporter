@@ -1,0 +1,22 @@
+package upload
+
+import (
+	"github.com/codeclimate/test-reporter/formatters"
+	"github.com/markbates/pop/nulls"
+)
+
+type Coverage []nulls.Int
+
+type SourceFile struct {
+	BlobID          string                `json:"blob_id"`
+	Coverage        Coverage              `json:"coverage"`
+	CoveredPercent  float64               `json:"covered_percent"`
+	CoveredStrength int                   `json:"covered_strength"`
+	LineCounts      formatters.LineCounts `json:"line_counts"`
+	Path            string                `json:"path"`
+}
+
+type SourceFiles struct {
+	Type        string       `json:"type"`
+	SourceFiles []SourceFile `json:"source_files"`
+}
