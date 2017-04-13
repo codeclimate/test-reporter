@@ -90,16 +90,11 @@ func (u Uploader) SendBatches(rep *TestReport, url string) error {
 	}
 
 	for i, b := range batch {
-		sf := SourceFiles{
-			Type:        "test_report_files",
-			SourceFiles: b,
-		}
-
 		pr, pw := io.Pipe()
 		go func() {
 			defer pw.Close()
 			json.NewEncoder(pw).Encode(JSONWraper{
-				Data: sf,
+				Data: b,
 				Meta: map[string]int{
 					"current": i + 1,
 					"total":   len(batch),
