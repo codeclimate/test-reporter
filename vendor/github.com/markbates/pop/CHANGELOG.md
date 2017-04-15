@@ -1,5 +1,29 @@
 # Change Log
 
+## [v3.17.0](https://github.com/markbates/pop/tree/v3.17.0) (2017-04-11)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.16.0...v3.17.0)
+
+## [v3.16.0](https://github.com/markbates/pop/tree/v3.16.0) (2017-04-11)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.15.0...v3.16.0)
+
+**Closed issues:**
+
+- Address struct will become addres table name [\#61](https://github.com/markbates/pop/issues/61)
+
+## [v3.15.0](https://github.com/markbates/pop/tree/v3.15.0) (2017-04-11)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.14.1...v3.15.0)
+
+## [v3.14.1](https://github.com/markbates/pop/tree/v3.14.1) (2017-04-10)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.14.0...v3.14.1)
+
+## [v3.14.0](https://github.com/markbates/pop/tree/v3.14.0) (2017-04-10)
+[Full Changelog](https://github.com/markbates/pop/compare/v3.13.7...v3.14.0)
+
+**Closed issues:**
+
+- Cannot generate a config and cannot update pop [\#60](https://github.com/markbates/pop/issues/60)
+- How can I exec a raw sql query? [\#59](https://github.com/markbates/pop/issues/59)
+
 ## [v3.13.7](https://github.com/markbates/pop/tree/v3.13.7) (2017-04-04)
 [Full Changelog](https://github.com/markbates/pop/compare/v3.13.6...v3.13.7)
 

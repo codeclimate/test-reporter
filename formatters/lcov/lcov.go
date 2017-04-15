@@ -9,6 +9,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/formatters"
+	"github.com/codeclimate/test-reporter/env"
 	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
@@ -44,7 +45,8 @@ func (f *Formatter) Parse() error {
 	for _, line := range bytes.Split(b, []byte("\n")) {
 		if bytes.HasPrefix(line, []byte("SF:")) {
 			name := string(bytes.TrimSpace(bytes.TrimPrefix(line, []byte("SF:"))))
-			sf, err = formatters.NewSourceFile(name)
+			var gitHead, _ = env.GetHead()
+			sf, err = formatters.NewSourceFile(name, gitHead)
 			if err != nil {
 				return errors.WithStack(err)
 			}

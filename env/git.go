@@ -3,6 +3,7 @@ package env
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -11,6 +12,9 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"gopkg.in/src-d/go-git.v4"
+	"gopkg.in/src-d/go-git.v4/plumbing"
+	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
 type Git struct {
@@ -28,6 +32,25 @@ func (g Git) String() string {
 	out.WriteString("\nGIT_COMMITTED_AT=")
 	out.WriteString(fmt.Sprint(g.CommittedAt))
 	return out.String()
+}
+
+func GetHead() (*object.Commit, error) {
+	r, err := git.PlainOpen(".")
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	ref, err := r.Head()
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	commit, err := r.CommitObject(ref.Hash())
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return commit, nil
 }
 
 func findGitInfo() (Git, error) {
@@ -86,23 +109,27 @@ func GitSHA(path string) (string, error) {
 	return strings.TrimSpace(string(out)), nil
 }
 
-var GitBlob = func(path string) (string, error) {
-	sha, err := GitSHA(path)
+var GitBlob = func(path string, commit *object.Commit) (string, error) {
+	file, err := commit.File(path)
+
 	if err != nil {
 		return "", errors.WithStack(err)
 	}
-	cmd := exec.Command("git", "ls-tree", sha, "--", path)
-	cmd.Stderr = os.Stderr
-	out, err := cmd.Output()
+
+	res := strings.TrimSpace(file.Hash.String())
+	return res, nil
+}
+
+func FallbackBlob(path string) (string, error) {
+	file, err := ioutil.ReadFile(path)
+
 	if err != nil {
 		return "", errors.WithStack(err)
 	}
-	res := strings.TrimSpace(string(out))
-	matches := blobRegex.FindStringSubmatch(res)
-	if len(matches) == 0 {
-		return "", errors.Errorf("could not find blob id for file %s in %s", path, res)
-	}
-	return matches[1], nil
+
+	hash := plumbing.ComputeHash(plumbing.BlobObject, []byte(file))
+	res := hash.String()
+	return res, nil
 }
 
 func loadGitFromENV() (Git, error) {
