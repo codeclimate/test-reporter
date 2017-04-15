@@ -6,6 +6,8 @@ import (
 	"os"
 	"strings"
 
+	"gopkg.in/src-d/go-git.v4/plumbing/object"
+
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/gobuffalo/envy"
 	"github.com/markbates/pop/nulls"
@@ -67,7 +69,7 @@ func (sf *SourceFile) CalcLineCounts() {
 	sf.CoveredPercent = lc.CoveredPercent()
 }
 
-func NewSourceFile(name string) (SourceFile, error) {
+func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 	if prefix, err := envy.MustGet("PREFIX"); err == nil {
 		prefix := fmt.Sprintf("%s%s", prefix, string(os.PathSeparator))
 		name = strings.TrimPrefix(name, prefix)
@@ -75,7 +77,15 @@ func NewSourceFile(name string) (SourceFile, error) {
 
 	sf := SourceFile{Name: name}
 	var err error
-	sf.BlobID, err = env.GitBlob(name)
+
+	if commit != nil {
+		fmt.Print("git")
+		sf.BlobID, err = env.GitBlob(name, commit)
+	} else {
+		fmt.Print("fallback")
+		sf.BlobID, err = env.FallbackBlob(name)
+	}
+
 	return sf, err
 }
 

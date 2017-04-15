@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/pkg/errors"
 )
@@ -55,8 +56,9 @@ func (f *Formatter) Parse() error {
 			Timestamp:   v.Timestamp.Time(),
 			SourceFiles: make([]formatters.SourceFile, 0, len(v.Coverage)),
 		}
+		gitHead, _ := env.GetHead()
 		for n, ls := range v.Coverage {
-			fe, err := formatters.NewSourceFile(n)
+			fe, err := formatters.NewSourceFile(n, gitHead)
 			if err != nil {
 				return errors.WithStack(err)
 			}
