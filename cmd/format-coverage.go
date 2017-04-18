@@ -11,6 +11,7 @@ import (
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/codeclimate/test-reporter/formatters/lcov"
 	"github.com/codeclimate/test-reporter/formatters/simplecov"
+	"github.com/gobuffalo/envy"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -19,7 +20,7 @@ type CoverageFormatter struct {
 	In        formatters.Formatter
 	InputType string
 	Output    string
-	Print     bool
+	Prefix    string
 }
 
 var formatOptions = CoverageFormatter{}
@@ -38,6 +39,7 @@ var formatCoverageCmd = &cobra.Command{
 	Use:   "format-coverage",
 	Short: "Locate, parse, and re-format supported coverage sources.",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		envy.Set("PREFIX", formatOptions.Prefix)
 		// if a type is specified use that
 		if formatOptions.InputType != "" {
 			if f, ok := formatterMap[formatOptions.InputType]; ok {
@@ -74,7 +76,7 @@ func (f CoverageFormatter) Save() error {
 	}
 
 	var out io.Writer
-	if formatOptions.Print || formatOptions.Output == "-" {
+	if formatOptions.Output == "-" {
 		out = os.Stdout
 	} else {
 		err = os.MkdirAll(filepath.Dir(formatOptions.Output), 0755)
@@ -100,7 +102,9 @@ func (f CoverageFormatter) Save() error {
 }
 
 func init() {
-	formatCoverageCmd.Flags().BoolVarP(&formatOptions.Print, "print", "p", false, "prints to standard out only")
+	pwd, _ := os.Getwd()
+	formatOptions.Prefix = pwd
+	formatCoverageCmd.Flags().StringVarP(&formatOptions.Prefix, "prefix", "p", pwd, "the root directory where the coverage analysis was performed")
 	formatCoverageCmd.Flags().StringVarP(&formatOptions.Output, "output", "o", ccDefaultCoveragePath, "output path")
 	formatCoverageCmd.Flags().StringVarP(&formatOptions.InputType, "input-type", "t", "", fmt.Sprintf("type of input source to use [%s]", strings.Join(formatterList, ", ")))
 	RootCmd.AddCommand(formatCoverageCmd)
