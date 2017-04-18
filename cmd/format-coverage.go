@@ -103,7 +103,6 @@ func (f CoverageFormatter) Save() error {
 
 func init() {
 	pwd, _ := os.Getwd()
-	formatOptions.Prefix = pwd
 	formatCoverageCmd.Flags().StringVarP(&formatOptions.Prefix, "prefix", "p", pwd, "the root directory where the coverage analysis was performed")
 	formatCoverageCmd.Flags().StringVarP(&formatOptions.Output, "output", "o", ccDefaultCoveragePath, "output path")
 	formatCoverageCmd.Flags().StringVarP(&formatOptions.InputType, "input-type", "t", "", fmt.Sprintf("type of input source to use [%s]", strings.Join(formatterList, ", ")))
