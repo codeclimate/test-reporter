@@ -81,12 +81,12 @@ func Test_Report_Merge(t *testing.T) {
 	r.Equal(16815, main.LineCounts.Covered)
 	r.InDelta(86.76, main.LineCounts.CoveredPercent(), 1)
 
-	sf := main.SourceFiles["config/initializers/resque.rb"]
+	sf := main.SourceFiles["lib/code_climate/polymorphic_routes.rb"]
 	r.NotNil(sf)
-	r.Equal(14, sf.LineCounts.Total)
-	r.Equal(5, sf.LineCounts.Missed)
-	r.Equal(9, sf.LineCounts.Covered)
-	r.InDelta(64.28, sf.CoveredPercent, 1)
+	r.Equal(196, sf.LineCounts.Total)
+	r.Equal(59, sf.LineCounts.Missed)
+	r.Equal(137, sf.LineCounts.Covered)
+	r.InDelta(69.8, sf.CoveredPercent, 1)
 }
 
 func Test_Report_JSON_Unmarshal(t *testing.T) {
@@ -110,4 +110,48 @@ func Test_Report_JSON_Unmarshal(t *testing.T) {
 	r.Equal(8, lc.Missed)
 	r.Equal(58, lc.Covered)
 	r.Equal(66, lc.Total)
+}
+
+func Test_Merge_Issue_103(t *testing.T) {
+	r := require.New(t)
+
+	a, err := NewReport()
+	r.NoError(err)
+
+	a.SourceFiles = SourceFiles{
+		"app/jobs/initialize_account_seats.rb": SourceFile{
+			Name:           "app/jobs/initialize_account_seats.rb",
+			CoveredPercent: 100,
+			Coverage:       Coverage{nulls.NewInt(1), nulls.NewInt(1), nulls.NewInt(15), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.NewInt(3), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.Int{}, nulls.NewInt(1), nulls.NewInt(3), nulls.Int{}, nulls.Int{}},
+			LineCounts: LineCounts{
+				Missed:  0,
+				Covered: 8,
+				Total:   8,
+			},
+		},
+	}
+
+	b, err := NewReport()
+	r.NoError(err)
+
+	b.SourceFiles = SourceFiles{
+		"app/jobs/initialize_account_seats.rb": SourceFile{
+			Name:           "app/jobs/initialize_account_seats.rb",
+			CoveredPercent: 62.5,
+			Coverage:       Coverage{nulls.NewInt(1), nulls.NewInt(1), nulls.NewInt(0), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.NewInt(0), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.Int{}, nulls.NewInt(1), nulls.NewInt(0), nulls.Int{}, nulls.Int{}},
+			LineCounts: LineCounts{
+				Missed:  3,
+				Covered: 5,
+				Total:   8,
+			},
+		},
+	}
+
+	err = a.Merge(&b)
+	r.NoError(err)
+
+	r.InDelta(100, a.CoveredPercent, 1)
+	r.Equal(0, a.LineCounts.Missed)
+	r.Equal(8, a.LineCounts.Covered)
+	r.Equal(8, a.LineCounts.Total)
 }
