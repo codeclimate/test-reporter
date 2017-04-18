@@ -43,6 +43,7 @@ type Environment struct {
 	GemVersion      string `json:"gem_version"`
 	PackageVersion  string `json:"package_version"`
 	PWD             string `json:"pwd"`
+	Prefix          string `json:"prefix"`
 	RailsRoot       string `json:"rails_root"`
 	ReporterVersion string `json:"reporter_version"`
 	SimplecovRoot   string `json:"simplecov_root"`
@@ -52,6 +53,7 @@ func newEnvironment() Environment {
 	cc := Environment{
 		RailsRoot:       envy.Get("RAILS_ROOT", ""),
 		ReporterVersion: version.Version,
+		Prefix:          envy.Get("PREFIX", ""),
 	}
 
 	pwd, _ := os.Getwd()

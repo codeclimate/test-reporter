@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/codeclimate/test-reporter/env"
+	"github.com/gobuffalo/envy"
 	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
@@ -67,9 +68,9 @@ func (sf *SourceFile) CalcLineCounts() {
 }
 
 func NewSourceFile(name string) (SourceFile, error) {
-	if pwd, err := os.Getwd(); err == nil {
-		pwd := fmt.Sprintf("%s%s", pwd, string(os.PathSeparator))
-		name = strings.TrimPrefix(name, pwd)
+	if prefix, err := envy.MustGet("PREFIX"); err == nil {
+		prefix := fmt.Sprintf("%s%s", prefix, string(os.PathSeparator))
+		name = strings.TrimPrefix(name, prefix)
 	}
 
 	sf := SourceFile{Name: name}
