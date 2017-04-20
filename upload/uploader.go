@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/Sirupsen/logrus"
@@ -15,10 +14,10 @@ import (
 )
 
 type Uploader struct {
-	Input       string
 	ReporterID  string
 	EndpointURL string
 	BatchSize   int
+	Input       io.Reader
 }
 
 func (u Uploader) Upload() error {
@@ -26,23 +25,12 @@ func (u Uploader) Upload() error {
 		return errors.New("you must supply a CC_TEST_REPORTER_ID ENV variable or pass it via the -r flag")
 	}
 
-	var err error
-	var in io.Reader
-	if u.Input == "-" {
-		in = os.Stdin
-	} else {
-		in, err = os.Open(u.Input)
-		if err != nil {
-			return errors.WithStack(err)
-		}
-	}
-
 	rep, err := formatters.NewReport()
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
-	err = json.NewDecoder(in).Decode(&rep)
+	err = json.NewDecoder(u.Input).Decode(&rep)
 	if err != nil {
 		return errors.WithStack(err)
 	}
