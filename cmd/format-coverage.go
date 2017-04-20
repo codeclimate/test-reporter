@@ -21,6 +21,7 @@ type CoverageFormatter struct {
 	InputType string
 	Output    string
 	Prefix    string
+	writer    io.Writer
 }
 
 var formatOptions = CoverageFormatter{}
@@ -39,34 +40,38 @@ var formatCoverageCmd = &cobra.Command{
 	Use:   "format-coverage",
 	Short: "Locate, parse, and re-format supported coverage sources.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		envy.Set("PREFIX", formatOptions.Prefix)
-		// if a type is specified use that
-		if formatOptions.InputType != "" {
-			if f, ok := formatterMap[formatOptions.InputType]; ok {
-				logrus.Debugf("using formatter %s", formatOptions.InputType)
-				formatOptions.In = f
-			} else {
-				return errors.WithStack(errors.Errorf("could not find a formatter of type %s", formatOptions.InputType))
-			}
-		} else {
-			logrus.Debug("searching for a formatter to use")
-			// else start searching for files:
-			for n, f := range formatterMap {
-				logrus.Debugf("checking %s formatter", n)
-				if p, err := f.Search(); err == nil {
-					logrus.Debugf("found file %s for %s formatter", p, n)
-					formatOptions.In = f
-					break
-				}
-			}
-		}
-
-		if formatOptions.In == nil {
-			return errors.WithStack(errors.Errorf("could not find any viable formatter. available formatters: %s", strings.Join(formatterList, ", ")))
-		}
-
-		return formatOptions.Save()
+		return runFormatter(formatOptions)
 	},
+}
+
+func runFormatter(formatOptions CoverageFormatter) error {
+	envy.Set("PREFIX", formatOptions.Prefix)
+	// if a type is specified use that
+	if formatOptions.InputType != "" {
+		if f, ok := formatterMap[formatOptions.InputType]; ok {
+			logrus.Debugf("using formatter %s", formatOptions.InputType)
+			formatOptions.In = f
+		} else {
+			return errors.WithStack(errors.Errorf("could not find a formatter of type %s", formatOptions.InputType))
+		}
+	} else {
+		logrus.Debug("searching for a formatter to use")
+		// else start searching for files:
+		for n, f := range formatterMap {
+			logrus.Debugf("checking %s formatter", n)
+			if p, err := f.Search(); err == nil {
+				logrus.Debugf("found file %s for %s formatter", p, n)
+				formatOptions.In = f
+				break
+			}
+		}
+	}
+
+	if formatOptions.In == nil {
+		return errors.WithStack(errors.Errorf("could not find any viable formatter. available formatters: %s", strings.Join(formatterList, ", ")))
+	}
+
+	return formatOptions.Save()
 }
 
 func (f CoverageFormatter) Save() error {
@@ -75,17 +80,18 @@ func (f CoverageFormatter) Save() error {
 		return errors.WithStack(err)
 	}
 
-	var out io.Writer
-	if formatOptions.Output == "-" {
-		out = os.Stdout
-	} else {
-		err = os.MkdirAll(filepath.Dir(formatOptions.Output), 0755)
-		if err != nil {
-			return errors.WithStack(err)
-		}
-		out, err = os.Create(formatOptions.Output)
-		if err != nil {
-			return errors.WithStack(err)
+	if f.writer == nil {
+		if formatOptions.Output == "-" {
+			f.writer = os.Stdout
+		} else {
+			err = os.MkdirAll(filepath.Dir(formatOptions.Output), 0755)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+			f.writer, err = os.Create(formatOptions.Output)
+			if err != nil {
+				return errors.WithStack(err)
+			}
 		}
 	}
 
@@ -94,7 +100,7 @@ func (f CoverageFormatter) Save() error {
 		return errors.WithStack(err)
 	}
 
-	err = rep.Save(out)
+	err = rep.Save(f.writer)
 	if err != nil {
 		return errors.WithStack(err)
 	}
