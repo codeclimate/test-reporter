@@ -110,17 +110,29 @@ func GitSHA(path string) (string, error) {
 }
 
 var GitBlob = func(path string, commit *object.Commit) (string, error) {
+
+	if commit == nil {
+		blob, err := fallbackBlob(path)
+
+		if err != nil {
+			return "", errors.WithStack(err)
+		}
+
+		return blob, nil
+	}
+
 	file, err := commit.File(path)
 
 	if err != nil {
 		return "", errors.WithStack(err)
 	}
 
-	res := strings.TrimSpace(file.Hash.String())
-	return res, nil
+	blob := strings.TrimSpace(file.Hash.String())
+
+	return blob, nil
 }
 
-func FallbackBlob(path string) (string, error) {
+func fallbackBlob(path string) (string, error) {
 	file, err := ioutil.ReadFile(path)
 
 	if err != nil {
