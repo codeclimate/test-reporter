@@ -78,13 +78,7 @@ func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 	sf := SourceFile{Name: name}
 	var err error
 
-	if commit != nil {
-		fmt.Print("git")
-		sf.BlobID, err = env.GitBlob(name, commit)
-	} else {
-		fmt.Print("fallback")
-		sf.BlobID, err = env.FallbackBlob(name)
-	}
+	sf.BlobID, err = env.GitBlob(name, commit)
 
 	return sf, err
 }
