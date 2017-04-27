@@ -1,0 +1,36 @@
+{
+  "name-a": {
+    "coverage": {
+      "/home/patrick/code/codeclimate/ruby-test-reporter/lib/codeclimate-test-reporter.rb": [
+        1,
+        1,
+        1,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "timestamp": 1489777915
+  },
+  "name-b": {
+    "coverage": {
+      "/home/patrick/code/codeclimate/ruby-test-reporter/lib/codeclimate-test-reporter.rb": [
+        null,
+        null,
+        null,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "timestamp": 1489777982
+  }
+}
