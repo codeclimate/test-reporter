@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"encoding/json"
-	"io"
 	"os"
 	"path/filepath"
 
@@ -13,7 +12,7 @@ import (
 
 type CoverageSummer struct {
 	Output string
-	Print  bool
+	Parts  int
 }
 
 var summerOptions = CoverageSummer{}
@@ -25,6 +24,10 @@ var sumCoverageCmd = &cobra.Command{
 		if len(args) == 0 {
 			return errors.New("you must pass in one or more files to be summarized")
 		}
+		if summerOptions.Parts != 0 && len(args) != summerOptions.Parts {
+			return errors.Errorf("expected %d parts, received only %d parts", summerOptions.Parts, len(args))
+		}
+
 		rep, err := formatters.NewReport()
 		if err != nil {
 			return errors.WithStack(err)
@@ -45,18 +48,13 @@ var sumCoverageCmd = &cobra.Command{
 			rep.Merge(&rr)
 		}
 
-		var out io.Writer
-		if summerOptions.Print {
-			out = os.Stdout
-		} else {
-			err = os.MkdirAll(filepath.Dir(summerOptions.Output), 0755)
-			if err != nil {
-				return errors.WithStack(err)
-			}
-			out, err = os.Create(summerOptions.Output)
-			if err != nil {
-				return errors.WithStack(err)
-			}
+		err = os.MkdirAll(filepath.Dir(summerOptions.Output), 0755)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		out, err := os.Create(summerOptions.Output)
+		if err != nil {
+			return errors.WithStack(err)
 		}
 
 		err = rep.Save(out)
@@ -68,7 +66,7 @@ var sumCoverageCmd = &cobra.Command{
 }
 
 func init() {
-	sumCoverageCmd.Flags().BoolVarP(&summerOptions.Print, "print", "p", false, "prints to standard out only")
+	sumCoverageCmd.Flags().IntVarP(&summerOptions.Parts, "parts", "p", 0, "total number of parts to sum")
 	sumCoverageCmd.Flags().StringVarP(&summerOptions.Output, "output", "o", ccDefaultCoveragePath, "output path")
 	RootCmd.AddCommand(sumCoverageCmd)
 }
