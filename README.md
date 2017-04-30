@@ -4,8 +4,6 @@ Report information about your CI builds to Code Climate.
 
 ## Installation & Usage
 
-**NOTE**: this is *proposed* usage, we've not built this yet.
-
 Most CI systems allow configuration of commands to run as part of setup, before,
 and after a test build. Using Circle CI as an example:
 
@@ -16,7 +14,7 @@ machine:
 
 dependencies:
   post:
-    - curl -L https://s3.amazonaws.com/codeclimate/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     - chmod +x ./cc-test-reporter
 
 test:
@@ -79,7 +77,7 @@ For example:
 
    ```sh
    aws s3 sync "s3://my-bucket/coverage/$SHA" coverage/
-   cc-test-reporter sum-coverage --output - coverage/codeclimate.*.json | \
+   cc-test-reporter sum-coverage --output - --parts <number-partials-results> coverage/codeclimate.*.json | \
      cc-test-reporter upload-coverage --input -
    ```
 

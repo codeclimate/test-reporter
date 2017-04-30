@@ -21,6 +21,11 @@ Locate, parse, and re-format supported coverage sources.
 Output to *PATH*. If *-* is given, content will be written to *stdout*. Defaults
 to *coverage/codeclimate.json*.
 
+## -p, --prefix *PATH*
+
+*PATH* of the working directory where the tests were run. Defaults to current
+working directory.
+
 # SUPPORTED SOURCES
 
 The formatter will look for each of the paths in the following list and process
