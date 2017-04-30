@@ -21,6 +21,10 @@ Combine (sum) multiple pre-formatted coverage payloads into one.
 Output to *PATH*. If *-* is given, content will be written to *stdout*. Defaults
 to *coverage/codeclimate.json*.
 
+## -p, --parts *NUMBER*
+
+*NUMBER* of partial test coverage results. Required flag.
+
 ## FILE [FILE, ...]
 
 Input files to combine. These are expected to be pre-formatted coverage
