@@ -77,9 +77,13 @@ For example:
 
    ```sh
    aws s3 sync "s3://my-bucket/coverage/$SHA" coverage/
-   cc-test-reporter sum-coverage --output - --parts <number-partials-results> coverage/codeclimate.*.json | \
+   cc-test-reporter sum-coverage --output - --parts $PARTS coverage/codeclimate.*.json | \
      cc-test-reporter upload-coverage --input -
    ```
+
+   Where:
+
+   - `$PARTS` should be the number of payloads to sum.
 
 ## Multiple Suites
 
