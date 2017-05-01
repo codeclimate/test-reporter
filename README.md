@@ -22,8 +22,13 @@ test:
     - ./cc-test-reporter before-build
 
   post:
-    - ./cc-test-reporter after-build --exit-code $CIRCLE_EXIT_CODE
+    - ./cc-test-reporter after-build --exit-code $TEST_SUITE_EXIT_CODE
 ```
+
+  Where:
+
+  - `$TEST_EXIT_CODE` should be the exit code when the test suite ran. Some CI
+    services don't expose directly a var with the
 
 ## Code Climate: Enterprise
 
