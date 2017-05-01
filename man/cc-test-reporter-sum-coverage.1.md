@@ -8,7 +8,7 @@ This is a sub-command of **cc-test-reporter**(1).
 
 # SYNOPSIS
 
-**cc-test-reporter-sum-coverage** [--output=\<path>] FILE [FILE, ...]
+**cc-test-reporter-sum-coverage** --parts=\<number> [--output=\<path>] FILE [FILE, ...]
 
 # DESCRIPTION
 
@@ -23,7 +23,8 @@ to *coverage/codeclimate.json*.
 
 ## -p, --parts *NUMBER*
 
-*NUMBER* of partial test coverage results. Required flag.
+Expect *NUMBER* payloads to sum. If this many arguments are not present,
+command will error. This ensures you don't accidentally sum incomplete results.
 
 ## FILE [FILE, ...]
 

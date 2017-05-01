@@ -8,7 +8,7 @@ This is a sub-command of **cc-test-reporter**(1).
 
 # SYNOPSIS
 
-**cc-test-reporter-format-coverage** [--output=\<path>]
+**cc-test-reporter-format-coverage** [--output=\<path>] [--prefix=\<path>]
 
 # DESCRIPTION
 
@@ -23,8 +23,9 @@ to *coverage/codeclimate.json*.
 
 ## -p, --prefix *PATH*
 
-*PATH* of the working directory where the tests were run. Defaults to current
-working directory.
+The prefix *PATH* to remove from absolute paths in coverage payloads, to make
+them relative to the project root. This is usually the directory in which the
+tests were run. Defaults to current working directory.
 
 # SUPPORTED SOURCES
 
