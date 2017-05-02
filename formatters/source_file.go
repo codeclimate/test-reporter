@@ -75,7 +75,10 @@ func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 		name = strings.TrimPrefix(name, prefix)
 	}
 
-	sf := SourceFile{Name: name}
+	sf := SourceFile{
+		Name:     name,
+		Coverage: Coverage{},
+	}
 	var err error
 
 	sf.BlobID, err = env.GitBlob(name, commit)
