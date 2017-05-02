@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-var searchPaths = []string{".coverage"}
+var searchPaths = []string{"coverage.xml"}
 
 type Formatter struct {
 	Path        string
@@ -62,6 +62,15 @@ func (f *Formatter) Parse() error {
 	return nil
 }
 
-func (f *Formatter) Format() (formatters.Report, error) {
-	panic("not implemented")
+func (r *Formatter) Format() (formatters.Report, error) {
+	rep, err := formatters.NewReport()
+	if err != nil {
+		return rep, err
+	}
+
+	for _, f := range r.SourceFiles {
+		rep.AddSourceFile(f)
+	}
+
+	return rep, nil
 }
