@@ -23,7 +23,7 @@ to *coverage/codeclimate.json*.
 
 ## -p, --prefix *PATH*
 
-The prefix *PATH* to remove from absolute paths in coverage payloads, to make
+The prefix to remove from absolute paths in coverage payloads, to make
 them relative to the project root. This is usually the directory in which the
 tests were run. Defaults to current working directory.
 
