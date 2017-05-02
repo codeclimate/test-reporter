@@ -3,6 +3,8 @@ package lcov
 import (
 	"testing"
 
+	"gopkg.in/src-d/go-git.v4/plumbing/object"
+
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/stretchr/testify/require"
 )
@@ -10,7 +12,7 @@ import (
 func Test_Formatter_Parse(t *testing.T) {
 	gb := env.GitBlob
 	defer func() { env.GitBlob = gb }()
-	env.GitBlob = func(s string) (string, error) {
+	env.GitBlob = func(s string, c *object.Commit) (string, error) {
 		return s, nil
 	}
 

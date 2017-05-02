@@ -3,6 +3,8 @@ package simplecov
 import (
 	"testing"
 
+	"gopkg.in/src-d/go-git.v4/plumbing/object"
+
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/stretchr/testify/require"
 )
@@ -12,7 +14,7 @@ func Test_Parse(t *testing.T) {
 	defer func() {
 		env.GitBlob = ogb
 	}()
-	env.GitBlob = func(s string) (string, error) {
+	env.GitBlob = func(s string, c *object.Commit) (string, error) {
 		return s, nil
 	}
 

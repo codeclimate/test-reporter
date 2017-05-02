@@ -28,7 +28,7 @@ func Test_SourceFile_Merge(t *testing.T) {
 
 func Test_SourceFile_BlobID(t *testing.T) {
 	r := require.New(t)
-	sf, err := NewSourceFile("./coverage.go")
+	sf, err := NewSourceFile("./coverage.go", nil)
 	r.NoError(err)
 	r.NotZero(sf.BlobID)
 	r.NotContains(sf.BlobID, "blob")
