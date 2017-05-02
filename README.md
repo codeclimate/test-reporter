@@ -22,13 +22,15 @@ test:
     - ./cc-test-reporter before-build
 
   post:
-    - ./cc-test-reporter after-build --exit-code $TEST_SUITE_EXIT_CODE
+    - ./cc-test-reporter after-build --exit-code $EXIT_CODE
 ```
 
   Where:
 
-  - `$TEST_EXIT_CODE` should be the exit code when the test suite ran. Some CI
-    services don't expose directly a var with the
+  - `$EXIT_CODE` should be the exit code of your test suite process. Some CI
+     system expose this as an environment variable; for others, you may need
+     to manually capture $? to provide it to after-build later. Providing this
+     will enable future Code Climate features such as pass/fail metrics.
 
 ## Code Climate: Enterprise
 
