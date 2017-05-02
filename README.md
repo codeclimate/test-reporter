@@ -30,7 +30,7 @@ test:
   - `$EXIT_CODE` should be the exit code of your test suite process. Some CI
      system expose this as an environment variable; for others, you may need
      to manually capture $? to provide it to after-build later. Providing this
-     will enable future Code Climate features such as pass/fail metrics.
+     will prevent sending test coverage results for failed tests. 
 
 ## Code Climate: Enterprise
 
