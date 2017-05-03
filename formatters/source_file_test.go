@@ -23,7 +23,8 @@ func Test_SourceFile_Merge(t *testing.T) {
 	r.Equal("a", c.BlobID)
 	r.Equal(4, len(c.Coverage))
 	r.InDelta(75.0, c.CoveredPercent, 1)
-	r.Equal(LineCounts{Total: 4, Missed: 1, Covered: 3}, c.LineCounts)
+	r.InDelta(2.2, c.CoveredStrength, 1)
+	r.Equal(LineCounts{Total: 4, Missed: 1, Covered: 3, Strength: 9}, c.LineCounts)
 }
 
 func Test_SourceFile_BlobID(t *testing.T) {
