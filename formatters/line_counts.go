@@ -1,5 +1,7 @@
 package formatters
 
+import "math"
+
 type LineCounts struct {
 	Missed  int `json:"missed"`
 	Covered int `json:"covered"`
@@ -7,5 +9,9 @@ type LineCounts struct {
 }
 
 func (lc LineCounts) CoveredPercent() float64 {
-	return (float64(lc.Covered) / float64(lc.Total)) * 100
+	f := (float64(lc.Covered) / float64(lc.Total)) * 100
+	if math.IsNaN(f) {
+		return 0
+	}
+	return f
 }
