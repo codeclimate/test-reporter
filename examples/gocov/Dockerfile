@@ -18,5 +18,5 @@ RUN git add ignore.me
 RUN git commit -m "testing"
 
 ENV CC_TEST_REPORTER_ID=c4881e09870b0fac1291c93339b36ffe36210a2645c1ad25e52d8fda3943fb4d
-RUN test-reporter format-coverage -d -p github.com/codeclimate/test-reporter
+RUN test-reporter format-coverage -d
 RUN test-reporter upload-coverage -d -s 2
