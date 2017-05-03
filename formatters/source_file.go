@@ -79,11 +79,14 @@ func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 		Name:     name,
 		Coverage: Coverage{},
 	}
+
 	var err error
-
 	sf.BlobID, err = env.GitBlob(name, commit)
+	if err != nil {
+		return sf, errors.WithStack(err)
+	}
 
-	return sf, err
+	return sf, nil
 }
 
 type SourceFiles map[string]SourceFile

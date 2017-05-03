@@ -59,6 +59,9 @@ test-lcov:
 test-covpy:
 	docker build -f examples/coverage_py/Dockerfile .
 
+test-gocov:
+	docker build -f examples/gocov/Dockerfile .
+
 publish:
 	$(AWS) s3 cp --acl public-read --recursive artifacts/bin/ s3://codeclimate/test-reporter/ --exclude "*" --include "test-reporter-*"
 
