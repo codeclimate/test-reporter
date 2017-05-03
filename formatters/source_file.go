@@ -95,11 +95,6 @@ func (sf SourceFiles) MarshalJSON() ([]byte, error) {
 	files := []SourceFile{}
 	for _, s := range sf {
 		s.CalcLineCounts()
-		_, err := json.Marshal(s)
-		if err != nil {
-			fmt.Printf("### s.Name -> %+v\n", s.Name)
-			fmt.Printf("### err -> %+v\n", err)
-		}
 		files = append(files, s)
 	}
 	b, err := json.Marshal(files)
