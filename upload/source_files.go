@@ -12,7 +12,7 @@ type SourceFile struct {
 	BlobID          string                `json:"blob_id"`
 	Coverage        Coverage              `json:"coverage"`
 	CoveredPercent  float64               `json:"covered_percent"`
-	CoveredStrength int                   `json:"covered_strength"`
+	CoveredStrength float64               `json:"covered_strength"`
 	LineCounts      formatters.LineCounts `json:"line_counts"`
 	Path            string                `json:"path"`
 }

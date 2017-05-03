@@ -18,7 +18,7 @@ type SourceFile struct {
 	BlobID          string     `json:"blob_id"`
 	Coverage        Coverage   `json:"coverage"`
 	CoveredPercent  float64    `json:"covered_percent"`
-	CoveredStrength int        `json:"covered_strength"`
+	CoveredStrength float64    `json:"covered_strength"`
 	LineCounts      LineCounts `json:"line_counts"`
 	Name            string     `json:"name"`
 }
@@ -59,6 +59,7 @@ func (sf *SourceFile) CalcLineCounts() {
 			continue
 		}
 		lc.Total++
+		lc.Strength += c.Int
 		if c.Int == 0 {
 			lc.Missed++
 			continue
@@ -67,6 +68,7 @@ func (sf *SourceFile) CalcLineCounts() {
 	}
 	sf.LineCounts = lc
 	sf.CoveredPercent = lc.CoveredPercent()
+	sf.CoveredStrength = lc.CoveredStrength()
 }
 
 func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
