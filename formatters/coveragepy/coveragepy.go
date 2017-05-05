@@ -51,8 +51,15 @@ func (f *Formatter) Parse() error {
 			if err != nil {
 				return errors.WithStack(err)
 			}
+			num := 1
 			for _, l := range cc.Lines {
-				sf.Coverage = append(sf.Coverage, nulls.NewInt(l.Hits))
+				for num < l.Number {
+					sf.Coverage = append(sf.Coverage, nulls.Int{})
+					num++
+				}
+				ni := nulls.NewInt(l.Hits)
+				sf.Coverage = append(sf.Coverage, ni)
+				num++
 			}
 			sf.CalcLineCounts()
 			f.SourceFiles = append(f.SourceFiles, sf)

@@ -26,4 +26,9 @@ func Test_Parse(t *testing.T) {
 	sf := f.SourceFiles[11]
 	r.Equal("codeclimate_test_reporter/components/runner.py", sf.Name)
 	r.InDelta(85.71, sf.CoveredPercent, 1)
+	r.Len(sf.Coverage, 82)
+	r.False(sf.Coverage[53].Valid)
+	r.True(sf.Coverage[54].Valid)
+	r.Equal(1, sf.Coverage[54].Int)
+	r.Equal(0, sf.Coverage[55].Int)
 }

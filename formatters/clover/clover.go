@@ -47,12 +47,19 @@ func (f *Formatter) Parse() error {
 	gitHead, _ := env.GetHead()
 	for _, pp := range c.Packages {
 		for _, pf := range pp.Files {
+			num := 1
 			sf, err := formatters.NewSourceFile(pf.Name, gitHead)
 			if err != nil {
 				return errors.WithStack(err)
 			}
 			for _, l := range pf.Lines {
-				sf.Coverage = append(sf.Coverage, nulls.NewInt(l.Count))
+				for num < l.Num {
+					sf.Coverage = append(sf.Coverage, nulls.Int{})
+					num++
+				}
+				ni := nulls.NewInt(l.Count)
+				sf.Coverage = append(sf.Coverage, ni)
+				num++
 			}
 			sf.CalcLineCounts()
 			f.SourceFiles = append(f.SourceFiles, sf)
