@@ -110,7 +110,6 @@ func GitSHA(path string) (string, error) {
 }
 
 var GitBlob = func(path string, commit *object.Commit) (string, error) {
-
 	if commit == nil {
 		blob, err := fallbackBlob(path)
 

@@ -59,6 +59,9 @@ test-lcov:
 test-covpy:
 	docker build -f examples/coverage_py/Dockerfile .
 
+test-gocov:
+	docker build -f examples/gocov/Dockerfile .
+
 test-clover:
 	docker build -f examples/clover/Dockerfile .
 
