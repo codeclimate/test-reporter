@@ -9,6 +9,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/formatters"
+	"github.com/codeclimate/test-reporter/formatters/clover"
 	"github.com/codeclimate/test-reporter/formatters/coveragepy"
 	"github.com/codeclimate/test-reporter/formatters/gocov"
 	"github.com/codeclimate/test-reporter/formatters/lcov"
@@ -29,7 +30,7 @@ type CoverageFormatter struct {
 var formatOptions = CoverageFormatter{}
 
 // a prioritized list of the formatters to use
-var formatterList = []string{"simplecov", "lcov", "coverage.py", "gocov"}
+var formatterList = []string{"simplecov", "lcov", "coverage.py", "clover", "gocov"}
 
 // a map of the formatters to use
 var formatterMap = map[string]formatters.Formatter{
@@ -37,6 +38,7 @@ var formatterMap = map[string]formatters.Formatter{
 	"lcov":        &lcov.Formatter{},
 	"coverage.py": &coveragepy.Formatter{},
 	"gocov":       &gocov.Formatter{},
+	"clover":      &clover.Formatter{},
 }
 
 // formatCoverageCmd represents the format command

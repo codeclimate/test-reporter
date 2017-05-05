@@ -8,7 +8,7 @@ MAN_FILES = $(wildcard man/*.md)
 MAN_PAGES = $(patsubst man/%.md,man/%,$(MAN_FILES))
 
 PROJECT = github.com/codeclimate/test-reporter
-VERSION ?= 0.1.2
+VERSION ?= 0.1.3
 BUILD_VERSION = $(shell git log -1 --pretty=format:'%H')
 BUILD_TIME = $(shell date +%FT%T%z)
 LDFLAGS = -ldflags "-X $(PROJECT)/version.Version=${VERSION} -X $(PROJECT)/version.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/version.BuildTime=${BUILD_TIME}"
@@ -61,6 +61,9 @@ test-covpy:
 
 test-gocov:
 	docker build -f examples/gocov/Dockerfile .
+
+test-clover:
+	docker build -f examples/clover/Dockerfile .
 
 publish:
 	$(AWS) s3 cp --acl public-read --recursive artifacts/bin/ s3://codeclimate/test-reporter/ --exclude "*" --include "test-reporter-*"

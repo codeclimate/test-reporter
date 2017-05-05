@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/codeclimate/test-reporter/env"
+	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
@@ -33,6 +33,7 @@ func (f *Formatter) Search(paths ...string) (string, error) {
 
 	return "", errors.WithStack(errors.Errorf("could not find any files in search paths for lcov. search paths were: %s", strings.Join(paths, ", ")))
 }
+
 func (f *Formatter) Parse() error {
 	b, err := ioutil.ReadFile(f.Path)
 	if err != nil {

@@ -3,9 +3,11 @@ package formatters
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"strings"
 
 	"github.com/markbates/pop/nulls"
+	"github.com/pkg/errors"
 )
 
 type Coverage []nulls.Int
@@ -23,7 +25,14 @@ func (c Coverage) MarshalJSON() ([]byte, error) {
 	if err != nil {
 		return bb.Bytes(), err
 	}
-	return json.Marshal(strings.TrimSpace(bb.String()))
+	b, err := json.Marshal(strings.TrimSpace(bb.String()))
+
+	if err != nil {
+		fmt.Printf("### err -> %+v\n", err)
+		return b, errors.WithStack(err)
+	}
+
+	return b, nil
 }
 
 func (c *Coverage) UnmarshalJSON(text []byte) error {
