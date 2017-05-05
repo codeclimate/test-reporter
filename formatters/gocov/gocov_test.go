@@ -27,4 +27,5 @@ func Test_Parse(t *testing.T) {
 	sf := f.SourceFiles[3]
 	r.Equal("github.com/codeclimate/test-reporter/formatters/source_file.go", sf.Name)
 	r.InDelta(77.4, sf.CoveredPercent, 1)
+	r.Len(sf.Coverage, 116)
 }

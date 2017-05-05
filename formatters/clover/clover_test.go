@@ -26,4 +26,5 @@ func Test_Parse(t *testing.T) {
 	sf := f.SourceFiles[10]
 	r.Equal("/Users/markbates/Dropbox/development/php-test-reporter/src/TestReporter/Entity/CiInfo.php", sf.Name)
 	r.InDelta(91.78, sf.CoveredPercent, 1)
+	r.Len(sf.Coverage, 194)
 }

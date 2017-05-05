@@ -9,6 +9,7 @@ type xmlFile struct {
 		Files []struct {
 			Name  string `xml:"name,attr"`
 			Lines []struct {
+				Num   int `xml:"num,attr"`
 				Count int `xml:"count,attr"`
 			} `xml:"line"`
 		} `xml:"file"`
