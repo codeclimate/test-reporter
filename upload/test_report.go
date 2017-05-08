@@ -31,7 +31,7 @@ func NewTestReport(rep formatters.Report) *TestReport {
 		tr.SourceFiles = append(tr.SourceFiles, SourceFile{
 			Type:            "test_file_reports",
 			BlobID:          sf.BlobID,
-			Coverage:        Coverage(sf.Coverage),
+			Coverage:        sf.Coverage,
 			CoveredPercent:  sf.CoveredPercent,
 			CoveredStrength: sf.CoveredStrength,
 			LineCounts:      sf.LineCounts,
