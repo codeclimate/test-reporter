@@ -27,6 +27,11 @@ for x in man/*.1; do man "$x"; done
 - [Files](/examples/ruby)
 - [Project](https://github.com/codeclimate/ruby-test-reporter/tree/1ec10f635414c70dc4e9c102825557b6510a8037)
 
+### Cobertura
+
+- [File](/examples/cobertura/coverage.xml)
+- [Project](https://github.com/codeclimate-testing/cobertura-example/tree/d4ae1230498120ca6160343943298bcf7c6f202c)
+
 ## Coverage Payload
 
 The coverage payload expected by Code Climate is defined canonically by
