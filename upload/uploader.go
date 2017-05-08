@@ -1,6 +1,7 @@
 package upload
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -40,7 +41,14 @@ func (u Uploader) Upload() error {
 	pr, pw := io.Pipe()
 	go func() {
 		defer pw.Close()
-		json.NewEncoder(pw).Encode(JSONWraper{Data: testReport})
+		bb := &bytes.Buffer{}
+		w := io.MultiWriter(pw, bb)
+		err := json.NewEncoder(w).Encode(JSONWraper{Data: testReport})
+		if err != nil {
+			logrus.Error(err)
+			return
+		}
+		logrus.Debug(bb.String())
 	}()
 
 	res, err := u.doRequest(pr, u.EndpointURL)
@@ -81,13 +89,20 @@ func (u Uploader) SendBatches(rep *TestReport, url string) error {
 		pr, pw := io.Pipe()
 		go func() {
 			defer pw.Close()
-			json.NewEncoder(pw).Encode(JSONWraper{
+			bb := &bytes.Buffer{}
+			w := io.MultiWriter(pw, bb)
+			err := json.NewEncoder(w).Encode(JSONWraper{
 				Data: b,
 				Meta: map[string]int{
 					"current": i + 1,
 					"total":   len(batch),
 				},
 			})
+			if err != nil {
+				logrus.Error(err)
+				return
+			}
+			logrus.Debug(bb.String())
 		}()
 		_, err := u.doRequest(pr, url)
 		if err != nil {
