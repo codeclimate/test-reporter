@@ -93,6 +93,7 @@ TODO
 To release a new version,
 
 * Update VERSION in Makefile
+* Update CHANGELOG
 * Run
   ```
     make release
