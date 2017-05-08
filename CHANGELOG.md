@@ -2,9 +2,12 @@
 
 ## Unreleased
 
+## v0.1.4 [(2017-05-08)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.4)
+
 * [NEW] Add `Gocov` support
 * [NEW] Add `Clover XML` support
 * [NEW] Add coverage strength for tools that don't calculate it.
+* [FIX] Ensure "blank" lines on source file's coverage
 
 ## v0.1.3 [(2017-05-03)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.3)
 
