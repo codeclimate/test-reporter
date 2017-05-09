@@ -32,6 +32,11 @@ for x in man/*.1; do man "$x"; done
 - [File](/examples/cobertura/coverage.xml)
 - [Project](https://github.com/codeclimate-testing/cobertura-example/tree/d4ae1230498120ca6160343943298bcf7c6f202c)
 
+### JaCoCo
+
+- [File](/examples/jacoco.xml)
+- [Project](https://github.com/marchof/jacoco-maven-examples/tree/90708bf/org.jacoco.examples.maven.java)
+
 ## Coverage Payload
 
 The coverage payload expected by Code Climate is defined canonically by
