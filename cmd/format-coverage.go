@@ -14,6 +14,7 @@ import (
 	"github.com/codeclimate/test-reporter/formatters/gocov"
 	"github.com/codeclimate/test-reporter/formatters/lcov"
 	"github.com/codeclimate/test-reporter/formatters/simplecov"
+	"github.com/codeclimate/test-reporter/formatters/swiftcov"
 	"github.com/gobuffalo/envy"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -30,7 +31,7 @@ type CoverageFormatter struct {
 var formatOptions = CoverageFormatter{}
 
 // a prioritized list of the formatters to use
-var formatterList = []string{"simplecov", "lcov", "coverage.py", "clover", "gocov"}
+var formatterList = []string{"simplecov", "lcov", "coverage.py", "clover", "gocov", "swiftcov"}
 
 // a map of the formatters to use
 var formatterMap = map[string]formatters.Formatter{
@@ -39,6 +40,7 @@ var formatterMap = map[string]formatters.Formatter{
 	"coverage.py": &coveragepy.Formatter{},
 	"gocov":       &gocov.Formatter{},
 	"clover":      &clover.Formatter{},
+	"swiftcov":    &swiftcov.Formatter{},
 }
 
 // formatCoverageCmd represents the format command
