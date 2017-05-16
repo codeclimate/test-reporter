@@ -67,14 +67,20 @@ test-gocov:
 test-clover:
 	docker build -f examples/clover/Dockerfile .
 
-publish:
+publish-latest:
 	$(AWS) s3 cp \
 	  --acl public-read \
-	  --exclude "*" \
-	  --include "test-reporter-$(VERSION)-*" \
-	  --include "test-reporter-latest-*" \
-	  --recursive \
-	  artifacts/bin/ s3://codeclimate/test-reporter/
+	  artifacts/bin/test-reporter-latest-* s3://codeclimate/test-reporter/
+
+publish-version:
+	if [ "$(shell curl https://s3.amazonaws.com/codeclimate/test-reporter/test-reporter-$(VERSION)-linux-amd64 --output /dev/null --write-out %{http_code})" -eq 403 ]; then \
+	  $(AWS) s3 cp \
+	    --acl public-read \
+	    artifacts/bin/test-reporter-$(VERSION)-* s3://codeclimate/test-reporter/; \
+	else \
+	  echo "Version $(VERSION) already published"; \
+	  exit 1; \
+	fi
 
 tag:
 	$(GIT_TAG) --message v$(VERSION) v$(VERSION)
@@ -84,4 +90,4 @@ clean:
 	sudo $(RM) -r ./artifacts
 	$(RM) $(MAN_PAGES)
 
-release: build-all build-all-latest publish tag
+release: build-all build-all-latest publish-version publish-latest tag
