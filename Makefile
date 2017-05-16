@@ -68,7 +68,13 @@ test-clover:
 	docker build -f examples/clover/Dockerfile .
 
 publish:
-	$(AWS) s3 cp --acl public-read --recursive artifacts/bin/ s3://codeclimate/test-reporter/ --exclude "*" --include "test-reporter-*"
+	$(AWS) s3 cp \
+	  --acl public-read \
+	  --exclude "*" \
+	  --include "test-reporter-$(VERSION)-*" \
+	  --include "test-reporter-latest-*" \
+	  --recursive \
+	  artifacts/bin/ s3://codeclimate/test-reporter/
 
 tag:
 	$(GIT_TAG) --message v$(VERSION) v$(VERSION)
