@@ -1,10 +1,11 @@
-package swiftcov
+package gcov
 
 import (
 	"bufio"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -15,28 +16,29 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Formatter collects SwiftCov files, parses them, then formats them into a single report.
+// Formatter collects GCov files, parses them, then formats them into a single report.
 type Formatter struct {
 	FileNames   []string
 	SourceFiles []formatters.SourceFile
 }
 
 var searchPaths = []string{"./"}
-var search = ".swift.gcov" // look for these file extensions
+var search = ".gcov" // look for these file extensions
 
-// Search searches the designated paths for SwiftCov files,
+// Search searches the designated paths for GCov files,
 // appending them to the list of filenames.
 func (f *Formatter) Search(paths ...string) (string, error) {
 	paths = append(paths, searchPaths...)
+
 	for _, p := range paths {
-		logrus.Debugf("checking search path %s for SwiftCov formatter", p)
+		logrus.Debugf("checking search path %s for GCov formatter", p)
 		files, err := ioutil.ReadDir(p)
 		if err != nil {
 			return "", errors.WithStack(err)
 		}
 		for _, file := range files {
 			if !file.IsDir() && strings.HasSuffix(file.Name(), search) {
-				f.FileNames = append(f.FileNames, file.Name())
+				f.FileNames = append(f.FileNames, filepath.Join(p, file.Name()))
 			}
 		}
 	}
@@ -45,7 +47,7 @@ func (f *Formatter) Search(paths ...string) (string, error) {
 		return "",
 			errors.WithStack(
 				errors.Errorf(
-					"could not find any files in search paths for SwiftCov. search paths were: %s",
+					"could not find any files in search paths for GCov. search paths were: %s",
 					strings.Join(paths, ", ")))
 	}
 
@@ -64,7 +66,7 @@ func (f *Formatter) Parse() error {
 	return nil
 }
 
-// Parse a single Swift source file.
+// Parse a single GCov source file.
 func parseSourceFile(fileName string) (*formatters.SourceFile, error) {
 	gitHead, _ := env.GetHead()
 	sf, err := formatters.NewSourceFile(fileName, gitHead)
@@ -84,8 +86,7 @@ func parseSourceFile(fileName string) (*formatters.SourceFile, error) {
 
 		split := strings.SplitN(string(line), ":", 3)
 		if len(split) != 3 {
-			return nil, errors.New(
-				"SwiftCov file expected to have 3 parts to each line, separated by ':'" + string(line))
+			continue
 		}
 
 		coverage := strings.TrimSpace(split[0])

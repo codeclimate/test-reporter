@@ -1,0 +1,46 @@
+        -:    0:Source:hamming.c
+        -:    0:Graph:hamming.gcno
+        -:    0:Data:hamming.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <string.h>
+        -:    3:
+function compute called 2 returned 100% blocks executed 100%
+        2:    4:int compute(char* alpha, char* beta) {
+        2:    5:	int distance = 0;
+        2:    6:	int len = strlen(alpha)<strlen(beta) ? strlen(alpha) : strlen(beta);
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+        -:    7:
+        5:    8:	for(int i=0; i<len; i++) {
+branch  0 taken 60%
+branch  1 taken 40% (fallthrough)
+        3:    9:		if(alpha[i] != beta[i]) {
+branch  0 taken 33% (fallthrough)
+branch  1 taken 67%
+        1:   10:			distance++;
+        -:   11:		}
+        -:   12:	}
+        -:   13:
+        2:   14:	return distance;
+        -:   15:}
+        -:   16:
+function main called 1 returned 100% blocks executed 75%
+        1:   17:int main() {
+        1:   18:	if(compute("", "AAGC") != 0) {
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+    #####:   19:		printf("Test failed");
+call    0 never executed
+        -:   20:	}
+        -:   21:	
+        1:   22:	if(compute("AGA", "AGC") != 1) {
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+    #####:   23:		printf("Test failed");
+call    0 never executed
+        -:   24:	}
+        -:   25:}
