@@ -2,6 +2,8 @@
 
 AWS ?= $(shell which aws)
 DOCKER_RUN ?= $(shell which docker) run --rm
+GIT_PUSH ?= $(shell which git) push
+GIT_TAG ?= $(shell which git) tag --sign
 PANDOC ?= $(shell which pandoc)
 
 MAN_FILES = $(wildcard man/*.md)
@@ -68,8 +70,12 @@ test-clover:
 publish:
 	$(AWS) s3 cp --acl public-read --recursive artifacts/bin/ s3://codeclimate/test-reporter/ --exclude "*" --include "test-reporter-*"
 
+tag:
+	$(GIT_TAG) --message v$(VERSION) v$(VERSION)
+	$(GIT_PUSH) origin refs/tags/v$(VERSION)
+
 clean:
 	sudo $(RM) -r ./artifacts
 	$(RM) $(MAN_PAGES)
 
-release: build-all build-all-latest publish
+release: build-all build-all-latest publish tag
