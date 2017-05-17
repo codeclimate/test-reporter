@@ -42,6 +42,7 @@ func (f *Formatter) Parse() error {
 	}
 	jf, err := os.Open(f.Path)
 	if err != nil {
+		logrus.Debugf("failed to open coverage file %s", f.Path)
 		return errors.WithStack(err)
 	}
 	m := map[string]input{}
