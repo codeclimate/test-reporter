@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/pkg/errors"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing"
@@ -57,6 +58,7 @@ func findGitInfo() (Git, error) {
 	_, err := exec.LookPath("git")
 	if err != nil {
 		// git isn't present, so load from ENV vars:
+		logrus.Debug("Loading GIT info from ENV")
 		return loadGitFromENV()
 	}
 
@@ -120,9 +122,11 @@ var GitBlob = func(path string, commit *object.Commit) (string, error) {
 		return blob, nil
 	}
 
+	logrus.Debugf("getting git blob_id for source file %s", path)
 	file, err := commit.File(path)
 
 	if err != nil {
+		logrus.Errorf("failed to find file %s\n%s", path, err)
 		return "", errors.WithStack(err)
 	}
 
@@ -132,9 +136,11 @@ var GitBlob = func(path string, commit *object.Commit) (string, error) {
 }
 
 func fallbackBlob(path string) (string, error) {
+	logrus.Debugf("getting fallback blob_id for source file %s", path)
 	file, err := ioutil.ReadFile(path)
 
 	if err != nil {
+		logrus.Errorf("failed to read file %s\n%s", path, err)
 		return "", errors.WithStack(err)
 	}
 
