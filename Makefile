@@ -67,6 +67,11 @@ test-gocov:
 test-clover:
 	docker build -f examples/clover/Dockerfile .
 
+publish-head:
+	$(AWS) s3 cp \
+	  --acl public-read \
+	  artifacts/bin/test-reporter-head-* s3://codeclimate/test-reporter/
+
 publish-latest:
 	$(AWS) s3 cp \
 	  --acl public-read \
