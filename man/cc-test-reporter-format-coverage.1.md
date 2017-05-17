@@ -8,6 +8,7 @@ This is a sub-command of **cc-test-reporter**(1).
 
 # SYNOPSIS
 
+**cc-test-reporter-format-coverage** [--output=\<path>] [--prefix=<path>]
 **cc-test-reporter-format-coverage** [--input-type=\<coverage type>] [--output=\<path>] [--prefix=\<path>] [COVERAGE_FILE]
 
 # DESCRIPTION
@@ -16,9 +17,9 @@ Locate, parse, and re-format supported coverage sources.
 
 # OPTIONS
 
-## -t, --input-type *COVERAGE TYPE*
+## -t, --input-type *simplecov*|*lcov*|*coverage.py*|*gcov*|*clover*
 
-Tool used to generate the coverage data.
+Identifies the input type (format) of the COVERAGE_FILE.
 
 ## -o, --output *PATH*
 
@@ -33,8 +34,8 @@ tests were run. Defaults to current working directory.
 
 ## COVERAGE_FILE
 
-Path where the coverage file is located. It requires the flag `--input-type`
-to be set.
+Path to the coverage file to process. Defaults to searching known paths where
+coverage files could exist and selecting the first one found.
 
 # SUPPORTED SOURCES
 
