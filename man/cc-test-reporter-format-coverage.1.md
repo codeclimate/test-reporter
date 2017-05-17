@@ -8,13 +8,17 @@ This is a sub-command of **cc-test-reporter**(1).
 
 # SYNOPSIS
 
-**cc-test-reporter-format-coverage** [--output=\<path>] [--prefix=\<path>]
+**cc-test-reporter-format-coverage** [--input-type=\<coverage type>] [--output=\<path>] [--prefix=\<path>] [COVERAGE_FILE]
 
 # DESCRIPTION
 
 Locate, parse, and re-format supported coverage sources.
 
 # OPTIONS
+
+## -t, --input-type *COVERAGE TYPE*
+
+Tool used to generate the coverage data.
 
 ## -o, --output *PATH*
 
@@ -26,6 +30,11 @@ to *coverage/codeclimate.json*.
 The prefix to remove from absolute paths in coverage payloads, to make
 them relative to the project root. This is usually the directory in which the
 tests were run. Defaults to current working directory.
+
+## COVERAGE_FILE
+
+Path where the coverage file is located. It requires the flag `--input-type`
+to be set.
 
 # SUPPORTED SOURCES
 
