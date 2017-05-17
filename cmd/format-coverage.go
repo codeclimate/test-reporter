@@ -20,11 +20,12 @@ import (
 )
 
 type CoverageFormatter struct {
-	In        formatters.Formatter
-	InputType string
-	Output    string
-	Prefix    string
-	writer    io.Writer
+	CoveragePath string
+	In           formatters.Formatter
+	InputType    string
+	Output       string
+	Prefix       string
+	writer       io.Writer
 }
 
 var formatOptions = CoverageFormatter{}
@@ -46,16 +47,28 @@ var formatCoverageCmd = &cobra.Command{
 	Use:   "format-coverage",
 	Short: "Locate, parse, and re-format supported coverage sources.",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if args[0] != "" {
+			logrus.Debugf("coverage path %s", args[0])
+			formatOptions.CoveragePath = args[0]
+		}
 		return runFormatter(formatOptions)
 	},
 }
 
 func runFormatter(formatOptions CoverageFormatter) error {
 	envy.Set("PREFIX", formatOptions.Prefix)
+
 	// if a type is specified use that
 	if formatOptions.InputType != "" {
 		if f, ok := formatterMap[formatOptions.InputType]; ok {
 			logrus.Debugf("using formatter %s", formatOptions.InputType)
+			if formatOptions.CoveragePath != "" {
+				_, err := f.Search(formatOptions.CoveragePath)
+				if err != nil {
+					logrus.Errorf("could not find coverage file %s\n%s", formatOptions.CoveragePath, err)
+					return errors.WithStack(err)
+				}
+			}
 			formatOptions.In = f
 		} else {
 			return errors.WithStack(errors.Errorf("could not find a formatter of type %s", formatOptions.InputType))
