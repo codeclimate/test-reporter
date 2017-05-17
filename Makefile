@@ -70,18 +70,24 @@ test-clover:
 publish-head:
 	$(AWS) s3 cp \
 	  --acl public-read \
-	  artifacts/bin/test-reporter-head-* s3://codeclimate/test-reporter/
+	  --exclude "*" \
+	  --include "test-reporter-head-*" \
+	  artifacts/bin/ s3://codeclimate/test-reporter/
 
 publish-latest:
 	$(AWS) s3 cp \
 	  --acl public-read \
-	  artifacts/bin/test-reporter-latest-* s3://codeclimate/test-reporter/
+	  --exclude "*" \
+	  --include "test-reporter-latest-*" \
+	  artifacts/bin/ s3://codeclimate/test-reporter/
 
 publish-version:
 	if [ "$(shell curl https://s3.amazonaws.com/codeclimate/test-reporter/test-reporter-$(VERSION)-linux-amd64 --output /dev/null --write-out %{http_code})" -eq 403 ]; then \
 	  $(AWS) s3 cp \
 	    --acl public-read \
-	    artifacts/bin/test-reporter-$(VERSION)-* s3://codeclimate/test-reporter/; \
+	    --exclude "*" \
+	    --include "test-reporter-$(VERSION)-*"
+	    artifacts/bin/ s3://codeclimate/test-reporter/; \
 	else \
 	  echo "Version $(VERSION) already published"; \
 	  exit 1; \
