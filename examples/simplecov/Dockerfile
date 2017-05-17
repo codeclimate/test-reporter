@@ -30,7 +30,9 @@ RUN bundle exec rake; exit 0
 
 ENV CC_TEST_REPORTER_ID=c4881e09870b0fac1291c93339b36ffe36210a2645c1ad25e52d8fda3943fb4d
 
-# RUN test-reporter after-build -s 5 -d
+RUN test-reporter after-build -s 5 -d
 
-RUN test-reporter format-coverage -d -t simplecov $PWD/coverage/.resultset.json
-RUN test-reporter upload-coverage -d -s 5
+# test coverage on a non-default path
+# RUN mv coverage custom-coverage
+# RUN test-reporter format-coverage -d -t simplecov custom-coverage/.resultset.json
+# RUN test-reporter upload-coverage -d -s 5
