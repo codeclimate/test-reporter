@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## v0.1.5 [(2017-05-08)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.5)
+## v0.1.5 [(2017-05-17)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.5)
 
 * [NEW] Add coverage file path argument to `format-coverage`
 * [NEW] Add debug logs to Git commands
