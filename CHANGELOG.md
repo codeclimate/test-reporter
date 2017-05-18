@@ -2,13 +2,9 @@
 
 ## Unreleased
 
-## v1.0.1 [(2017-05-18)](https://github.com/codeclimate/test-reporter/releases/tag/v1.0.1)
+## v0.1.6 [(2017-05-18)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.6)
 
 * [FIX] `format-coverage` when COVERAGE_FILE arg is not present
-
-## v1.0.0 [(2017-05-18)](https://github.com/codeclimate/test-reporter/releases/tag/v1.0.0)
-
-* [NEW] Stable release!
 
 ## v0.1.5 [(2017-05-17)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.5)
 
