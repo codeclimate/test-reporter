@@ -86,7 +86,7 @@ publish-version:
 	  $(AWS) s3 cp \
 	    --acl public-read \
 	    --exclude "*" \
-	    --include "test-reporter-$(VERSION)-*"
+	    --include "test-reporter-$(VERSION)-*" \
 	    artifacts/bin/ s3://codeclimate/test-reporter/; \
 	else \
 	  echo "Version $(VERSION) already published"; \
