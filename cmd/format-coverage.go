@@ -47,7 +47,7 @@ var formatCoverageCmd = &cobra.Command{
 	Use:   "format-coverage",
 	Short: "Locate, parse, and re-format supported coverage sources.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if args[0] != "" {
+		if len(args) != 0 {
 			logrus.Debugf("coverage path %s", args[0])
 			formatOptions.CoveragePath = args[0]
 		}
