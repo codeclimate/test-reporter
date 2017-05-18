@@ -50,6 +50,9 @@ var formatCoverageCmd = &cobra.Command{
 		if len(args) != 0 {
 			logrus.Debugf("coverage path %s", args[0])
 			formatOptions.CoveragePath = args[0]
+			if formatOptions.InputType == "" {
+				return errors.WithStack(errors.Errorf("please specify the format of the coverage file \"%s\" using the --input-type flag", formatOptions.CoveragePath))
+			}
 		}
 		return runFormatter(formatOptions)
 	},
