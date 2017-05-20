@@ -132,21 +132,13 @@ func (rep *Report) AddSourceFile(sf SourceFile) error {
 		if err != nil {
 			return err
 		}
-
-		// pop the source file in
-		rep.SourceFiles[sf.Name] = sf
-
-		// add the new, more correct numbers
-		rep.LineCounts.Covered += sf.LineCounts.Covered
-		rep.LineCounts.Missed += sf.LineCounts.Missed
-		rep.LineCounts.Total += sf.LineCounts.Total
 	} else {
 		sf.CalcLineCounts()
-		rep.SourceFiles[sf.Name] = sf
-		rep.LineCounts.Covered += sf.LineCounts.Covered
-		rep.LineCounts.Missed += sf.LineCounts.Missed
-		rep.LineCounts.Total += sf.LineCounts.Total
 	}
+	rep.SourceFiles[sf.Name] = sf
+	rep.LineCounts.Covered += sf.LineCounts.Covered
+	rep.LineCounts.Missed += sf.LineCounts.Missed
+	rep.LineCounts.Total += sf.LineCounts.Total
 
 	rep.CoveredPercent = rep.LineCounts.CoveredPercent()
 	return nil
