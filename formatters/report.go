@@ -120,22 +120,34 @@ func (a *Report) Merge(reps ...*Report) error {
 
 func (rep *Report) AddSourceFile(sf SourceFile) error {
 	var err error
+
+	// check if we already know about this file
 	if s, ok := rep.SourceFiles[sf.Name]; ok {
+		// remove the old values... we know more now
+		rep.LineCounts.Covered -= s.LineCounts.Covered
+		rep.LineCounts.Missed -= s.LineCounts.Missed
+		rep.LineCounts.Total -= s.LineCounts.Total
+
 		sf, err = s.Merge(sf)
 		if err != nil {
 			return err
 		}
-	}
-	sf.CalcLineCounts()
-	rep.SourceFiles[sf.Name] = sf
 
-	lc := LineCounts{}
-	for _, s := range rep.SourceFiles {
-		lc.Covered += s.LineCounts.Covered
-		lc.Missed += s.LineCounts.Missed
-		lc.Total += s.LineCounts.Total
+		// pop the source file in
+		rep.SourceFiles[sf.Name] = sf
+
+		// add the new, more correct numbers
+		rep.LineCounts.Covered += sf.LineCounts.Covered
+		rep.LineCounts.Missed += sf.LineCounts.Missed
+		rep.LineCounts.Total += sf.LineCounts.Total
+	} else {
+		sf.CalcLineCounts()
+		rep.SourceFiles[sf.Name] = sf
+		rep.LineCounts.Covered += sf.LineCounts.Covered
+		rep.LineCounts.Missed += sf.LineCounts.Missed
+		rep.LineCounts.Total += sf.LineCounts.Total
 	}
-	rep.LineCounts = lc
+
 	rep.CoveredPercent = rep.LineCounts.CoveredPercent()
 	return nil
 }
