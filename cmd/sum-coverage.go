@@ -45,7 +45,10 @@ var sumCoverageCmd = &cobra.Command{
 			if err != nil {
 				return errors.WithStack(err)
 			}
-			rep.Merge(&rr)
+			err = rep.Merge(&rr)
+      if err != nil {
+				return errors.WithStack(err)
+      }
 		}
 
 		err = os.MkdirAll(filepath.Dir(summerOptions.Output), 0755)
