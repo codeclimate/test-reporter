@@ -118,34 +118,33 @@ func Test_Merge_Issue_103(t *testing.T) {
 	a, err := NewReport()
 	r.NoError(err)
 
-	a.SourceFiles = SourceFiles{
-		"app/jobs/initialize_account_seats.rb": SourceFile{
-			Name:           "app/jobs/initialize_account_seats.rb",
-			CoveredPercent: 100,
-			Coverage:       Coverage{nulls.NewInt(1), nulls.NewInt(1), nulls.NewInt(15), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.NewInt(3), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.Int{}, nulls.NewInt(1), nulls.NewInt(3), nulls.Int{}, nulls.Int{}},
-			LineCounts: LineCounts{
-				Missed:  0,
-				Covered: 8,
-				Total:   8,
-			},
-		},
-	}
+  sf := SourceFile{
+    Name:           "app/jobs/initialize_account_seats.rb",
+    CoveredPercent: 100,
+    Coverage:       Coverage{nulls.NewInt(1), nulls.NewInt(1), nulls.NewInt(15), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.NewInt(3), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.Int{}, nulls.NewInt(1), nulls.NewInt(3), nulls.Int{}, nulls.Int{}},
+    LineCounts: LineCounts{
+      Missed:  0,
+      Covered: 8,
+      Total:   8,
+    },
+  }
+  a.AddSourceFile(sf)
 
 	b, err := NewReport()
 	r.NoError(err)
 
-	b.SourceFiles = SourceFiles{
-		"app/jobs/initialize_account_seats.rb": SourceFile{
-			Name:           "app/jobs/initialize_account_seats.rb",
-			CoveredPercent: 62.5,
-			Coverage:       Coverage{nulls.NewInt(1), nulls.NewInt(1), nulls.NewInt(0), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.NewInt(0), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.Int{}, nulls.NewInt(1), nulls.NewInt(0), nulls.Int{}, nulls.Int{}},
-			LineCounts: LineCounts{
-				Missed:  3,
-				Covered: 5,
-				Total:   8,
-			},
-		},
-	}
+  sf2 := SourceFile{
+    Name:           "app/jobs/initialize_account_seats.rb",
+    CoveredPercent: 62.5,
+    Coverage:       Coverage{nulls.NewInt(1), nulls.NewInt(1), nulls.NewInt(0), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.NewInt(0), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.Int{}, nulls.NewInt(1), nulls.NewInt(0), nulls.Int{}, nulls.Int{}},
+    LineCounts: LineCounts{
+      Missed:  3,
+      Covered: 5,
+      Total:   8,
+    },
+  }
+
+  b.AddSourceFile(sf2)
 
 	err = a.Merge(&b)
 	r.NoError(err)
