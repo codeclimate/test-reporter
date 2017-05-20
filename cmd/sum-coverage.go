@@ -28,19 +28,30 @@ var sumCoverageCmd = &cobra.Command{
 			return errors.Errorf("expected %d parts, received only %d parts", summerOptions.Parts, len(args))
 		}
 
-		rep, err := formatters.NewReport()
+		rep := formatters.Report{
+			SourceFiles: formatters.SourceFiles{},
+		}
+
+		f, err := os.Open(args[0])
 		if err != nil {
 			return errors.WithStack(err)
 		}
-		for _, n := range args {
+
+		err = json.NewDecoder(f).Decode(&rep)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		for _, n := range args[1:] {
 			f, err := os.Open(n)
 			if err != nil {
 				return errors.WithStack(err)
 			}
-			rr, err := formatters.NewReport()
-			if err != nil {
-				return errors.WithStack(err)
+
+			rr := formatters.Report{
+				SourceFiles: formatters.SourceFiles{},
 			}
+
 			err = json.NewDecoder(f).Decode(&rr)
 			if err != nil {
 				return errors.WithStack(err)
