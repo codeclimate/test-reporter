@@ -32,14 +32,14 @@ var sumCoverageCmd = &cobra.Command{
 		if err != nil {
 			return errors.WithStack(err)
 		}
+
 		for _, n := range args {
 			f, err := os.Open(n)
 			if err != nil {
 				return errors.WithStack(err)
 			}
-			rr, err := formatters.NewReport()
-			if err != nil {
-				return errors.WithStack(err)
+			rr := formatters.Report{
+				SourceFiles: formatters.SourceFiles{},
 			}
 			err = json.NewDecoder(f).Decode(&rr)
 			if err != nil {

@@ -24,7 +24,7 @@ func Test_Report_Merge_Bad_GitHead(t *testing.T) {
 	}
 	err := a.Merge(b)
 	r.Error(err)
-	r.Equal("git heads do not match", err.Error())
+	r.Equal("git heads do not match: a, b", err.Error())
 }
 
 func Test_Report_Merge_MismatchedCoverageLength(t *testing.T) {

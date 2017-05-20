@@ -3,6 +3,7 @@ package formatters
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -105,8 +106,8 @@ func NewReport() (Report, error) {
 
 func (a *Report) Merge(reps ...*Report) error {
 	for _, r := range reps {
-		if a.Git.Head != r.Git.Head {
-			return errors.New("git heads do not match")
+		if a.Git.Head != "" && a.Git.Head != r.Git.Head {
+			return errors.New(fmt.Sprintf("git heads do not match: %v, %v", a.Git.Head, r.Git.Head))
 		}
 		for _, sf := range r.SourceFiles {
 			err := a.AddSourceFile(sf)
