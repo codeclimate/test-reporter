@@ -26,12 +26,11 @@ func (u Uploader) Upload() error {
 		return errors.New("you must supply a CC_TEST_REPORTER_ID ENV variable or pass it via the -r flag")
 	}
 
-	rep, err := formatters.NewReport()
-	if err != nil {
-		return errors.WithStack(err)
+	rep := formatters.Report{
+		SourceFiles: formatters.SourceFiles{},
 	}
 
-	err = json.NewDecoder(u.Input).Decode(&rep)
+	err := json.NewDecoder(u.Input).Decode(&rep)
 	if err != nil {
 		return errors.WithStack(err)
 	}
