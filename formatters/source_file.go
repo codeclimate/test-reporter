@@ -37,13 +37,13 @@ func (a SourceFile) Merge(b SourceFile) (SourceFile, error) {
 			continue
 		}
 
-		if !bc.Valid {
-			//default is to nothing and use the ac value
+		// ac is null and bc isn't so ac takes precendence, we do nothing
+		if !ac.Valid {
 			continue
 		}
 
-		// ac is null and bc isn't so use bc
-		if !ac.Valid {
+		// bc is null and ac isn't so bc takes precendence
+		if !bc.Valid {
 			a.Coverage[i] = bc
 		}
 
