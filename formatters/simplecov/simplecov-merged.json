@@ -5,12 +5,12 @@
         1,
         1,
         1,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         null
       ]
     },
@@ -19,16 +19,16 @@
   "name-b": {
     "coverage": {
       "/home/patrick/code/codeclimate/ruby-test-reporter/lib/codeclimate-test-reporter.rb": [
+        0,
+        0,
+        0,
+        0,
+        0,
         null,
-        null,
-        null,
         1,
         1,
         1,
-        1,
-        1,
-        1,
-        1
+        0
       ]
     },
     "timestamp": 1489777982

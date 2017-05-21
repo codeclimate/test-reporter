@@ -58,14 +58,14 @@ func Test_Format_Merged(t *testing.T) {
 	rep, err := rb.Format()
 	r.NoError(err)
 
-	r.InDelta(100, rep.CoveredPercent, 1)
+	r.InDelta(75.0, rep.CoveredPercent, 1)
 	r.Len(rep.SourceFiles, 1)
 
 	sf := rb.Tests[0].SourceFiles[0]
-	r.InDelta(100, sf.CoveredPercent, 1)
+	r.InDelta(33.3, sf.CoveredPercent, 1)
 
 	lc := rep.LineCounts
-	r.Equal(lc.Covered, 10)
-	r.Equal(lc.Missed, 0)
-	r.Equal(lc.Total, 10)
+	r.Equal(lc.Covered, 6)
+	r.Equal(lc.Missed, 2)
+	r.Equal(lc.Total, 8)
 }
