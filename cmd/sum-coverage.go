@@ -25,7 +25,7 @@ var sumCoverageCmd = &cobra.Command{
 			return errors.New("you must pass in one or more files to be summarized")
 		}
 		if summerOptions.Parts != 0 && len(args) != summerOptions.Parts {
-			return errors.Errorf("expected %d parts, received only %d parts", summerOptions.Parts, len(args))
+			return errors.Errorf("expected %d parts, received %d parts", summerOptions.Parts, len(args))
 		}
 
 		rep := formatters.Report{
