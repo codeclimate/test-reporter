@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v0.1.7 [(2017-05-20)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.7)
+
+* [FIX] Raise an error when invalid format-coverage path usage
+* [FIX] Avoid accessing the git repository for sum-coverage
+* [FIX] Avoid accessing the git repository for upload-coverage
+* [FIX] Improve performance of sum-coverage
+
 ## v0.1.6 [(2017-05-18)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.6)
 
 * [FIX] `format-coverage` when COVERAGE_FILE arg is not present
