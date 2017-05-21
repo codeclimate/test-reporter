@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v0.1.8 [(2017-05-21)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.8)
+
+* [NEW] `sum-coverage` when merging source file coverage it preserves nulls
+
 ## v0.1.7 [(2017-05-20)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.7)
 
 * [FIX] Raise an error when invalid format-coverage path usage
