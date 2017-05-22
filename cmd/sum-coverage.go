@@ -3,7 +3,6 @@ package cmd
 import (
 	"encoding/json"
 	"os"
-	"path/filepath"
 
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/pkg/errors"
@@ -62,11 +61,7 @@ var sumCoverageCmd = &cobra.Command{
 			}
 		}
 
-		err = os.MkdirAll(filepath.Dir(summerOptions.Output), 0755)
-		if err != nil {
-			return errors.WithStack(err)
-		}
-		out, err := os.Create(summerOptions.Output)
+		out, err := writer(summerOptions.Output)
 		if err != nil {
 			return errors.WithStack(err)
 		}

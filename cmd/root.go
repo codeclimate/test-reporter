@@ -2,10 +2,13 @@ package cmd
 
 import (
 	"fmt"
+	"io"
 	"os"
+	"path/filepath"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/version"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -35,6 +38,22 @@ var RootCmd = &cobra.Command{
 		}
 		return cmd.Help()
 	},
+}
+
+func writer(p string) (io.Writer, error) {
+	if p == "-" {
+		return os.Stdout, nil
+	}
+	err := os.MkdirAll(filepath.Dir(p), 0755)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	out, err := os.Create(p)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return out, err
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.

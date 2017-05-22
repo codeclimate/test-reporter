@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/Sirupsen/logrus"
@@ -103,17 +102,9 @@ func (f CoverageFormatter) Save() error {
 	}
 
 	if f.writer == nil {
-		if formatOptions.Output == "-" {
-			f.writer = os.Stdout
-		} else {
-			err = os.MkdirAll(filepath.Dir(formatOptions.Output), 0755)
-			if err != nil {
-				return errors.WithStack(err)
-			}
-			f.writer, err = os.Create(formatOptions.Output)
-			if err != nil {
-				return errors.WithStack(err)
-			}
+		f.writer, err = writer(formatOptions.Output)
+		if err != nil {
+			return errors.WithStack(err)
 		}
 	}
 
