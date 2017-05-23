@@ -7,9 +7,10 @@ memo = ""
   revision = "10f801ebc38b33738c9d17d50860f484a0988ff5"
 
 [[projects]]
+  branch = "master"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
-  revision = "5215b55f46b2b919f50a1df0eaa5886afe4e3b3d"
+  revision = "346938d642f2ec3594ed81d874461961cd0faa76"
 
 [[projects]]
   branch = "master"
@@ -73,7 +74,7 @@ memo = ""
   branch = "master"
   name = "github.com/stretchr/testify"
   packages = ["require"]
-  revision = "2402e8e7a02fc811447d11f881aa9746cdc57983"
+  revision = "4d4bfba8f1d1027c4fdbe371823030df51419987"
 
 [[projects]]
   branch = "master"
