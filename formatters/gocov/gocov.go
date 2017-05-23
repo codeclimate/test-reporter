@@ -11,7 +11,6 @@ import (
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/gobuffalo/envy"
-	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
 
@@ -60,11 +59,11 @@ func (f *Formatter) Parse() error {
 		num := 0
 		for _, b := range p.Blocks {
 			for num < b.StartLine {
-				sf.Coverage = append(sf.Coverage, nulls.Int{})
+				sf.Coverage = append(sf.Coverage, formatters.NullInt{})
 				num++
 			}
 			for i := 0; i < b.NumStmt; i++ {
-				sf.Coverage = append(sf.Coverage, nulls.NewInt(b.Count))
+				sf.Coverage = append(sf.Coverage, formatters.NewNullInt(b.Count))
 				num++
 			}
 		}

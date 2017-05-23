@@ -1,0 +1,36 @@
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/Sirupsen/logrus"
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/fatih/structs"
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/gobuffalo/envy"
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/pkg/errors"
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/spf13/cobra"
+
+[[dependencies]]
+  branch = "master"
+  name = "github.com/stretchr/testify"
+
+[[dependencies]]
+  branch = "master"
+  name = "golang.org/x/sync"
+
+[[dependencies]]
+  branch = "master"
+  name = "golang.org/x/tools"
+
+[[dependencies]]
+  branch = "v4"
+  name = "gopkg.in/src-d/go-git.v4"

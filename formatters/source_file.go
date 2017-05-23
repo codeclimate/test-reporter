@@ -11,7 +11,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/gobuffalo/envy"
-	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
 
@@ -33,7 +32,7 @@ func (a SourceFile) Merge(b SourceFile) (SourceFile, error) {
 		ac := a.Coverage[i]
 		if ac.Valid && bc.Valid {
 			// they're both valid numbers so add them:
-			a.Coverage[i] = nulls.NewInt(ac.Int + bc.Int)
+			a.Coverage[i] = NewNullInt(ac.Int + bc.Int)
 			continue
 		}
 
