@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/Sirupsen/logrus"
@@ -129,7 +131,17 @@ func (u Uploader) doRequest(in io.Reader, url string) (*http.Response, error) {
 	}
 
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
-		return res, fmt.Errorf("response from %s was %d", url, res.StatusCode)
+		httpBody, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+
+		logrus.Debug(string(httpBody))
+		errorMessage, err := getErrorMessage(httpBody)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		return res, fmt.Errorf("response from %s.\nHTTP %d: %s", url, res.StatusCode, errorMessage)
 	}
 	return res, nil
 }
@@ -144,4 +156,28 @@ func (u Uploader) newRequest(in io.Reader, url string) (*http.Request, error) {
 	req.Header.Set("X-CC-Test-Reporter-Id", u.ReporterID)
 	req.Header.Set("Accept", "application/vnd.api+json")
 	return req, err
+}
+
+type apiError struct {
+	Detail string `json:"detail"`
+}
+
+type errorsResponse struct {
+	Errors []apiError `json:"errors"`
+}
+
+func getErrorMessage(body []byte) (string, error) {
+	var response = new(errorsResponse)
+	err := json.Unmarshal(body, &response)
+	if err != nil {
+		return "", errors.WithStack(err)
+	}
+
+	var details []string
+
+	for i := range response.Errors {
+		details = append(details, response.Errors[i].Detail)
+	}
+
+	return strings.Join(details, ", "), err
 }
