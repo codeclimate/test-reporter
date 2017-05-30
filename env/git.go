@@ -112,25 +112,20 @@ func GitSHA(path string) (string, error) {
 }
 
 var GitBlob = func(path string, commit *object.Commit) (string, error) {
-	if commit == nil {
-		blob, err := fallbackBlob(path)
+	if commit != nil {
+		if file, err := commit.File(path); err == nil {
+			logrus.Debugf("getting git blob_id for source file %s", path)
 
-		if err != nil {
-			return "", errors.WithStack(err)
+			blob := strings.TrimSpace(file.Hash.String())
+			return blob, nil
 		}
-
-		return blob, nil
 	}
 
-	logrus.Debugf("getting git blob_id for source file %s", path)
-	file, err := commit.File(path)
+	blob, err := fallbackBlob(path)
 
 	if err != nil {
-		logrus.Errorf("failed to find file %s\n%s", path, err)
 		return "", errors.WithStack(err)
 	}
-
-	blob := strings.TrimSpace(file.Hash.String())
 
 	return blob, nil
 }
@@ -146,6 +141,7 @@ func fallbackBlob(path string) (string, error) {
 
 	hash := plumbing.ComputeHash(plumbing.BlobObject, []byte(file))
 	res := hash.String()
+
 	return res, nil
 }
 
