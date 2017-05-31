@@ -113,7 +113,8 @@ func GitSHA(path string) (string, error) {
 
 var GitBlob = func(path string, commit *object.Commit) (string, error) {
 	if commit != nil {
-		if file, err := commit.File(path); err == nil {
+		file, err := commit.File(path)
+		if err == nil {
 			logrus.Debugf("getting git blob_id for source file %s", path)
 
 			blob := strings.TrimSpace(file.Hash.String())
