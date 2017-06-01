@@ -13,7 +13,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-var searchPaths = []string{"build/logs/cobertura.xml", "cobertura.xml"}
+var searchPaths = []string{"cobertura.xml", "cobertura.ser"}
 
 type Formatter struct {
 	Path        string
