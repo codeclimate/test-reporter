@@ -53,19 +53,19 @@ build-docker:
 	  golang:1.8 make build
 
 test-simplecov:
-	docker build -f examples/simplecov/Dockerfile .
+	docker build -f integration-tests/simplecov/Dockerfile .
 
 test-lcov:
-	docker build -f examples/lcov/Dockerfile .
+	docker build -f integration-tests/lcov/Dockerfile .
 
 test-covpy:
-	docker build -f examples/coverage_py/Dockerfile .
+	docker build -f integration-tests/coverage_py/Dockerfile .
 
 test-gocov:
-	docker build -f examples/gocov/Dockerfile .
+	docker build -f integration-tests/gocov/Dockerfile .
 
 test-clover:
-	docker build -f examples/clover/Dockerfile .
+	docker build -f integration-tests/clover/Dockerfile .
 
 publish-head:
 	$(AWS) s3 cp \

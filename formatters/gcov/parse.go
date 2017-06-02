@@ -12,7 +12,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/formatters"
-	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
 
@@ -97,15 +96,15 @@ func parseSourceFile(fileName string) (*formatters.SourceFile, error) {
 
 		switch coverage {
 		case "-":
-			sf.Coverage = append(sf.Coverage, nulls.Int{})
+			sf.Coverage = append(sf.Coverage, formatters.NullInt{})
 		case "#####":
-			sf.Coverage = append(sf.Coverage, nulls.NewInt(0))
+			sf.Coverage = append(sf.Coverage, formatters.NewNullInt(0))
 		default: // coverage is number of hits
 			num, err := strconv.Atoi(coverage)
 			if err != nil {
 				return nil, errors.WithStack(err)
 			}
-			sf.Coverage = append(sf.Coverage, nulls.NewInt(num))
+			sf.Coverage = append(sf.Coverage, formatters.NewNullInt(num))
 		}
 
 	}
