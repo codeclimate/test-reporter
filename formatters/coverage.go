@@ -32,15 +32,18 @@ func (c Coverage) MarshalJSON() ([]byte, error) {
 	return b, nil
 }
 
+var cwp = []byte("\"")
+var cws = []byte("\"")
+
 func (c *Coverage) UnmarshalJSON(text []byte) error {
-	q := []byte("\"")
-	text = bytes.TrimPrefix(text, q)
-	text = bytes.TrimSuffix(text, q)
-	cc := []NullInt{}
+	text = bytes.TrimPrefix(text, cwp)
+	text = bytes.TrimSuffix(text, cws)
+	cc := make([]NullInt, 0, 1024)
+
 	err := json.Unmarshal(text, &cc)
 	if err != nil {
 		return err
 	}
-	*c = append(*c, cc...)
+	*c = cc
 	return nil
 }
