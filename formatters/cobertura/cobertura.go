@@ -2,7 +2,6 @@ package cobertura
 
 import (
 	"encoding/xml"
-	"fmt"
 	"os"
 	"strings"
 
@@ -46,7 +45,6 @@ func (f *Formatter) Parse() error {
 	}
 
 	gitHead, _ := env.GetHead()
-	fmt.Printf("### c -> %+v\n", c)
 	for _, pp := range c.Packages {
 		for _, pf := range pp.Classes {
 			num := 1
