@@ -2,15 +2,17 @@ package formatters
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/version"
 	"github.com/gobuffalo/envy"
+	"github.com/pkg/errors"
 )
 
 type Report struct {
@@ -104,6 +106,9 @@ func NewReport() (Report, error) {
 }
 
 func (a *Report) Merge(reps ...*Report) error {
+	start := time.Now()
+	logrus.Debug("starting merge")
+	defer func() { logrus.Debugf("completed merge %s", time.Since(start)) }()
 	for _, r := range reps {
 		if a.Git.Head != r.Git.Head {
 			return errors.New("git heads do not match")
@@ -130,7 +135,7 @@ func (rep *Report) AddSourceFile(sf SourceFile) error {
 
 		sf, err = s.Merge(sf)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 	} else {
 		sf.CalcLineCounts()

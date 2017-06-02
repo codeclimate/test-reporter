@@ -134,6 +134,7 @@ func TestImportTestdata(t *testing.T) {
 	// This package only handles gc export data.
 	if runtime.Compiler != "gc" {
 		t.Skipf("gc-built packages not available (compiler = %s)", runtime.Compiler)
+		return
 	}
 
 	if outFn := compile(t, "testdata", testfile); outFn != "" {
@@ -167,6 +168,7 @@ func TestVersionHandling(t *testing.T) {
 	// This package only handles gc export data.
 	if runtime.Compiler != "gc" {
 		t.Skipf("gc-built packages not available (compiler = %s)", runtime.Compiler)
+		return
 	}
 
 	const dir = "./testdata/versions"
@@ -230,6 +232,7 @@ func TestImportStdLib(t *testing.T) {
 	// This package only handles gc export data.
 	if runtime.Compiler != "gc" {
 		t.Skipf("gc-built packages not available (compiler = %s)", runtime.Compiler)
+		return
 	}
 
 	dt := maxTime
@@ -260,6 +263,7 @@ func TestImportedTypes(t *testing.T) {
 	// This package only handles gc export data.
 	if runtime.Compiler != "gc" {
 		t.Skipf("gc-built packages not available (compiler = %s)", runtime.Compiler)
+		return
 	}
 
 	for _, test := range importedObjectTests {
@@ -295,9 +299,13 @@ func TestIssue5815(t *testing.T) {
 	// This package only handles gc export data.
 	if runtime.Compiler != "gc" {
 		t.Skipf("gc-built packages not available (compiler = %s)", runtime.Compiler)
+		return
 	}
 
-	pkg := importPkg(t, "strings")
+	pkg, err := Import(make(map[string]*types.Package), "strings", ".")
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	scope := pkg.Scope()
 	for _, name := range scope.Names() {
@@ -324,6 +332,7 @@ func TestCorrectMethodPackage(t *testing.T) {
 	// This package only handles gc export data.
 	if runtime.Compiler != "gc" {
 		t.Skipf("gc-built packages not available (compiler = %s)", runtime.Compiler)
+		return
 	}
 
 	imports := make(map[string]*types.Package)
@@ -347,6 +356,7 @@ func TestIssue13566(t *testing.T) {
 	// This package only handles gc export data.
 	if runtime.Compiler != "gc" {
 		t.Skipf("gc-built packages not available (compiler = %s)", runtime.Compiler)
+		return
 	}
 
 	// On windows, we have to set the -D option for the compiler to avoid having a drive
@@ -363,7 +373,10 @@ func TestIssue13566(t *testing.T) {
 	}
 
 	// import must succeed (test for issue at hand)
-	pkg := importPkg(t, "./testdata/b")
+	pkg, err := Import(make(map[string]*types.Package), "./testdata/b", ".")
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// make sure all indirectly imported packages have names
 	for _, imp := range pkg.Imports() {
@@ -379,6 +392,7 @@ func TestIssue13898(t *testing.T) {
 	// This package only handles gc export data.
 	if runtime.Compiler != "gc" {
 		t.Skipf("gc-built packages not available (compiler = %s)", runtime.Compiler)
+		return
 	}
 
 	// import go/internal/gcimporter which imports go/types partially
@@ -401,7 +415,10 @@ func TestIssue13898(t *testing.T) {
 	}
 
 	// look for go/types.Object type
-	obj := lookupObj(t, goTypesPkg.Scope(), "Object")
+	obj := goTypesPkg.Scope().Lookup("Object")
+	if obj == nil {
+		t.Fatal("go/types.Object not found")
+	}
 	typ, ok := obj.Type().(*types.Named)
 	if !ok {
 		t.Fatalf("go/types.Object type is %v; wanted named type", typ)
@@ -425,6 +442,7 @@ func TestIssue15517(t *testing.T) {
 	// This package only handles gc export data.
 	if runtime.Compiler != "gc" {
 		t.Skipf("gc-built packages not available (compiler = %s)", runtime.Compiler)
+		return
 	}
 
 	// On windows, we have to set the -D option for the compiler to avoid having a drive
@@ -463,6 +481,7 @@ func TestIssue15920(t *testing.T) {
 	// This package only handles gc export data.
 	if runtime.Compiler != "gc" {
 		t.Skipf("gc-built packages not available (compiler = %s)", runtime.Compiler)
+		return
 	}
 
 	// On windows, we have to set the -D option for the compiler to avoid having a drive
@@ -475,47 +494,8 @@ func TestIssue15920(t *testing.T) {
 		defer os.Remove(f)
 	}
 
-	importPkg(t, "./testdata/issue15920")
-}
-
-func TestIssue20046(t *testing.T) {
-	skipSpecialPlatforms(t)
-
-	// This package only handles gc export data.
-	if runtime.Compiler != "gc" {
-		t.Skipf("gc-built packages not available (compiler = %s)", runtime.Compiler)
-	}
-
-	// On windows, we have to set the -D option for the compiler to avoid having a drive
-	// letter and an illegal ':' in the import path - just skip it (see also issue #3483).
-	if runtime.GOOS == "windows" {
-		t.Skip("avoid dealing with relative paths/drive letters on windows")
-	}
-
-	if f := compile(t, "testdata", "issue20046.go"); f != "" {
-		defer os.Remove(f)
-	}
-
-	// "./issue20046".V.M must exist
-	pkg := importPkg(t, "./testdata/issue20046")
-	obj := lookupObj(t, pkg.Scope(), "V")
-	if m, index, indirect := types.LookupFieldOrMethod(obj.Type(), false, nil, "M"); m == nil {
-		t.Fatalf("V.M not found (index = %v, indirect = %v)", index, indirect)
-	}
-}
-
-func importPkg(t *testing.T, path string) *types.Package {
-	pkg, err := Import(make(map[string]*types.Package), path, ".")
-	if err != nil {
+	imports := make(map[string]*types.Package)
+	if _, err := Import(imports, "./testdata/issue15920", "."); err != nil {
 		t.Fatal(err)
 	}
-	return pkg
-}
-
-func lookupObj(t *testing.T, scope *types.Scope, name string) types.Object {
-	if obj := scope.Lookup(name); obj != nil {
-		return obj
-	}
-	t.Fatalf("%s not found", name)
-	return nil
 }

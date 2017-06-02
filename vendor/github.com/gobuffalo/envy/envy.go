@@ -115,3 +115,12 @@ func GoPaths() []string {
 	}
 	return strings.Split(gp, ":")
 }
+
+func CurrentPackage() string {
+	pwd, _ := os.Getwd()
+	for _, gp := range GoPaths() {
+		pwd = strings.TrimPrefix(pwd, filepath.Join(gp, "src"))
+	}
+	pwd = strings.TrimPrefix(pwd, string(os.PathSeparator))
+	return filepath.ToSlash(pwd)
+}

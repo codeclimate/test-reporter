@@ -10,7 +10,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/formatters"
-	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
 
@@ -60,7 +59,7 @@ func (f *Formatter) Parse() error {
 				return errors.WithStack(err)
 			}
 			for ln-curLine >= 1 {
-				sf.Coverage = append(sf.Coverage, nulls.Int{})
+				sf.Coverage = append(sf.Coverage, formatters.NullInt{})
 				sf.CalcLineCounts()
 				curLine++
 			}
@@ -68,7 +67,7 @@ func (f *Formatter) Parse() error {
 			if err != nil {
 				return errors.WithStack(err)
 			}
-			sf.Coverage = append(sf.Coverage, nulls.NewInt(lh))
+			sf.Coverage = append(sf.Coverage, formatters.NewNullInt(lh))
 			curLine++
 			continue
 		}

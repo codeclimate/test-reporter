@@ -34,12 +34,6 @@
 //	-memprofilerate rate
 //		Set runtime.MemProfileRate during compilation.
 //
-//	-obj
-//		Report object file statistics.
-//
-//  -pkg
-//		Benchmark compiling a single package.
-//
 //	-run regexp
 //		Only run benchmarks with names matching regexp.
 //
@@ -66,7 +60,6 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"go/build"
@@ -91,7 +84,6 @@ var (
 
 var (
 	flagAlloc          = flag.Bool("alloc", false, "report allocations")
-	flagObj            = flag.Bool("obj", false, "report object file stats")
 	flagCompiler       = flag.String("compile", "", "use `exe` as the cmd/compile binary")
 	flagCompilerFlags  = flag.String("compileflags", "", "additional `flags` to pass to compile")
 	flagRun            = flag.String("run", "", "run benchmarks matching `regexp`")
@@ -99,7 +91,6 @@ var (
 	flagCpuprofile     = flag.String("cpuprofile", "", "write CPU profile to `file`")
 	flagMemprofile     = flag.String("memprofile", "", "write memory profile to `file`")
 	flagMemprofilerate = flag.Int64("memprofilerate", -1, "set memory profile `rate`")
-	flagPackage        = flag.String("pkg", "", "if set, benchmark the package at path `pkg`")
 	flagShort          = flag.Bool("short", false, "skip long-running benchmarks")
 )
 
@@ -162,10 +153,6 @@ func main() {
 	}
 
 	for i := 0; i < *flagCount; i++ {
-		if *flagPackage != "" {
-			runBuild("BenchmarkPkg", *flagPackage, i)
-			continue
-		}
 		for _, tt := range tests {
 			if tt.long && *flagShort {
 				continue
@@ -188,12 +175,7 @@ func runCmd(name string, cmd *exec.Cmd) {
 }
 
 func runStdCmd() {
-	args := []string{"build", "-a"}
-	if *flagCompilerFlags != "" {
-		args = append(args, "-gcflags", *flagCompilerFlags)
-	}
-	args = append(args, "std", "cmd")
-	cmd := exec.Command("go", args...)
+	cmd := exec.Command("go", "build", "-a", "std", "cmd")
 	cmd.Dir = filepath.Join(runtime.GOROOT(), "src")
 	runCmd("BenchmarkStdCmd", cmd)
 }
@@ -281,7 +263,7 @@ func runBuild(name, dir string, count int) {
 	}
 	end := time.Now()
 
-	var allocs, allocbytes int64
+	var allocs, bytes int64
 	if *flagAlloc || *flagMemprofile != "" {
 		out, err := ioutil.ReadFile(pkg.Dir + "/_compilebench_.memprof")
 		if err != nil {
@@ -298,7 +280,7 @@ func runBuild(name, dir string, count int) {
 			}
 			switch f[1] {
 			case "TotalAlloc":
-				allocbytes = val
+				bytes = val
 			case "Mallocs":
 				allocs = val
 			}
@@ -330,25 +312,11 @@ func runBuild(name, dir string, count int) {
 	wallns := end.Sub(start).Nanoseconds()
 	userns := cmd.ProcessState.UserTime().Nanoseconds()
 
-	fmt.Printf("%s 1 %d ns/op %d user-ns/op", name, wallns, userns)
 	if *flagAlloc {
-		fmt.Printf(" %d B/op %d allocs/op", allocbytes, allocs)
+		fmt.Printf("%s 1 %d ns/op %d user-ns/op %d B/op %d allocs/op\n", name, wallns, userns, bytes, allocs)
+	} else {
+		fmt.Printf("%s 1 %d ns/op %d user-ns/op\n", name, wallns, userns)
 	}
 
-	opath := pkg.Dir + "/_compilebench_.o"
-	if *flagObj {
-		// TODO(josharian): object files are big; just read enough to find what we seek.
-		data, err := ioutil.ReadFile(opath)
-		if err != nil {
-			log.Print(err)
-		}
-		// Find start of export data.
-		i := bytes.Index(data, []byte("\n$$B\n")) + len("\n$$B\n")
-		// Count bytes to end of export data.
-		nexport := bytes.Index(data[i:], []byte("\n$$\n"))
-		fmt.Printf(" %d object-bytes %d export-bytes", len(data), nexport)
-	}
-	fmt.Println()
-
-	os.Remove(opath)
+	os.Remove(pkg.Dir + "/_compilebench_.o")
 }

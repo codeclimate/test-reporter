@@ -78,3 +78,8 @@ func Test_GoPaths(t *testing.T) {
 		r.Equal([]string{"/foo", "/bar"}, envy.GoPaths())
 	})
 }
+
+func Test_CurrentPackage(t *testing.T) {
+	r := require.New(t)
+	r.Equal("github.com/gobuffalo/envy", envy.CurrentPackage())
+}

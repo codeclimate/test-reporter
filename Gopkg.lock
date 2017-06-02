@@ -1,40 +1,33 @@
-memo = "073ef4b1edd95b4c45b942591c63e2edcdcc966401055a0e8ce092a8ed0cfb65"
+memo = ""
 
 [[projects]]
+  branch = "master"
   name = "github.com/Sirupsen/logrus"
   packages = ["."]
-  revision = "418b41d23a1bf978c06faea5313ba194650ac088"
-  version = "v0.8.7"
+  revision = "10f801ebc38b33738c9d17d50860f484a0988ff5"
 
 [[projects]]
+  branch = "master"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
-  version = "v1.1.0"
 
 [[projects]]
+  branch = "master"
   name = "github.com/fatih/structs"
   packages = ["."]
   revision = "a720dfa8df582c51dee1b36feabb906bde1588bd"
-  version = "v1.0"
 
 [[projects]]
   branch = "master"
   name = "github.com/gobuffalo/envy"
   packages = ["."]
-  revision = "f9545cd7564a92b306df0be590567ff5bae5750c"
+  revision = "a901aeb76c2647ce52acf7f3bac64c4def49a899"
 
 [[projects]]
-  branch = "master"
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
   revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
-
-[[projects]]
-  name = "github.com/markbates/pop"
-  packages = ["nulls"]
-  revision = "6e0f5604b25bec1533b35c584fa7c19a67e8ca1b"
-  version = "v3.18.0"
 
 [[projects]]
   branch = "master"
@@ -43,73 +36,90 @@ memo = "073ef4b1edd95b4c45b942591c63e2edcdcc966401055a0e8ce092a8ed0cfb65"
   revision = "b8bc1bf767474819792c23f32d8286a45736f1c6"
 
 [[projects]]
+  branch = "master"
   name = "github.com/pkg/errors"
   packages = ["."]
-  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
-  version = "v0.8.0"
-
-[[projects]]
-  name = "github.com/pmezard/go-difflib"
-  packages = ["difflib"]
-  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
-  version = "v1.0.0"
+  revision = "c605e284fe17294bda444b34710735b29d1a9d90"
 
 [[projects]]
   branch = "master"
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+
+[[projects]]
   name = "github.com/sergi/go-diff"
   packages = ["diffmatchpatch"]
-  revision = "feef008d51ad2b3778f85d387ccf91735543008d"
+  revision = "83532ca1c1caa393179c677b6facf48e61f4ca5d"
 
 [[projects]]
   branch = "master"
   name = "github.com/spf13/cobra"
   packages = ["."]
-  revision = "5deb57bbca49eb370538fc295ba4b2988f9f5e09"
+  revision = "ca57f0f5dba473a8a58765d16d7e811fb8027add"
 
 [[projects]]
   branch = "master"
   name = "github.com/spf13/pflag"
   packages = ["."]
-  revision = "e453343e6260b4a3a89f1f0e10a2fbb07f8d9750"
+  revision = "e57e3eeb33f795204c1ca35f56c44f83227c6e66"
 
 [[projects]]
+  branch = "v1"
   name = "github.com/src-d/gcfg"
-  packages = [".","scanner","token","types"]
+  packages = ["."]
   revision = "f187355171c936ac84a82793659ebb4936bc1c23"
-  version = "v1.3.0"
 
 [[projects]]
+  branch = "master"
   name = "github.com/stretchr/testify"
-  packages = ["assert","require"]
-  revision = "69483b4bd14f5845b5a1e55bca19e954e827f1d0"
-  version = "v1.1.4"
+  packages = ["require"]
+  revision = "4d4bfba8f1d1027c4fdbe371823030df51419987"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["curve25519","ed25519","ed25519/internal/edwards25519","ssh","ssh/agent"]
-  revision = "04eae0b62feaaf659a0ce2c4e8dc70b6ae2fff67"
+  packages = ["ssh","ssh/agent"]
+  revision = "453249f01cfeb54c3d549ddb75ff152ca243f9d8"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/net"
+  packages = ["context"]
+  revision = "c9b681d35165f1995d6f3034e61f8761d4b90c99"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sync"
+  packages = ["errgroup"]
+  revision = "de49d9dcd27d4f764488181bea099dfe6179bcf0"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "ea9bcade75cb975a0b9738936568ab388b845617"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/tools"
   packages = ["cover"]
-  revision = "2382e3994d48b1d22acc2c86bcad0a2aff028e32"
+  revision = "9bf174b4d3fab31065b140e4a69c6e6b17746806"
 
 [[projects]]
+  branch = "master"
   name = "gopkg.in/src-d/go-billy.v2"
   packages = [".","osfs"]
-  revision = "99d839800b93542496ec19319f37abacf17f589f"
-  version = "v2.0.4"
+  revision = "52497601f113730d14baa00453674376fca22f22"
 
 [[projects]]
   branch = "v4"
   name = "gopkg.in/src-d/go-git.v4"
-  packages = [".","config","internal/revision","plumbing","plumbing/cache","plumbing/filemode","plumbing/format/config","plumbing/format/idxfile","plumbing/format/index","plumbing/format/objfile","plumbing/format/packfile","plumbing/format/pktline","plumbing/object","plumbing/protocol/packp","plumbing/protocol/packp/capability","plumbing/protocol/packp/sideband","plumbing/revlist","plumbing/storer","plumbing/transport","plumbing/transport/client","plumbing/transport/file","plumbing/transport/git","plumbing/transport/http","plumbing/transport/internal/common","plumbing/transport/server","plumbing/transport/ssh","storage","storage/filesystem","storage/filesystem/internal/dotgit","storage/memory","utils/binary","utils/diff","utils/ioutil","utils/merkletrie","utils/merkletrie/internal/frame","utils/merkletrie/noder"]
+  packages = [".","plumbing","plumbing/object"]
   revision = "36c78b9d1b1eea682703fb1cbb0f4f3144354389"
 
 [[projects]]
+  branch = "master"
   name = "gopkg.in/warnings.v0"
   packages = ["."]
   revision = "8a331561fe74dadba6edfc59f3be66c22c3b065d"
-  version = "v0.1.1"
