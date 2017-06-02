@@ -17,8 +17,7 @@ import (
 
 // Formatter collects GCov files, parses them, then formats them into a single report.
 type Formatter struct {
-	FileNames   []string
-	SourceFiles []formatters.SourceFile
+	FileNames []string
 }
 
 var searchPaths = []string{"./"}
@@ -43,39 +42,44 @@ func (f *Formatter) Search(paths ...string) (string, error) {
 	}
 
 	if len(f.FileNames) == 0 {
-		return "",
-			errors.WithStack(
-				errors.Errorf(
-					"could not find any files in search paths for GCov. search paths were: %s",
-					strings.Join(paths, ", ")))
+		return "", errors.WithStack(errors.Errorf("could not find any files in search paths for GCov. search paths were: %s", strings.Join(paths, ", ")))
 	}
 
 	return fmt.Sprint(f.FileNames), nil
 }
 
-// Parse parses each file the formatter has found in turn.
-func (f *Formatter) Parse() error {
+// Format combines the source files into a report.
+func (f *Formatter) Format() (formatters.Report, error) {
+	rep, err := formatters.NewReport()
+	if err != nil {
+		return rep, err
+	}
+
 	for _, file := range f.FileNames {
 		sf, err := parseSourceFile(file)
 		if err != nil {
-			return errors.WithStack(err)
+			return rep, errors.WithStack(err)
 		}
-		f.SourceFiles = append(f.SourceFiles, *sf)
+		err = rep.AddSourceFile(sf)
+		if err != nil {
+			return rep, errors.WithStack(err)
+		}
 	}
-	return nil
+
+	return rep, nil
 }
 
 // Parse a single GCov source file.
-func parseSourceFile(fileName string) (*formatters.SourceFile, error) {
+func parseSourceFile(fileName string) (formatters.SourceFile, error) {
 	gitHead, _ := env.GetHead()
 	sf, err := formatters.NewSourceFile(fileName, gitHead)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return sf, errors.WithStack(err)
 	}
 
 	file, err := os.Open(fileName)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return sf, errors.WithStack(err)
 	}
 	defer file.Close()
 
@@ -102,27 +106,12 @@ func parseSourceFile(fileName string) (*formatters.SourceFile, error) {
 		default: // coverage is number of hits
 			num, err := strconv.Atoi(coverage)
 			if err != nil {
-				return nil, errors.WithStack(err)
+				return sf, errors.WithStack(err)
 			}
 			sf.Coverage = append(sf.Coverage, formatters.NewNullInt(num))
 		}
 
 	}
 
-	sf.CalcLineCounts()
-	return &sf, nil
-}
-
-// Format combines the source files into a report.
-func (f *Formatter) Format() (formatters.Report, error) {
-	rep, err := formatters.NewReport()
-	if err != nil {
-		return rep, err
-	}
-
-	for _, sf := range f.SourceFiles {
-		rep.AddSourceFile(sf)
-	}
-
-	return rep, nil
+	return sf, nil
 }

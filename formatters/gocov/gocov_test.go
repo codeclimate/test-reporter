@@ -19,13 +19,12 @@ func Test_Parse(t *testing.T) {
 	r := require.New(t)
 
 	f := &Formatter{Path: "./example.out"}
-	err := f.Parse()
+	rep, err := f.Format()
 	r.NoError(err)
 
-	r.Len(f.SourceFiles, 4)
+	r.Len(rep.SourceFiles, 4)
 
-	sf := f.SourceFiles[3]
-	r.Equal("github.com/codeclimate/test-reporter/formatters/source_file.go", sf.Name)
+	sf := rep.SourceFiles["github.com/codeclimate/test-reporter/formatters/source_file.go"]
 	r.InDelta(77.4, sf.CoveredPercent, 1)
 	r.Len(sf.Coverage, 116)
 	r.False(sf.Coverage[5].Valid)

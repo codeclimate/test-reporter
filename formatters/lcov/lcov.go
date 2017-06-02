@@ -16,8 +16,7 @@ import (
 var searchPaths = []string{"coverage/lcov.info"}
 
 type Formatter struct {
-	Path        string
-	SourceFiles []formatters.SourceFile
+	Path string
 }
 
 func (f *Formatter) Search(paths ...string) (string, error) {
@@ -33,10 +32,15 @@ func (f *Formatter) Search(paths ...string) (string, error) {
 	return "", errors.WithStack(errors.Errorf("could not find any files in search paths for lcov. search paths were: %s", strings.Join(paths, ", ")))
 }
 
-func (f *Formatter) Parse() error {
-	b, err := ioutil.ReadFile(f.Path)
+func (r Formatter) Format() (formatters.Report, error) {
+	rep, err := formatters.NewReport()
 	if err != nil {
-		return errors.WithStack(err)
+		return rep, err
+	}
+
+	b, err := ioutil.ReadFile(r.Path)
+	if err != nil {
+		return rep, errors.WithStack(err)
 	}
 
 	var sf formatters.SourceFile
@@ -48,7 +52,7 @@ func (f *Formatter) Parse() error {
 			var gitHead, _ = env.GetHead()
 			sf, err = formatters.NewSourceFile(name, gitHead)
 			if err != nil {
-				return errors.WithStack(err)
+				return rep, errors.WithStack(err)
 			}
 			continue
 		}
@@ -56,7 +60,7 @@ func (f *Formatter) Parse() error {
 			lineInfo := bytes.Split(bytes.TrimSpace(bytes.TrimPrefix(line, []byte("DA:"))), []byte(","))
 			ln, err := strconv.Atoi(string(lineInfo[0]))
 			if err != nil {
-				return errors.WithStack(err)
+				return rep, errors.WithStack(err)
 			}
 			for ln-curLine >= 1 {
 				sf.Coverage = append(sf.Coverage, formatters.NullInt{})
@@ -65,17 +69,21 @@ func (f *Formatter) Parse() error {
 			}
 			lh, err := strconv.Atoi(string(lineInfo[1]))
 			if err != nil {
-				return errors.WithStack(err)
+				return rep, errors.WithStack(err)
 			}
 			sf.Coverage = append(sf.Coverage, formatters.NewNullInt(lh))
 			curLine++
 			continue
 		}
 		if bytes.HasPrefix(line, []byte("end_of_record")) {
-			f.SourceFiles = append(f.SourceFiles, sf)
+			err = rep.AddSourceFile(sf)
+			if err != nil {
+				return rep, errors.WithStack(err)
+			}
 			curLine = 1
 			continue
 		}
 	}
-	return nil
+
+	return rep, nil
 }

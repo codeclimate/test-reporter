@@ -19,12 +19,11 @@ func Test_Parse(t *testing.T) {
 	r := require.New(t)
 
 	f := &Formatter{Path: "./example.xml"}
-	err := f.Parse()
+	rep, err := f.Format()
 	r.NoError(err)
-	r.Len(f.SourceFiles, 12)
+	r.Len(rep.SourceFiles, 12)
 
-	sf := f.SourceFiles[10]
-	r.Equal("/Users/markbates/Dropbox/development/php-test-reporter/src/TestReporter/Entity/CiInfo.php", sf.Name)
+	sf := rep.SourceFiles["/Users/markbates/Dropbox/development/php-test-reporter/src/TestReporter/Entity/CiInfo.php"]
 	r.InDelta(91.78, sf.CoveredPercent, 1)
 	r.Len(sf.Coverage, 194)
 	r.False(sf.Coverage[51].Valid)

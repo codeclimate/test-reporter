@@ -19,12 +19,11 @@ func Test_Parse(t *testing.T) {
 	r := require.New(t)
 
 	f := &Formatter{Path: "./example.xml"}
-	err := f.Parse()
+	rep, err := f.Format()
 	r.NoError(err)
-	r.Len(f.SourceFiles, 12)
+	r.Len(rep.SourceFiles, 12)
 
-	sf := f.SourceFiles[11]
-	r.Equal("codeclimate_test_reporter/components/runner.py", sf.Name)
+	sf := rep.SourceFiles["codeclimate_test_reporter/components/runner.py"]
 	r.InDelta(85.71, sf.CoveredPercent, 1)
 	r.Len(sf.Coverage, 82)
 	r.False(sf.Coverage[53].Valid)
