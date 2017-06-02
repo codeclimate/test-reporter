@@ -12,7 +12,7 @@ import (
 
 func exampleReport() (formatters.Report, error) {
 	rep := formatters.Report{}
-	f, err := os.Open("../examples/codeclimate.json")
+	f, err := os.Open("../integration-tests/codeclimate.json")
 	if err != nil {
 		return rep, errors.WithStack(err)
 	}

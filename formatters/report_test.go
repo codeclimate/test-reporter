@@ -63,7 +63,7 @@ func Test_Report_Merge(t *testing.T) {
 		rep, err := NewReport()
 		r.NoError(err)
 
-		f, err := os.Open(fmt.Sprintf("../examples/codeclimate.%d.json", i))
+		f, err := os.Open(fmt.Sprintf("../integration-tests/codeclimate.%d.json", i))
 		r.NoError(err)
 		err = json.NewDecoder(f).Decode(&rep)
 		r.NoError(err)
@@ -91,7 +91,7 @@ func Test_Report_Merge(t *testing.T) {
 
 func Test_Report_JSON_Unmarshal(t *testing.T) {
 	r := require.New(t)
-	f, err := os.Open("../examples/codeclimate.json")
+	f, err := os.Open("../integration-tests/codeclimate.json")
 	r.NoError(err)
 
 	rep, err := NewReport()
