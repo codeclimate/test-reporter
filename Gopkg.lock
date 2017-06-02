@@ -1,4 +1,4 @@
-memo = "073ef4b1edd95b4c45b942591c63e2edcdcc966401055a0e8ce092a8ed0cfb65"
+memo = "c273f8dfebad140999110b446f841504fba353d31f116e66b36fa6b81fee7596"
 
 [[projects]]
   name = "github.com/Sirupsen/logrus"
@@ -29,12 +29,6 @@ memo = "073ef4b1edd95b4c45b942591c63e2edcdcc966401055a0e8ce092a8ed0cfb65"
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
   revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
-
-[[projects]]
-  name = "github.com/markbates/pop"
-  packages = ["nulls"]
-  revision = "6e0f5604b25bec1533b35c584fa7c19a67e8ca1b"
-  version = "v3.18.0"
 
 [[projects]]
   branch = "master"

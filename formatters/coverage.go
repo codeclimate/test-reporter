@@ -3,14 +3,12 @@ package formatters
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"strings"
 
-	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
 
-type Coverage []nulls.Int
+type Coverage []NullInt
 
 // MarshalJSON marshals the coverage into JSON. Since the Code Climate
 // API requires this as a string "[1,2,null]" and not just a straight
@@ -28,7 +26,6 @@ func (c Coverage) MarshalJSON() ([]byte, error) {
 	b, err := json.Marshal(strings.TrimSpace(bb.String()))
 
 	if err != nil {
-		fmt.Printf("### err -> %+v\n", err)
 		return b, errors.WithStack(err)
 	}
 
@@ -39,7 +36,7 @@ func (c *Coverage) UnmarshalJSON(text []byte) error {
 	q := []byte("\"")
 	text = bytes.TrimPrefix(text, q)
 	text = bytes.TrimSuffix(text, q)
-	cc := []nulls.Int{}
+	cc := []NullInt{}
 	err := json.Unmarshal(text, &cc)
 	if err != nil {
 		return err

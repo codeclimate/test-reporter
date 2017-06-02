@@ -6,7 +6,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/markbates/pop/nulls"
 	"github.com/stretchr/testify/require"
 )
 
@@ -36,7 +35,7 @@ func Test_Report_Merge_MismatchedCoverageLength(t *testing.T) {
 		SourceFiles: SourceFiles{
 			"a.go": {
 				Name:     "a.go",
-				Coverage: Coverage{nulls.NewInt(1)},
+				Coverage: Coverage{NewNullInt(1)},
 			},
 		},
 	}
@@ -47,7 +46,7 @@ func Test_Report_Merge_MismatchedCoverageLength(t *testing.T) {
 		SourceFiles: SourceFiles{
 			"a.go": {
 				Name:     "a.go",
-				Coverage: Coverage{nulls.NewInt(1), nulls.NewInt(2)},
+				Coverage: Coverage{NewNullInt(1), NewNullInt(2)},
 			},
 		},
 	}
@@ -121,7 +120,7 @@ func Test_Merge_Issue_103(t *testing.T) {
 	sf := SourceFile{
 		Name:           "app/jobs/initialize_account_seats.rb",
 		CoveredPercent: 100,
-		Coverage:       Coverage{nulls.NewInt(1), nulls.NewInt(1), nulls.NewInt(15), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.NewInt(3), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.Int{}, nulls.NewInt(1), nulls.NewInt(3), nulls.Int{}, nulls.Int{}},
+		Coverage:       Coverage{NewNullInt(1), NewNullInt(1), NewNullInt(15), NullInt{}, NullInt{}, NewNullInt(1), NewNullInt(3), NullInt{}, NullInt{}, NewNullInt(1), NullInt{}, NewNullInt(1), NewNullInt(3), NullInt{}, NullInt{}},
 		LineCounts: LineCounts{
 			Missed:  0,
 			Covered: 8,
@@ -136,7 +135,7 @@ func Test_Merge_Issue_103(t *testing.T) {
 	sf2 := SourceFile{
 		Name:           "app/jobs/initialize_account_seats.rb",
 		CoveredPercent: 62.5,
-		Coverage:       Coverage{nulls.NewInt(1), nulls.NewInt(1), nulls.NewInt(0), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.NewInt(0), nulls.Int{}, nulls.Int{}, nulls.NewInt(1), nulls.Int{}, nulls.NewInt(1), nulls.NewInt(0), nulls.Int{}, nulls.Int{}},
+		Coverage:       Coverage{NewNullInt(1), NewNullInt(1), NewNullInt(0), NullInt{}, NullInt{}, NewNullInt(1), NewNullInt(0), NullInt{}, NullInt{}, NewNullInt(1), NullInt{}, NewNullInt(1), NewNullInt(0), NullInt{}, NullInt{}},
 		LineCounts: LineCounts{
 			Missed:  3,
 			Covered: 5,

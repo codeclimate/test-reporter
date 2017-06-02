@@ -8,7 +8,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/formatters"
-	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
 
@@ -54,10 +53,10 @@ func (f *Formatter) Parse() error {
 			num := 1
 			for _, l := range cc.Lines {
 				for num < l.Number {
-					sf.Coverage = append(sf.Coverage, nulls.Int{})
+					sf.Coverage = append(sf.Coverage, formatters.NullInt{})
 					num++
 				}
-				ni := nulls.NewInt(l.Hits)
+				ni := formatters.NewNullInt(l.Hits)
 				sf.Coverage = append(sf.Coverage, ni)
 				num++
 			}
