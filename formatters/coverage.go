@@ -36,10 +36,10 @@ var cwp = []byte("\"")
 var cws = []byte("\"")
 
 func (c *Coverage) UnmarshalJSON(text []byte) error {
-	text = bytes.TrimPrefix(text, cwp)
-	text = bytes.TrimSuffix(text, cws)
-	cc := make([]NullInt, 0, 1024)
-
+	q := []byte("\"")
+	text = bytes.TrimPrefix(text, q)
+	text = bytes.TrimSuffix(text, q)
+	cc := []NullInt{}
 	err := json.Unmarshal(text, &cc)
 	if err != nil {
 		return err
