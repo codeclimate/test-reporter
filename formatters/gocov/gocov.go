@@ -26,8 +26,7 @@ func init() {
 var searchPaths = []string{"c.out"}
 
 type Formatter struct {
-	Path        string
-	SourceFiles []formatters.SourceFile
+	Path string
 }
 
 func (f *Formatter) Search(paths ...string) (string, error) {
@@ -43,10 +42,15 @@ func (f *Formatter) Search(paths ...string) (string, error) {
 	return "", errors.WithStack(errors.Errorf("could not find any files in search paths for gocov. search paths were: %s", strings.Join(paths, ", ")))
 }
 
-func (f *Formatter) Parse() error {
-	profiles, err := cover.ParseProfiles(f.Path)
+func (r Formatter) Format() (formatters.Report, error) {
+	rep, err := formatters.NewReport()
 	if err != nil {
-		return errors.WithStack(err)
+		return rep, err
+	}
+
+	profiles, err := cover.ParseProfiles(r.Path)
+	if err != nil {
+		return rep, errors.WithStack(err)
 	}
 
 	gitHead, _ := env.GetHead()
@@ -54,7 +58,7 @@ func (f *Formatter) Parse() error {
 		n := strings.TrimPrefix(p.FileName, basePackage+string(os.PathSeparator))
 		sf, err := formatters.NewSourceFile(n, gitHead)
 		if err != nil {
-			return errors.WithStack(err)
+			return rep, errors.WithStack(err)
 		}
 		num := 0
 		for _, b := range p.Blocks {
@@ -67,20 +71,10 @@ func (f *Formatter) Parse() error {
 				num++
 			}
 		}
-		sf.CalcLineCounts()
-		f.SourceFiles = append(f.SourceFiles, sf)
-	}
-	return nil
-}
-
-func (r Formatter) Format() (formatters.Report, error) {
-	rep, err := formatters.NewReport()
-	if err != nil {
-		return rep, err
-	}
-
-	for _, f := range r.SourceFiles {
-		rep.AddSourceFile(f)
+		err = rep.AddSourceFile(sf)
+		if err != nil {
+			return rep, errors.WithStack(err)
+		}
 	}
 
 	return rep, nil

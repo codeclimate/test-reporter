@@ -11,17 +11,14 @@ func TestParse(t *testing.T) {
 	r := require.New(t)
 
 	f := &Formatter{}
-	files, err := f.Search("examples")
-	t.Log(files)
-	if err != nil {
-		t.Fatal(err)
-	}
-	err = f.Parse()
+	_, err := f.Search("examples")
 	r.NoError(err)
-	r.Len(f.SourceFiles, 3)
+	rep, err := f.Format()
+	r.NoError(err)
+	r.Len(rep.SourceFiles, 3)
 
-	testCalculator(r, f.SourceFiles[0])
-	testHamming(r, f.SourceFiles[2])
+	testCalculator(r, rep.SourceFiles["examples/Calculator.swift.gcov"])
+	testHamming(r, rep.SourceFiles["examples/hamming.c.gcov"])
 	testReport(r, f)
 }
 

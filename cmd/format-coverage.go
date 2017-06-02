@@ -100,7 +100,7 @@ func runFormatter(formatOptions CoverageFormatter) error {
 }
 
 func (f CoverageFormatter) Save() error {
-	err := f.In.Parse()
+	rep, err := f.In.Format()
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -110,11 +110,6 @@ func (f CoverageFormatter) Save() error {
 		if err != nil {
 			return errors.WithStack(err)
 		}
-	}
-
-	rep, err := f.In.Format()
-	if err != nil {
-		return errors.WithStack(err)
 	}
 
 	err = rep.Save(f.writer)
