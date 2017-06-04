@@ -36,12 +36,12 @@ func (g Git) String() string {
 }
 
 func GetHead() (*object.Commit, error) {
-	r, err := git.PlainOpen(".")
+	r, err := getRepo()
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 
-	ref, err := r.Head()
+	ref, err := getReference()
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -54,10 +54,33 @@ func GetHead() (*object.Commit, error) {
 	return commit, nil
 }
 
-func findGitInfo() (Git, error) {
-	_, err := exec.LookPath("git")
+func getReference() (*plumbing.Reference, error) {
+	r, err := getRepo()
 	if err != nil {
-		// git isn't present, so load from ENV vars:
+		return nil, errors.WithStack(err)
+	}
+
+	ref, err := r.Head()
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return ref, nil
+}
+
+func getRepo() (*git.Repository, error) {
+	r, err := git.PlainOpen(".")
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	return r, nil
+}
+
+func findGitInfo() (Git, error) {
+	reference, err := getReference()
+
+	// git isn't present or is a detached HEAD, so load from ENV vars:
+	if err != nil || !reference.IsBranch() {
 		logrus.Debug("Loading GIT info from ENV")
 		return loadGitFromENV()
 	}
