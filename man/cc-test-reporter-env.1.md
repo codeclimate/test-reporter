@@ -34,8 +34,7 @@ and error accordingly if they require a value.
 
 ## GIT_BRANCH
 
-If *./.git* exists, read **git rev-parse --abbrev-ref HEAD**. Otherwise, try the
-following environment variables in order:
+First, try the following environment variables in order. Otherwise, read **git rev-parse --abbrev-ref HEAD**.
 
     APPVEYOR_REPO_BRANCH
     BRANCH_NAME
@@ -48,8 +47,7 @@ following environment variables in order:
 
 ## GIT_COMMIT_SHA
 
-If *./.git* exists, read **git log -1 --pretty=format:'%H'**. Otherwise, try the
-following environment variables in order:
+First, try the following environment variables in order. Otherwise, read **git log -1 --pretty=format:'%H'**.
 
     APPVEYOR_REPO_COMMIT
     BUILDKITE_COMMIT
@@ -63,8 +61,7 @@ following environment variables in order:
 
 ## GIT_COMMITTED_AT
 
-If *./.git* exists, read **git log -1 --pretty=format:'%ct'**. Otherwise, try
-the following environment variables in order:
+First, try the following environment variables in order. Otherwise, read **git log -1 --pretty=format:'%ct'**.
 
     CI_COMMITED_AT [sic]
 
