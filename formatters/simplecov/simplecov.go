@@ -38,7 +38,7 @@ func (r Formatter) Format() (formatters.Report, error) {
 
 	jf, err := os.Open(r.Path)
 	if err != nil {
-		return rep, errors.WithStack(err)
+		return rep, errors.WithStack(errors.Errorf("could not open coverage file %s", r.Path))
 	}
 
 	m := map[string]input{}
