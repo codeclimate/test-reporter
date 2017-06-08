@@ -68,12 +68,10 @@ func runFormatter(formatOptions CoverageFormatter) error {
 	if formatOptions.InputType != "" {
 		if f, ok := formatterMap[formatOptions.InputType]; ok {
 			logrus.Debugf("using formatter %s", formatOptions.InputType)
-			if formatOptions.CoveragePath != "" {
-				_, err := f.Search(formatOptions.CoveragePath)
-				if err != nil {
-					logrus.Errorf("could not find coverage file %s\n%s", formatOptions.CoveragePath, err)
-					return errors.WithStack(err)
-				}
+			_, err := f.Search(formatOptions.CoveragePath)
+			if err != nil {
+				logrus.Errorf("could not find coverage file %s\n%s", formatOptions.CoveragePath, err)
+				return errors.WithStack(err)
 			}
 			formatOptions.In = f
 		} else {
