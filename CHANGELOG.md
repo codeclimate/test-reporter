@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v0.1.10 [(2017-06-08)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.10)
+
+* [NEW]  Add support on `format-coverage` for Travis ENV vars to
+  infer correctly git commit sha and git branch name
+* [FIX] `format-coverage` when `--input-type` is specified without a file path
+
 ## v0.1.9 [(2017-06-06)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.9)
 
 * [NEW] Add `SwiftCov` support
