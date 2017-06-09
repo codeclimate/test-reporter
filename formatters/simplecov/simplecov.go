@@ -47,8 +47,8 @@ func (r Formatter) Format() (formatters.Report, error) {
 		return rep, errors.WithStack(err)
 	}
 
+	gitHead, _ := env.GetHead()
 	for _, v := range m {
-		gitHead, _ := env.GetHead()
 		for n, ls := range v.Coverage {
 			fe, err := formatters.NewSourceFile(n, gitHead)
 			if err != nil {

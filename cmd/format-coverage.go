@@ -13,6 +13,7 @@ import (
 	"github.com/codeclimate/test-reporter/formatters/coveragepy"
 	"github.com/codeclimate/test-reporter/formatters/gcov"
 	"github.com/codeclimate/test-reporter/formatters/gocov"
+	"github.com/codeclimate/test-reporter/formatters/jacoco"
 	"github.com/codeclimate/test-reporter/formatters/lcov"
 	"github.com/codeclimate/test-reporter/formatters/simplecov"
 	"github.com/gobuffalo/envy"
@@ -32,7 +33,7 @@ type CoverageFormatter struct {
 var formatOptions = CoverageFormatter{}
 
 // a prioritized list of the formatters to use
-var formatterList = []string{"simplecov", "lcov", "coverage.py", "clover", "gocov", "gcov", "cobertura"}
+var formatterList = []string{"simplecov", "lcov", "coverage.py", "clover", "gocov", "gcov", "cobertura", "jacoco"}
 
 // a map of the formatters to use
 var formatterMap = map[string]formatters.Formatter{
@@ -43,6 +44,7 @@ var formatterMap = map[string]formatters.Formatter{
 	"clover":      &clover.Formatter{},
 	"cobertura":   &cobertura.Formatter{},
 	"gcov":        &gcov.Formatter{},
+	"jacoco":      &jacoco.Formatter{},
 }
 
 // formatCoverageCmd represents the format command
