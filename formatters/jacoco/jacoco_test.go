@@ -19,12 +19,11 @@ func Test_Parse(t *testing.T) {
 	r := require.New(t)
 
 	f := &Formatter{Path: "./example.xml"}
-	err := f.Parse()
+	rep, err := f.Format()
 	r.NoError(err)
-	r.Len(f.SourceFiles, 3)
+	r.Len(rep.SourceFiles, 3)
 
-	sf := f.SourceFiles[0]
-	r.Equal("Application.java", sf.Name)
+	sf := rep.SourceFiles["Application.java"]
 	r.InDelta(33.3, sf.CoveredPercent, 1)
 	r.Len(sf.Coverage, 11)
 	r.True(sf.Coverage[6].Valid)
