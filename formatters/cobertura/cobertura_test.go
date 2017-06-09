@@ -19,12 +19,11 @@ func Test_Parse(t *testing.T) {
 	r := require.New(t)
 
 	f := &Formatter{Path: "./example.xml"}
-	err := f.Parse()
+	rep, err := f.Format()
 	r.NoError(err)
-	r.Len(f.SourceFiles, 4)
+	r.Len(rep.SourceFiles, 4)
 
-	sf := f.SourceFiles[1]
-	r.Equal("search/BinarySearch.java", sf.Name)
+	sf := rep.SourceFiles["search/BinarySearch.java"]
 	r.InDelta(91.6, sf.CoveredPercent, 1)
 	r.Len(sf.Coverage, 31)
 	r.False(sf.Coverage[2].Valid)
