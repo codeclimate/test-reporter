@@ -110,7 +110,7 @@ func (u Uploader) SendBatches(rep *TestReport, url string) error {
 			return errors.WithStack(err)
 		}
 	}
-
+	fmt.Println("Test report uploaded successfully to Code Climate")
 	return nil
 }
 
