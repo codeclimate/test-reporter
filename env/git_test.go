@@ -22,7 +22,7 @@ func Test_loadGitFromENV(t *testing.T) {
 		envy.Set("GIT_BRANCH", "master")
 		envy.Set("GIT_COMMIT_SHA", "a12345")
 		envy.Set("GIT_COMMITTED_AT", "1234")
-		g, err := loadGitFromENV()
+		g, err := findGitInfo()
 		r.NoError(err)
 		r.Equal(g.Branch, "master")
 		r.Equal(g.CommitSHA, "a12345")
@@ -30,13 +30,25 @@ func Test_loadGitFromENV(t *testing.T) {
 	})
 }
 
+func Test_loadGitFromENVOrGit(t *testing.T) {
+	r := require.New(t)
+	envy.Temp(func() {
+		envy.Set("GIT_BRANCH", "master")
+		envy.Set("GIT_COMMIT_SHA", "a12345")
+		g, err := findGitInfo()
+		r.NoError(err)
+		r.Equal(g.Branch, "master")
+		r.Equal(g.CommitSHA, "a12345")
+		r.NotZero(g.CommittedAt)
+	})
+}
 func Test_loadGitFromENV_Alt_Vars(t *testing.T) {
 	r := require.New(t)
 	envy.Temp(func() {
 		envy.Set("CIRCLE_BRANCH", "circle")
 		envy.Set("WERCKER_GIT_COMMIT", "b12345")
 		envy.Set("CI_COMMITED_AT", "1345")
-		g, err := loadGitFromENV()
+		g, err := findGitInfo()
 		r.NoError(err)
 		r.Equal(g.Branch, "circle")
 		r.Equal(g.CommitSHA, "b12345")

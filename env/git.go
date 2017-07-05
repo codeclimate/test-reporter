@@ -61,7 +61,7 @@ func findGitInfo() (Git, error) {
 	g.Branch = findVar(gitBranchVars)
 	if g.Branch == "" {
 		logrus.Debug("couldn't load branch from ENV, trying git...")
-		g.Branch, err = loadBranchFromGit()
+		g.Branch, err = loadFromGit("rev-parse", "--abbrev-ref", "HEAD")
 		if err != nil {
 			return g, errors.WithStack(err)
 		}
@@ -70,7 +70,7 @@ func findGitInfo() (Git, error) {
 	g.CommitSHA = findVar(gitCommitShaVars)
 	if g.CommitSHA == "" {
 		logrus.Debug("couldn't load commit sha from ENV, trying git...")
-		g.CommitSHA, err = loadCommitShaFromGit()
+		g.CommitSHA, err = loadFromGit("log", "-1", "--pretty=format:%H")
 		if err != nil {
 			return g, errors.WithStack(err)
 		}
@@ -79,7 +79,7 @@ func findGitInfo() (Git, error) {
 	committedAt := findVar(gitCommittedAtVars)
 	if committedAt == "" {
 		logrus.Debug("couldn't load committed at from ENV, trying git...")
-		committedAt, err = loadCommittedAtFromGit()
+		committedAt, err = loadFromGit("log", "-1", "--pretty=format:%ct")
 		if err != nil {
 			return g, errors.WithStack(err)
 		}
@@ -145,30 +145,8 @@ func fallbackBlob(path string) (string, error) {
 	return res, nil
 }
 
-func loadBranchFromGit() (string, error) {
-	cmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
-	cmd.Stderr = os.Stderr
-	out, err := cmd.Output()
-	if err != nil {
-		return "", errors.WithStack(err)
-	}
-
-	return strings.TrimSpace(string(out)), nil
-}
-
-func loadCommitShaFromGit() (string, error) {
-	cmd := exec.Command("git", "log", "-1", "--pretty=format:%H")
-	cmd.Stderr = os.Stderr
-	out, err := cmd.Output()
-	if err != nil {
-		return "", errors.WithStack(err)
-	}
-
-	return strings.TrimSpace(string(out)), nil
-}
-
-func loadCommittedAtFromGit() (string, error) {
-	cmd := exec.Command("git", "log", "-1", "--pretty=format:%ct")
+func loadFromGit(gitArgs ...string) (string, error) {
+	cmd := exec.Command("git", gitArgs...)
 	cmd.Stderr = os.Stderr
 	out, err := cmd.Output()
 	if err != nil {
