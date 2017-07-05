@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## v0.1.11 [(2017-06-08)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.11)
+
+* [NEW] Add `JaCoCo` support
+* [FIX] `upload-coverage` outputs message when successful
+
 ## v0.1.10 [(2017-06-08)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.10)
 
 * [NEW]  Add support on `format-coverage` for Travis ENV vars to
