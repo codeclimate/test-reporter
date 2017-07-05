@@ -55,19 +55,36 @@ func GetHead() (*object.Commit, error) {
 }
 
 func findGitInfo() (Git, error) {
-	g, err := loadGitFromENV()
-	if err == nil {
-		return g, nil
+	g := Git{}
+	var err error
+
+	g.Branch = findVar(gitBranchVars)
+	if g.Branch == "" {
+		logrus.Debug("couldn't load branch from ENV, trying git...")
+		g.Branch, err = loadFromGit("rev-parse", "--abbrev-ref", "HEAD")
+		if err != nil {
+			return g, errors.WithStack(err)
+		}
 	}
 
-	logrus.Debug("couldn't load git info from ENV, trying git...")
-	g = Git{}
-	_, err = exec.LookPath("git")
-	if err != nil {
-		return g, errors.New("can't find git or load git info from ENV")
+	g.CommitSHA = findVar(gitCommitShaVars)
+	if g.CommitSHA == "" {
+		logrus.Debug("couldn't load commit sha from ENV, trying git...")
+		g.CommitSHA, err = loadFromGit("log", "-1", "--pretty=format:%H")
+		if err != nil {
+			return g, errors.WithStack(err)
+		}
 	}
 
-	g, err = loadFromGit()
+	committedAt := findVar(gitCommittedAtVars)
+	if committedAt == "" {
+		logrus.Debug("couldn't load committed at from ENV, trying git...")
+		committedAt, err = loadFromGit("log", "-1", "--pretty=format:%ct")
+		if err != nil {
+			return g, errors.WithStack(err)
+		}
+	}
+	g.CommittedAt, err = strconv.Atoi(committedAt)
 	if err != nil {
 		return g, errors.WithStack(err)
 	}
@@ -128,65 +145,15 @@ func fallbackBlob(path string) (string, error) {
 	return res, nil
 }
 
-func loadGitFromENV() (Git, error) {
-	g := Git{}
-	var err error
-
-	g.Branch = findVar(gitBranchVars)
-	if g.Branch == "" {
-		return g, errors.New("git branch ENV not found")
-	}
-
-	g.CommitSHA = findVar(gitCommitShaVars)
-	if g.CommitSHA == "" {
-		return g, errors.New("git commit SHA ENV not found")
-	}
-
-	committedAt := findVar(gitCommittedAtVars)
-
-	if committedAt == "" {
-		return g, errors.New("git committed_at ENV not found")
-	}
-
-	g.CommittedAt, err = strconv.Atoi(committedAt)
-	if err != nil {
-		return g, errors.WithStack(err)
-	}
-
-	return g, nil
-}
-
-func loadFromGit() (Git, error) {
-	g := Git{}
-
-	cmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
+func loadFromGit(gitArgs ...string) (string, error) {
+	cmd := exec.Command("git", gitArgs...)
 	cmd.Stderr = os.Stderr
 	out, err := cmd.Output()
 	if err != nil {
-		return g, errors.WithStack(err)
-	}
-	g.Branch = strings.TrimSpace(string(out))
-
-	cmd = exec.Command("git", "log", "-1", "--pretty=format:%H")
-	cmd.Stderr = os.Stderr
-	out, err = cmd.Output()
-	if err != nil {
-		return g, errors.WithStack(err)
-	}
-	g.CommitSHA = strings.TrimSpace(string(out))
-
-	cmd = exec.Command("git", "log", "-1", "--pretty=format:%ct")
-	cmd.Stderr = os.Stderr
-	out, err = cmd.Output()
-	if err != nil {
-		return g, errors.WithStack(err)
-	}
-	g.CommittedAt, err = strconv.Atoi(strings.TrimSpace(string(out)))
-	if err != nil {
-		return g, errors.WithStack(err)
+		return "", errors.WithStack(err)
 	}
 
-	return g, nil
+	return strings.TrimSpace(string(out)), nil
 }
 
 var gitBranchVars = []string{"GIT_BRANCH", "APPVEYOR_REPO_BRANCH", "BRANCH_NAME", "BUILDKITE_BRANCH", "CIRCLE_BRANCH", "CI_BRANCH", "CI_BUILD_REF_NAME", "TRAVIS_PULL_REQUEST_BRANCH", "TRAVIS_BRANCH", "WERCKER_GIT_BRANCH", "CI_COMMIT_REF_NAME"}
