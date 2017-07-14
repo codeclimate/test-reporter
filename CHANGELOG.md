@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v0.1.12 [(2017-07-14)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.12)
+
+* [FIX] `format-coverage`/`after-build` `--debug` outputs `codeclimate.json` content
+
 ## v0.1.11 [(2017-07-06)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.11)
 
 * [NEW] Add `JaCoCo` support
