@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## v0.1.11 [(2017-06-08)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.11)
+## v0.1.11 [(2017-07-06)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.11)
 
 * [NEW] Add `JaCoCo` support
 * [FIX] `upload-coverage` outputs message when successful
