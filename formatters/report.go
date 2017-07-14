@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/version"
 	"github.com/gobuffalo/envy"
@@ -146,6 +147,7 @@ func (rep *Report) AddSourceFile(sf SourceFile) error {
 
 func (r Report) Save(w io.Writer) error {
 	b, err := json.MarshalIndent(r, "", "  ")
+	logrus.Debugf("codeclimate.json content: %s", string(b))
 	if err != nil {
 		return err
 	}
