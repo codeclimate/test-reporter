@@ -30,7 +30,7 @@ test:
   - `$EXIT_CODE` should be the exit code of your test suite process. Some CI
      system expose this as an environment variable; for others, you may need
      to manually capture $? to provide it to after-build later. Providing this
-     will prevent sending test coverage results for failed tests. 
+     will prevent sending test coverage results for failed tests.
 
 ## Code Climate: Enterprise
 
@@ -70,20 +70,18 @@ For example:
 
    ```sh
    ./cc-test-reporter format-coverage --output "coverage/codeclimate.$N.json"
-   aws s3 sync coverage/ "s3://my-bucket/coverage/$SHA"
+   aws s3 sync coverage/ "s3://my-bucket/coverage/$BUILD_NUMBER"
    ```
 
    Where:
 
    - `$N` should be a unique identifier for that batch of tests
-   - `$SHA` should be the commit for which the coverage was generated; you can
-     use an existing, CI-provided variable or `./cc-test-reporter env` to infer
-     `$GIT_COMMIT_SHA` and use that.
+   - `$BUILD_NUMBER` should be the build number provided by your CI.
 
 1. After *all* tests:
 
    ```sh
-   aws s3 sync "s3://my-bucket/coverage/$SHA" coverage/
+   aws s3 sync "s3://my-bucket/coverage/$BUILD_NUMBER" coverage/
    cc-test-reporter sum-coverage --output - --parts $PARTS coverage/codeclimate.*.json | \
      cc-test-reporter upload-coverage --input -
    ```
