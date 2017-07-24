@@ -39,7 +39,7 @@ export the `CC_TEST_REPORTER_COVERAGE_ENDPOINT` variable, or pass the
 `--coverage-endpoint` option to `after-build`.
 
 ```sh
-CC_TEST_REPORTER_COVERAGE_ENDPOINT=https://codeclimate.my-domain.com/test_reports
+CC_TEST_REPORTER_COVERAGE_ENDPOINT=https://codeclimate.my-domain.com/api/v1/test_reports
 ```
 
 ## Low-level Usage
