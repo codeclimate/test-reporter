@@ -88,6 +88,7 @@
             </method>
           </methods>
           <lines>
+            <line number="29" hits="9" branch="false" />
             <line number="12" hits="3" branch="false" />
             <line number="16" hits="3" branch="false" />
             <line number="18" hits="12" branch="true" condition-coverage="100% (2/2)">
@@ -167,7 +168,6 @@
               </conditions>
             </line>
             <line number="19" hits="0" branch="false" />
-            <line number="24" hits="0" branch="false" />
           </lines>
         </class>
       </classes>

@@ -3,6 +3,7 @@ package cobertura
 import (
 	"encoding/xml"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/Sirupsen/logrus"
@@ -55,6 +56,7 @@ func (r Formatter) Format() (formatters.Report, error) {
 			if err != nil {
 				return rep, errors.WithStack(err)
 			}
+			sort.Sort(ByLineNum(pf.Lines))
 			for _, l := range pf.Lines {
 				for num < l.Num {
 					sf.Coverage = append(sf.Coverage, formatters.NullInt{})
