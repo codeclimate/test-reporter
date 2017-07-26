@@ -30,4 +30,6 @@ func Test_Parse(t *testing.T) {
 	r.True(sf.Coverage[11].Valid)
 	r.Equal(0, sf.Coverage[10].Int)
 	r.Equal(3, sf.Coverage[11].Int)
+	r.Equal(21, sf.Coverage[19].Int)
+	r.Equal(15, sf.Coverage[20].Int)
 }
