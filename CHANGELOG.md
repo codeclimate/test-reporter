@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v0.1.13 [(2017-07-14)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.13)
+
+* [FIX] Update `Cobertura` formatter to correctly parse coverage information
+  from a `cobertura.xml` file that has lines not sorted by number or when lines
+  with the same number are present more than one time.
+
 ## v0.1.12 [(2017-07-14)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.12)
 
 * [FIX] `format-coverage`/`after-build` `--debug` outputs `codeclimate.json` content
