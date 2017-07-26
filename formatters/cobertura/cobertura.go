@@ -62,9 +62,14 @@ func (r Formatter) Format() (formatters.Report, error) {
 					sf.Coverage = append(sf.Coverage, formatters.NullInt{})
 					num++
 				}
-				ni := formatters.NewNullInt(l.Hits)
-				sf.Coverage = append(sf.Coverage, ni)
-				num++
+				if l.Num <= len(sf.Coverage) {
+					hits := sf.Coverage[l.Num-1].Int + l.Hits
+					sf.Coverage[l.Num-1] = formatters.NewNullInt(hits)
+				} else {
+					ni := formatters.NewNullInt(l.Hits)
+					sf.Coverage = append(sf.Coverage, ni)
+					num++
+				}
 			}
 			sf.CalcLineCounts()
 			err = rep.AddSourceFile(sf)
