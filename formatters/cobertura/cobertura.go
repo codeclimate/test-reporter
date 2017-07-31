@@ -44,13 +44,27 @@ func (r Formatter) Format() (formatters.Report, error) {
 
 	c := &xmlFile{}
 	err = xml.NewDecoder(fx).Decode(c)
+
 	if err != nil {
 		return rep, errors.WithStack(err)
 	}
 
 	gitHead, _ := env.GetHead()
 	for _, pp := range c.Packages {
-		for _, pf := range pp.Classes {
+		mergedClasses := make(map[string]*xmlClass)
+		// merge Classes by filename
+		for i, clss := range pp.Classes {
+			filename := clss.FileName
+			if _, ok := mergedClasses[filename]; ok {
+				// Appends lines for mergedClasses with the same filename
+				lines := append(mergedClasses[filename].Lines, clss.Lines...)
+				mergedClasses[filename].Lines = lines
+			} else {
+				mergedClasses[filename] = &pp.Classes[i]
+			}
+		}
+
+		for _, pf := range mergedClasses {
 			num := 1
 			sf, err := formatters.NewSourceFile(pf.FileName, gitHead)
 			if err != nil {

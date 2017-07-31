@@ -173,6 +173,20 @@
             <line number="24" hits="0" branch="false" />
           </lines>
         </class>
+        <class name="search.LinearSearch$1" filename="search/LinearSearch.java" line-rate="1.0" branch-rate="1.0" complexity="1.0">
+          <methods>
+            <method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
+              <lines>
+                <line number="9" hits="3" branch="false" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="10" hits="2" branch="false" />
+            <line number="24" hits="3" branch="false" />
+            <line number="40" hits="5" branch="false" />
+          </lines>
+        </class>
       </classes>
     </package>
   </packages>

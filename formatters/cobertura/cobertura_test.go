@@ -32,4 +32,9 @@ func Test_Parse(t *testing.T) {
 	r.Equal(3, sf.Coverage[11].Int)
 	r.Equal(21, sf.Coverage[19].Int)
 	r.Equal(15, sf.Coverage[20].Int)
+
+	sf = rep.SourceFiles["search/LinearSearch.java"]
+	r.Equal(2, sf.Coverage[9].Int)
+	r.Equal(3, sf.Coverage[23].Int)
+	r.Equal(5, sf.Coverage[39].Int)
 }
