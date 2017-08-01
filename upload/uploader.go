@@ -2,11 +2,15 @@ package upload
 
 import (
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -116,7 +120,8 @@ func (u Uploader) SendBatches(rep *TestReport, url string) error {
 
 func (u Uploader) doRequest(in io.Reader, url string) (*http.Response, error) {
 	c := http.Client{
-		Timeout: 30 * time.Second,
+		Transport: u.newTransport(),
+		Timeout:   30 * time.Second,
 	}
 
 	req, err := u.newRequest(in, url)
@@ -144,6 +149,25 @@ func (u Uploader) doRequest(in io.Reader, url string) (*http.Response, error) {
 		return res, fmt.Errorf("response from %s.\nHTTP %d: %s", url, res.StatusCode, errorMessage)
 	}
 	return res, nil
+}
+
+func (u Uploader) newTransport() (tr http.RoundTripper) {
+	sslCertFile := os.Getenv("SSL_CERT_FILE")
+	if sslCertFile == "" {
+		return tr
+	}
+
+	caCert, err := ioutil.ReadFile(sslCertFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	caCertPool := x509.NewCertPool()
+	caCertPool.AppendCertsFromPEM(caCert)
+	return &http.Transport{
+		TLSClientConfig: &tls.Config{
+			RootCAs: caCertPool,
+		},
+	}
 }
 
 func (u Uploader) newRequest(in io.Reader, url string) (*http.Request, error) {
