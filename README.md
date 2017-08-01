@@ -42,6 +42,9 @@ export the `CC_TEST_REPORTER_COVERAGE_ENDPOINT` variable, or pass the
 CC_TEST_REPORTER_COVERAGE_ENDPOINT=https://codeclimate.my-domain.com/api/v1/test_reports
 ```
 
+If you're using a self-signed certificate, export the `SSL_CERT_FILE` variable
+indicating the location of the certificate file when using `after-build` or `upload-coverage` commands.
+
 ## Low-level Usage
 
 The test reporter is implemented as a composition of lower-level commands, which
