@@ -7,15 +7,17 @@ type Lines struct {
 	Hits int `xml:"hits,attr"`
 }
 
+type xmlClass struct {
+	Name     string  `xml:"name,attr"`
+	FileName string  `xml:"filename,attr"`
+	Lines    []Lines `xml:"lines>line"`
+}
+
 type xmlFile struct {
 	XMLName  xml.Name `xml:"coverage"`
 	Packages []struct {
-		Name    string `xml:"name,attr"`
-		Classes []struct {
-			Name     string  `xml:"name,attr"`
-			FileName string  `xml:"filename,attr"`
-			Lines    []Lines `xml:"lines>line"`
-		} `xml:"classes>class"`
+		Name    string     `xml:"name,attr"`
+		Classes []xmlClass `xml:"classes>class"`
 	} `xml:"packages>package"`
 }
 
