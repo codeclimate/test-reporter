@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v0.1.13 [(2017-08-02)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.14)
+
+* [NEW] Add support for `SSL_CERT_FILE` env var on
+  `after-build`/`upload-coverage` commands
+* [FIX] Update `Cobertura` formatter to correctly parse coverage information
+  when file contains inner classes.
+
 ## v0.1.13 [(2017-07-14)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.13)
 
 * [FIX] Update `Cobertura` formatter to correctly parse coverage information
