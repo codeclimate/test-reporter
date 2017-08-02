@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## v0.1.13 [(2017-08-02)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.14)
+## v0.1.14 [(2017-08-02)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.14)
 
 * [NEW] Add support for `SSL_CERT_FILE` env var on
   `after-build`/`upload-coverage` commands
