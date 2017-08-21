@@ -106,7 +106,7 @@ func (f CoverageFormatter) Save() error {
 	}
 
 	if len(rep.SourceFiles) == 0 {
-		return errors.WithStack(errors.New("Empty report. Could not find coverage info for source files"))
+		return errors.WithStack(errors.New("could not find coverage info for source files"))
 	}
 
 	if f.writer == nil {
