@@ -105,6 +105,10 @@ func (f CoverageFormatter) Save() error {
 		return errors.WithStack(err)
 	}
 
+	if len(rep.SourceFiles) == 0 {
+		return errors.WithStack(errors.New("could not find coverage info for source files"))
+	}
+
 	if f.writer == nil {
 		f.writer, err = writer(formatOptions.Output)
 		if err != nil {
