@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## v0.2.0 [(2017-08-24)](https://github.com/codeclimate/test-reporter/releases/tag/v0.2.0)
+
+* [NEW] Add support for DroneCI by @teohm [#215][]
+* [FIX] Fix Clover formatter [#213][]
+* [FIX] Raise an error when report is empty [#214][]
+
+[#213]: https://github.com/codeclimate/test-reporter/pull/213
+[#214]: https://github.com/codeclimate/test-reporter/pull/214
+[#215]: https://github.com/codeclimate/test-reporter/pull/215
+
 ## v0.1.14 [(2017-08-02)](https://github.com/codeclimate/test-reporter/releases/tag/v0.1.14)
 
 * [NEW] Add support for `SSL_CERT_FILE` env var on
