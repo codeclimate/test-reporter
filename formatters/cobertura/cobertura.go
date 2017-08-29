@@ -42,15 +42,15 @@ func (r Formatter) Format() (formatters.Report, error) {
 		return rep, errors.WithStack(err)
 	}
 
-	c := &xmlFile{}
-	err = xml.NewDecoder(fx).Decode(c)
+	coberturaFile := &xmlFile{}
+	err = xml.NewDecoder(fx).Decode(coberturaFile)
 
 	if err != nil {
 		return rep, errors.WithStack(err)
 	}
 
 	gitHead, _ := env.GetHead()
-	for _, pp := range c.Packages {
+	for _, pp := range coberturaFile.Packages {
 		mergedClasses := make(map[string]*xmlClass)
 		// merge Classes by filename
 		for i, clss := range pp.Classes {
@@ -66,7 +66,9 @@ func (r Formatter) Format() (formatters.Report, error) {
 
 		for _, pf := range mergedClasses {
 			num := 1
-			sf, err := formatters.NewSourceFile(pf.FileName, gitHead)
+			fileName := coberturaFile.getFullFilePath(pf.FileName)
+			logrus.Debugf("creating test file report for %s", fileName)
+			sf, err := formatters.NewSourceFile(fileName, gitHead)
 			if err != nil {
 				return rep, errors.WithStack(err)
 			}
