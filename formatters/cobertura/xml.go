@@ -12,7 +12,7 @@ type Lines struct {
 }
 
 type Source struct {
-	Path string `xml:"source"`
+	Path string `xml:",chardata"`
 }
 
 type xmlClass struct {
@@ -41,12 +41,11 @@ func (coberturaFile xmlFile) getFullFilePath(filename string) string {
 	fullFilePath := filename
 
 	for _, source := range coberturaFile.Sources {
-		filepath := fmt.Sprintf("%s%s", source.Path, filename)
+		filepath := fmt.Sprintf("%s/%s", source.Path, filename)
 		if _, err := os.Stat(filepath); err == nil {
 			fullFilePath = filepath
 			break
 		}
 	}
-
 	return fullFilePath
 }
