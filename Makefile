@@ -67,6 +67,9 @@ test-gocov:
 test-clover:
 	docker build -f integration-tests/clover/Dockerfile .
 
+test-cobertura:
+	docker build -f integration-tests/cobertura/Dockerfile .
+
 publish-head:
 	$(AWS) s3 cp \
 	  --acl public-read \
