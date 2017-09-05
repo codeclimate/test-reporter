@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v0.2.1 [(2017-09-05)](https://github.com/codeclimate/test-reporter/releases/tag/v0.2.1)
+
+* [FIX] Update `Cobertura` formatter to parse `<source>` tags and correctly source file
+   paths. [#218][]
+
+[#218]: https://github.com/codeclimate/test-reporter/pull/218
+
 ## v0.2.0 [(2017-08-24)](https://github.com/codeclimate/test-reporter/releases/tag/v0.2.0)
 
 * [NEW] Add support for DroneCI by @teohm [#215][]
