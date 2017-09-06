@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v0.2.2 [(2017-09-06)](https://github.com/codeclimate/test-reporter/releases/tag/v0.2.2)
+
+* [FIX] Fix build task to statically compile binaries [#221][]
+
+[#221]: https://github.com/codeclimate/test-reporter/pull/221
+
 ## v0.2.1 [(2017-09-05)](https://github.com/codeclimate/test-reporter/releases/tag/v0.2.1)
 
 * [FIX] Update `Cobertura` formatter to parse `<source>` tags and correctly source file
