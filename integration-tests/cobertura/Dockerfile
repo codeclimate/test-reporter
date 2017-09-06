@@ -18,8 +18,8 @@ RUN go install -v && \
     apt-get update && \
     apt-get install -y maven
 
-RUN git clone https://github.com/ale7714/mavanagaiata.git
-WORKDIR mavanagaiata
+RUN git clone https://github.com/codeclimate-testing/test-reporter-cobertura-example.git
+WORKDIR test-reporter-cobertura-example
 RUN mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B
 
 RUN echo "testing" > ignore.me && \
