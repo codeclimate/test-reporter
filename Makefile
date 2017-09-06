@@ -47,6 +47,7 @@ build-docker:
 	  --env GOARCH \
 	  --env GOOS \
 	  --env GOPATH=/ \
+	  --env CGO_ENABLED=0 \
 	  --volume "$(PWD)"/artifacts:/artifacts \
 	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
 	  --workdir "/src/$(PROJECT)" \
