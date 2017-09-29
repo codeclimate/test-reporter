@@ -2,6 +2,7 @@ package jacoco
 
 import (
 	"encoding/xml"
+	"fmt"
 	"os"
 	"strings"
 
@@ -41,21 +42,22 @@ func (r Formatter) Format() (formatters.Report, error) {
 		return rep, errors.WithStack(err)
 	}
 
-	c := &xmlFile{}
-	err = xml.NewDecoder(fx).Decode(c)
+	xmlJacoco := &xmlFile{}
+	err = xml.NewDecoder(fx).Decode(xmlJacoco)
 	if err != nil {
 		return rep, errors.WithStack(err)
 	}
 
 	gitHead, _ := env.GetHead()
-	for _, pp := range c.Packages {
-		for _, pf := range pp.SourceFile {
+	for _, xmlPackage := range xmlJacoco.Packages {
+		for _, xmlSF := range xmlPackage.SourceFile {
 			num := 1
-			sf, err := formatters.NewSourceFile(pf.Name, gitHead)
+			filepath := fmt.Sprintf("%s/%s", xmlPackage.Name, xmlSF.Name)
+			sf, err := formatters.NewSourceFile(filepath, gitHead)
 			if err != nil {
 				return rep, errors.WithStack(err)
 			}
-			for _, l := range pf.Lines {
+			for _, l := range xmlSF.Lines {
 				for num < l.Num {
 					sf.Coverage = append(sf.Coverage, formatters.NullInt{})
 					num++
