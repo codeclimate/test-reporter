@@ -1,6 +1,10 @@
 # Change log
 
-## Unreleased
+## v0.3.0 [(2017-10-02)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.0)
+
+* [NEW] "format-coverage" now supports a new option "--add-prefix" for prefixing a path to all file paths
+* [FIX] JaCoCo formatter now properly takes into account package when creating file paths
+* [FIX] "format-coverage" "--prefix" option now accepts paths with or without trailing slash
 
 ## v0.2.2 [(2017-09-06)](https://github.com/codeclimate/test-reporter/releases/tag/v0.2.2)
 
