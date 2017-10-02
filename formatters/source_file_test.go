@@ -3,6 +3,7 @@ package formatters
 import (
 	"testing"
 
+	"github.com/gobuffalo/envy"
 	"github.com/stretchr/testify/require"
 )
 
@@ -54,4 +55,26 @@ func Test_SourceFile_BlobID(t *testing.T) {
 	r.NoError(err)
 	r.NotZero(sf.BlobID)
 	r.NotContains(sf.BlobID, "blob")
+}
+
+func Test_SourceFile_AddPrefix(t *testing.T) {
+	envy.Temp(func() {
+		envy.Set("ADD_PREFIX", "test-prefix")
+		envy.Set("PREFIX", ".")
+		r := require.New(t)
+		sf, err := NewSourceFile("./coverage.go", nil)
+		r.NoError(err)
+		r.Equal(sf.Name, "test-prefix/coverage.go")
+	})
+}
+
+func Test_SourceFile_AddPrefixWithPathSeparator(t *testing.T) {
+	envy.Temp(func() {
+		envy.Set("ADD_PREFIX", "test-prefix/")
+		envy.Set("PREFIX", ".")
+		r := require.New(t)
+		sf, err := NewSourceFile("./coverage.go", nil)
+		r.NoError(err)
+		r.Equal(sf.Name, "test-prefix/coverage.go")
+	})
 }

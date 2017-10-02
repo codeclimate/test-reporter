@@ -77,10 +77,6 @@ func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 		name = strings.TrimPrefix(name, prefix)
 	}
 
-	if addPrefix, err := envy.MustGet("ADD_PREFIX"); err == nil {
-		name = addPrefix + name
-	}
-
 	sf := SourceFile{
 		Name:     name,
 		Coverage: Coverage{},
@@ -88,8 +84,17 @@ func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 
 	var err error
 	sf.BlobID, err = env.GitBlob(name, commit)
+
 	if err != nil {
 		return sf, errors.WithStack(err)
+	}
+
+	if addPrefix, err := envy.MustGet("ADD_PREFIX"); err == nil {
+		if strings.HasSuffix(addPrefix, string(os.PathSeparator)) {
+			sf.Name = addPrefix + sf.Name
+		} else {
+			sf.Name = addPrefix + string(os.PathSeparator) + sf.Name
+		}
 	}
 
 	return sf, nil
