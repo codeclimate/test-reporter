@@ -58,19 +58,23 @@ func Test_SourceFile_BlobID(t *testing.T) {
 }
 
 func Test_SourceFile_AddPrefix(t *testing.T) {
-	envy.Set("ADD_PREFIX", "test-prefix")
-	envy.Set("PREFIX", ".")
-	r := require.New(t)
-	sf, err := NewSourceFile("./coverage.go", nil)
-	r.NoError(err)
-	r.Equal(sf.Name, "test-prefix/coverage.go")
+	envy.Temp(func() {
+		envy.Set("ADD_PREFIX", "test-prefix")
+		envy.Set("PREFIX", ".")
+		r := require.New(t)
+		sf, err := NewSourceFile("./coverage.go", nil)
+		r.NoError(err)
+		r.Equal(sf.Name, "test-prefix/coverage.go")
+	})
 }
 
 func Test_SourceFile_AddPrefixWithPathSeparator(t *testing.T) {
-	envy.Set("ADD_PREFIX", "test-prefix/")
-	envy.Set("PREFIX", ".")
-	r := require.New(t)
-	sf, err := NewSourceFile("./coverage.go", nil)
-	r.NoError(err)
-	r.Equal(sf.Name, "test-prefix/coverage.go")
+	envy.Temp(func() {
+		envy.Set("ADD_PREFIX", "test-prefix/")
+		envy.Set("PREFIX", ".")
+		r := require.New(t)
+		sf, err := NewSourceFile("./coverage.go", nil)
+		r.NoError(err)
+		r.Equal(sf.Name, "test-prefix/coverage.go")
+	})
 }
