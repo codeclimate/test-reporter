@@ -27,6 +27,7 @@ type CoverageFormatter struct {
 	InputType    string
 	Output       string
 	Prefix       string
+	AddPrefix    string
 	writer       io.Writer
 }
 
@@ -65,6 +66,7 @@ var formatCoverageCmd = &cobra.Command{
 
 func runFormatter(formatOptions CoverageFormatter) error {
 	envy.Set("PREFIX", formatOptions.Prefix)
+	envy.Set("ADD_PREFIX", formatOptions.AddPrefix)
 
 	// if a type is specified use that
 	if formatOptions.InputType != "" {
@@ -126,6 +128,7 @@ func (f CoverageFormatter) Save() error {
 func init() {
 	pwd, _ := os.Getwd()
 	formatCoverageCmd.Flags().StringVarP(&formatOptions.Prefix, "prefix", "p", pwd, "the root directory where the coverage analysis was performed")
+	formatCoverageCmd.Flags().StringVar(&formatOptions.AddPrefix, "add-prefix", "", "add this prefix to file paths")
 	formatCoverageCmd.Flags().StringVarP(&formatOptions.Output, "output", "o", ccDefaultCoveragePath, "output path")
 	formatCoverageCmd.Flags().StringVarP(&formatOptions.InputType, "input-type", "t", "", fmt.Sprintf("type of input source to use [%s]", strings.Join(formatterList, ", ")))
 	RootCmd.AddCommand(formatCoverageCmd)

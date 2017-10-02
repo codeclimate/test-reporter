@@ -77,6 +77,10 @@ func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 		name = strings.TrimPrefix(name, prefix)
 	}
 
+	if addPrefix, err := envy.MustGet("ADD_PREFIX"); err == nil {
+		name = addPrefix + name
+	}
+
 	sf := SourceFile{
 		Name:     name,
 		Coverage: Coverage{},
