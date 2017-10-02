@@ -73,8 +73,12 @@ func (sf *SourceFile) CalcLineCounts() {
 
 func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 	if prefix, err := envy.MustGet("PREFIX"); err == nil {
-		prefix := fmt.Sprintf("%s%s", prefix, string(os.PathSeparator))
-		name = strings.TrimPrefix(name, prefix)
+		if strings.HasSuffix(prefix, string(os.PathSeparator)) {
+			name = strings.TrimPrefix(name, prefix)
+		} else {
+			prefix := fmt.Sprintf("%s%s", prefix, string(os.PathSeparator))
+			name = strings.TrimPrefix(name, prefix)
+		}
 	}
 
 	sf := SourceFile{
