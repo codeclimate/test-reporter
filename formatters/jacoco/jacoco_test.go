@@ -23,7 +23,7 @@ func Test_Parse(t *testing.T) {
 	r.NoError(err)
 	r.Len(rep.SourceFiles, 3)
 
-	sf := rep.SourceFiles["Application.java"]
+	sf := rep.SourceFiles["be/apo/basic/Application.java"]
 	r.InDelta(33.3, sf.CoveredPercent, 1)
 	r.Len(sf.Coverage, 11)
 	r.True(sf.Coverage[6].Valid)
