@@ -98,3 +98,14 @@ func Test_SourceFilePrefixWithPathSeparator(t *testing.T) {
 		r.Equal(sf.Name, "coverage.go")
 	})
 }
+
+func Test_SourceFileEmptyAddPrefixDoesNothing(t *testing.T) {
+	envy.Temp(func() {
+		envy.Set("PREFIX", "./")
+		envy.Set("ADD_PREFIX", "")
+		r := require.New(t)
+		sf, err := NewSourceFile("./coverage.go", nil)
+		r.NoError(err)
+		r.Equal(sf.Name, "coverage.go")
+	})
+}

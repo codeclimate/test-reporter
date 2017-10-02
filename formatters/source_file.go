@@ -75,8 +75,10 @@ func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 	if prefix, err := envy.MustGet("PREFIX"); err == nil {
 		if strings.HasSuffix(prefix, string(os.PathSeparator)) {
 			name = strings.TrimPrefix(name, prefix)
+			logrus.Printf("triming with prefix %s\n", prefix)
 		} else {
-			prefix := fmt.Sprintf("%s%s", prefix, string(os.PathSeparator))
+			prefix = fmt.Sprintf("%s%s", prefix, string(os.PathSeparator))
+			logrus.Printf("triming with prefix %s\n", prefix)
 			name = strings.TrimPrefix(name, prefix)
 		}
 	}
@@ -94,10 +96,12 @@ func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 	}
 
 	if addPrefix, err := envy.MustGet("ADD_PREFIX"); err == nil {
-		if strings.HasSuffix(addPrefix, string(os.PathSeparator)) {
-			sf.Name = addPrefix + sf.Name
-		} else {
-			sf.Name = addPrefix + string(os.PathSeparator) + sf.Name
+		if addPrefix != "" {
+			if strings.HasSuffix(addPrefix, string(os.PathSeparator)) {
+				sf.Name = addPrefix + sf.Name
+			} else {
+				sf.Name = addPrefix + string(os.PathSeparator) + sf.Name
+			}
 		}
 	}
 
