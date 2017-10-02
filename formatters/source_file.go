@@ -90,7 +90,11 @@ func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 	}
 
 	if addPrefix, err := envy.MustGet("ADD_PREFIX"); err == nil {
-		sf.Name = addPrefix + sf.Name
+		if strings.HasSuffix(addPrefix, string(os.PathSeparator)) {
+			sf.Name = addPrefix + sf.Name
+		} else {
+			sf.Name = addPrefix + string(os.PathSeparator) + sf.Name
+		}
 	}
 
 	return sf, nil
