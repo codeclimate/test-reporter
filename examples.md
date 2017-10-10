@@ -243,7 +243,7 @@ install:
   - composer install
 after_script:
     - if [ $(phpenv version-name) = "7.1" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
-    ```
+  ```
 - Language: Ruby
 - CI: TravisCI
 - Coverage Tool: 
