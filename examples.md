@@ -1,6 +1,5 @@
 ## The test reporter can be configured with several different languages, coverage tools, and CI's. This file contains several different working configurations.
 
-- Example 1
 - Language: PHP
 - CI: TravisCI
 - Testing Framework: PHP Codeception
