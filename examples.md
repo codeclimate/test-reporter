@@ -63,7 +63,6 @@ env:
 
 - Language: Python
 - CI: TravisCI
-- CI: TravisCI
 - Coverage Tool: Codecov
 - File: travis.yml
 - Single/Parallel: 
@@ -139,3 +138,29 @@ after_success:
   #
   - codecov
 ```
+- Language: PHP
+- CI: TravisCI
+- Coverage Tool: Clover
+- File: travis.yml
+- Single/Parallel: Single
+- OSS Repo: https://github.com/trogne/skeleton
+
+```
+env:
+  global:
+    - CC_TEST_REPORTER_ID=7200f3ac9aab067d6a3c75ddf45f1cadbfb0ee1f9ef902f4e2d005a2511c5745
+    - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)    
+language: php
+php:
+  - 7.0
+before_script:
+  - "composer require codeclimate/php-test-reporter --dev"
+  - "composer install"
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+script:
+  - "phpunit --testsuite=unit --coverage-text --coverage-clover build/logs/clover.xml"
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  ```
+
