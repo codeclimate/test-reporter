@@ -218,3 +218,29 @@ jobs:
         - bin/kahlan --config=kahlan-config.travis.php --clover=clover.xml
         - bash <(curl -s https://codecov.io/bash)
 ```
+
+- Language: PHP
+- CI: TravisCI
+- Coverage Tool: 
+- File: travis.yml
+- Single/Parallel: 
+- OSS Repo: https://github.com/jmwri/pubg-php
+
+```
+env:
+  global:
+    - CC_TEST_REPORTER_ID=86a09970f02b3f841b263963099a65adf9bf9e85ea72db88a1d5f5ac003d01f2
+    - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
+language: php
+php:
+  - '5.6'
+  - '7.1'
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - if [ $(phpenv version-name) = "7.1" ]; then ./cc-test-reporter before-build; fi
+install:
+  - composer install
+after_script:
+    - if [ $(phpenv version-name) = "7.1" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+    ```
