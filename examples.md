@@ -32,8 +32,8 @@ after_script:
 - File: travis.yml
 - OSS Repo: https://github.com/menntamalastofnun/skolagatt
 
-```
-dist: trusty
+
+```dist: trusty
 language: python
 python:
   - "3.5"
