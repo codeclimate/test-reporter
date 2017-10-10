@@ -1,7 +1,7 @@
 The test reporter can be configured with several different languages, testing frameworks, and CI's. This file contains several different working configurations.
 
 **PHP / TravisCI / PHP Codeception**
-.travis.yml
+`.travis.yml`
 ```language: php
 
 php: 
