@@ -333,4 +333,33 @@ env:
     - DB=mysql TASKS=spec:all
     - TASKS=rubocop
 ```
-   
+
+- Language: PHP
+- CI: CircleCI 2.0
+- Coverage Tool: PHPUnit/Clover
+- File: config.yml
+- Single/Parallel: 
+- OSS Repo: https://github.com/ejcnet/sourcebot
+- Check out this blog post for more info! https://medium.com/@paulmwatson/configuring-code-coverage-for-code-climate-with-circleci-2-0-and-phpunit-3f7612683b67
+
+```
+version: 2
+
+jobs:
+  build:
+    environment:
+      CC_TEST_REPORTER_ID: YOUR_CODE_CLIMATE_REPORTER_ID
+    docker:
+      - image: notnoopci/php:7.1.5-browsers
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: sudo pecl channel-update pecl.php.net
+      - run: sudo pecl install xdebug && sudo docker-php-ext-enable xdebug
+      - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      - run: chmod +x ./cc-test-reporter
+      - run: sudo mkdir -p $CIRCLE_TEST_REPORTS/phpunit
+      - run: ./cc-test-reporter before-build
+      - run: sudo vendor/bin/phpunit --coverage-clover clover.xml
+      - run: ./cc-test-reporter after-build -t clover --exit-code $?
+  ```
