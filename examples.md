@@ -190,7 +190,7 @@ php:
 
 addons:
     code_climate:
-        repo_token: f247b0d7edc57539b62b4be98713f14f858c80b62df7e894db65e1b4fe705027
+        repo_token: token
 
 before_install:
     - composer install
@@ -271,7 +271,7 @@ rvm:
 
 addons:
   code_climate:
-    repo_token: 521d341f3320acda1902d0db0a3a92fb16b11ebfe3d5ab730218d4fc0fb3db13
+    repo_token: token
 
 sudo: false
 ```
