@@ -164,3 +164,57 @@ script:
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
   ```
 
+- Language: PHP
+- CI: TravisCI
+- Coverage Tool: Clover
+- File: travis.yml
+- Single/Parallel: Single
+- OSS Repo: https://github.com/elephantly/AmpConverterBundle
+
+```
+dist: trusty
+language: php
+sudo: required
+
+notifications:
+    email: false
+
+php:
+  - '5.4'
+  - '5.5'
+  - '5.6'
+  - '7.0'
+  - '7.1'
+  - hhvm
+  - nightly
+
+addons:
+    code_climate:
+        repo_token: f247b0d7edc57539b62b4be98713f14f858c80b62df7e894db65e1b4fe705027
+
+before_install:
+    - composer install
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+
+script:
+    - bin/kahlan
+
+jobs:
+  include:
+    - stage: Code Climate Coverage
+      env:
+        global:
+            - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
+      script:
+        - ./cc-test-reporter before-build
+        - bin/kahlan --config=kahlan-config.travis.php --clover=clover.xml
+        - cat clover.xml
+        - ./cc-test-reporter after-build --debug --exit-code $TRAVIS_TEST_RESULT
+    - stage: Codecov Coverage
+      script:
+        - bin/kahlan --config=kahlan-config.travis.php --clover=clover.xml
+        - bash <(curl -s https://codecov.io/bash)
+```
