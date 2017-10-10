@@ -244,3 +244,34 @@ install:
 after_script:
     - if [ $(phpenv version-name) = "7.1" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
     ```
+- Language: Ruby
+- CI: TravisCI
+- Coverage Tool: 
+- File: travis.yml
+- Single/Parallel: 
+- OSS Repo: https://github.com/noahd1/brakeman
+
+```
+before_install:
+  - gem update bundler
+
+script:
+  - "bundle exec ruby test/test.rb"
+  - "bundle exec codeclimate-test-reporter"
+
+branches:
+  only:
+    - master
+
+rvm:
+  - "1.9.3"
+  - "2.2.7"
+  - "2.3.4"
+  - "2.4.1"
+
+addons:
+  code_climate:
+    repo_token: 521d341f3320acda1902d0db0a3a92fb16b11ebfe3d5ab730218d4fc0fb3db13
+
+sudo: false
+```
