@@ -23,7 +23,8 @@ script:
 
 after_script: 
 - mv tests/_output/coverage.xml clover.xml 
-- ./cc-test-reporter after-build --coverage-input-type clover --id 12345 --exit-code $TRAVIS_TEST_RESULT```
+- ./cc-test-reporter after-build --coverage-input-type clover --id 12345 --exit-code $TRAVIS_TEST_RESULT
+```
 
 
 - Language: Python
@@ -33,7 +34,8 @@ after_script:
 - OSS Repo: https://github.com/menntamalastofnun/skolagatt
 
 
-```dist: trusty
+```
+dist: trusty
 language: python
 python:
   - "3.5"
