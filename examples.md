@@ -1,4 +1,4 @@
-## The test reporter can be configured with several different languages, testing frameworks, and CI's. This file contains several different working configurations.
+## The test reporter can be configured with several different languages, coverage toos, and CI's. This file contains several different working configurations.
 
 - Example 1
 - Language: PHP
