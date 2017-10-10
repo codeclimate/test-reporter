@@ -53,8 +53,8 @@ services:
 env:
   global:
     - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
-    - CODECLIMATE_REPO_TOKEN=487c91389b4ddd1ea050bef2a1c822db7d54f302aad677daa82cd7ae92adfeb6
-    - CC_TEST_REPORTER_ID=487c91389b4ddd1ea050bef2a1c822db7d54f302aad677daa82cd7ae92adfeb6
+    - CODECLIMATE_REPO_TOKEN=[token]
+    - CC_TEST_REPORTER_ID=[id]
 
 # command to run tests
 ```
