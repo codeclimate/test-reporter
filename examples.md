@@ -332,4 +332,4 @@ env:
     - COVERAGE=true DB=postgres TASKS=spec:all
     - DB=mysql TASKS=spec:all
     - TASKS=rubocop
-    ```
+   
