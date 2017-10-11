@@ -1,5 +1,6 @@
 ## The test reporter can be configured with several different languages, coverage tools, and CI's. This file contains several different working configurations.
 
+## Example 1
 - Language: PHP
 - CI: TravisCI
 - Coverage Tool: PHP Codeception
@@ -27,7 +28,7 @@ after_script:
 - ./cc-test-reporter after-build --coverage-input-type clover --id 12345 --exit-code $TRAVIS_TEST_RESULT
 ```
 
-
+## Example 2
 - Language: Python
 - CI: TravisCI
 - Coverage Tool: 
@@ -61,6 +62,7 @@ env:
 # command to run tests
 ```
 
+## Example 3
 - Language: Python
 - CI: TravisCI
 - Coverage Tool: Codecov
@@ -138,6 +140,8 @@ after_success:
   #
   - codecov
 ```
+
+## Example 4
 - Language: PHP
 - CI: TravisCI
 - Coverage Tool: Clover
@@ -164,6 +168,7 @@ script:
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
   ```
 
+## Example 5
 - Language: PHP
 - CI: TravisCI
 - Coverage Tool: Clover
@@ -219,6 +224,7 @@ jobs:
         - bash <(curl -s https://codecov.io/bash)
 ```
 
+## Example 6
 - Language: PHP
 - CI: TravisCI
 - Coverage Tool: 
@@ -244,6 +250,8 @@ install:
 after_script:
     - if [ $(phpenv version-name) = "7.1" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
   ```
+  
+## Example 7
 - Language: Ruby
 - CI: TravisCI
 - Coverage Tool: 
@@ -276,6 +284,7 @@ addons:
 sudo: false
 ```
 
+## Example 7
 - Language: Ruby
 - CI: TravisCI
 - Coverage Tool: RSpec
@@ -334,6 +343,8 @@ env:
     - TASKS=rubocop
 ```
 
+
+## Example 8
 - Language: PHP
 - CI: CircleCI 2.0
 - Coverage Tool: PHPUnit/Clover
