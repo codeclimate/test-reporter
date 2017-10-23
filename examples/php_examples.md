@@ -27,7 +27,7 @@ after_script:
 ```
 
 
-## Example 4
+## Example 2
 - Language: PHP
 - CI: TravisCI
 - Coverage Tool: Clover
@@ -54,7 +54,7 @@ script:
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
   ```
 
-## Example 5
+## Example 3
 - Language: PHP
 - CI: TravisCI
 - Coverage Tool: Clover
@@ -110,7 +110,7 @@ jobs:
         - bash <(curl -s https://codecov.io/bash)
 ```
 
-## Example 5
+## Example 4
 - Language: PHP
 - CI: TravisCI
 - Coverage Tool: 
@@ -138,7 +138,7 @@ after_script:
   ```
   
 
-## Example 6
+## Example 5
 - Language: PHP
 - CI: CircleCI 2.0
 - Coverage Tool: PHPUnit/Clover
