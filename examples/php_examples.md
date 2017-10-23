@@ -1,5 +1,3 @@
-## The test reporter can be configured with several different languages, coverage tools, and CI's. This file contains examples of working configurations for PHP repos.
-
 ## Example 1
 - Language: PHP
 - CI: TravisCI
