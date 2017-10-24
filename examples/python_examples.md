@@ -132,7 +132,7 @@ env:
     - CC_TEST_REPORTER_ID=e93289b66782f99213fec69659f0428021cf8cd284c79637e07323f15fd29461
 addons:
   postgresql: "9.6"
-  # chrome: stable # Re-enable for functional tests
+#chrome: stable # Re-enable for functional tests
 services:
   - postgresql
 install:
