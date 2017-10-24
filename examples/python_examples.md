@@ -149,19 +149,5 @@ script:
 after_script:
   - coverage xml
   - if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
-#The below is used to enable selenium testing as per:
-#https://docs.travis-ci.com/user/gui-and-headless-browsers/
-#Currently it runs and loads the view; but doesn't seem to resolve the asserts
-#Either the Chrome instance isn't running; or the static files aren't serving
-#To rule out the former maybe disable tabbycat.standings.tests.test_ui.CoreStandingsTests
-#And just let it test the login page (that should work without staticfiles)
-#before_install:
-##Run google chrome in headless mode
-#- google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
-#before_script:
-##GUI for real browsers.
-#- export DISPLAY=:99.0
-#- sh -e /etc/init.d/xvfb start
-#- sleep 3 # give xvfb some time to start
-#- dj collectstatic
+
 
