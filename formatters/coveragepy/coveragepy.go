@@ -41,30 +41,32 @@ func (r *Formatter) Format() (formatters.Report, error) {
 		return rep, errors.WithStack(err)
 	}
 
-	c := &xmlFile{}
-	err = xml.NewDecoder(fx).Decode(c)
+	coverageFile := &xmlFile{}
+	err = xml.NewDecoder(fx).Decode(coverageFile)
 	if err != nil {
 		return rep, errors.WithStack(err)
 	}
 
 	gitHead, _ := env.GetHead()
-	for _, pp := range c.Packages {
-		for _, cc := range pp.Classes {
-			sf, err := formatters.NewSourceFile(cc.FileName, gitHead)
+	for _, xmlPackage := range coverageFile.Packages {
+		for _, xmlClass := range xmlPackage.Classes {
+			fileName := coverageFile.getFullFilePath(xmlClass.FileName)
+			logrus.Debugf("creating test file report for %s", fileName)
+			sourceFile, err := formatters.NewSourceFile(fileName, gitHead)
 			if err != nil {
 				return rep, errors.WithStack(err)
 			}
 			num := 1
-			for _, l := range cc.Lines {
+			for _, l := range xmlClass.Lines {
 				for num < l.Number {
-					sf.Coverage = append(sf.Coverage, formatters.NullInt{})
+					sourceFile.Coverage = append(sourceFile.Coverage, formatters.NullInt{})
 					num++
 				}
 				ni := formatters.NewNullInt(l.Hits)
-				sf.Coverage = append(sf.Coverage, ni)
+				sourceFile.Coverage = append(sourceFile.Coverage, ni)
 				num++
 			}
-			err = rep.AddSourceFile(sf)
+			err = rep.AddSourceFile(sourceFile)
 			if err != nil {
 				return rep, errors.WithStack(err)
 			}
