@@ -1,8 +1,13 @@
 # Change log
 
-## v0.3.1 [(2017-10-02)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.0)
+## v0.3.2 [(2017-10-30)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.2)
 
-* [FIX] "format-coverage" "--add-prefix" option when is an empty string 
+* [FIX] Update `coverage.py` formatter to parse `<source>` tags and correctly create
+  source file paths. [#247][]
+
+## v0.3.1 [(2017-10-02)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.1)
+
+* [FIX] "format-coverage" "--add-prefix" option when is an empty string
 
 ## v0.3.0 [(2017-10-02)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.0)
 
