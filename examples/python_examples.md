@@ -3,7 +3,7 @@
 - CI: TravisCI
 - Coverage Tool: 
 - File: travis.yml
-- Single/Parallel: 
+- Single/Parallel: Single
 - OSS Repo: https://github.com/menntamalastofnun/skolagatt
 
 
@@ -38,7 +38,7 @@ env:
 - CI: TravisCI
 - Coverage Tool: 
 - File: travis.yml
-- Single/Parallel: 
+- Single/Parallel: Single
 - OSS Repo: https://github.com/czlee/tabbycat
 
 ```

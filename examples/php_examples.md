@@ -3,7 +3,7 @@
 - CI: TravisCI
 - Coverage Tool: PHP Codeception
 - File: travis.yml
-- Single/Parallel: 
+- Single/Parallel: Single
 
 ```
 language: php
@@ -60,7 +60,7 @@ script:
 - CI: TravisCI
 - Coverage Tool: 
 - File: travis.yml
-- Single/Parallel: 
+- Single/Parallel: Single
 - OSS Repo: https://github.com/jmwri/pubg-php
 
 ```
@@ -88,7 +88,7 @@ after_script:
 - CI: CircleCI 2.0
 - Coverage Tool: PHPUnit/Clover
 - File: config.yml
-- Single/Parallel: 
+- Single/Parallel: Single
 - OSS Repo: https://github.com/ejcnet/sourcebot
 - Check out this blog post for more info! https://medium.com/@paulmwatson/configuring-code-coverage-for-code-climate-with-circleci-2-0-and-phpunit-3f7612683b67
 
