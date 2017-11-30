@@ -107,8 +107,8 @@ suite's results into one final report.
 1. After all test suites, run:
 
   ```sh
-  ./cc-test-reporter sum-coverage coverage/codeclimate.*.json | \
-    ./cc-test-reporter upload-coverage
+  ./cc-test-reporter sum-coverage coverage/codeclimate.*.json
+  ./cc-test-reporter upload-coverage
   ```
 
 ## Copyright
