@@ -1,9 +1,17 @@
 # Change log
 
+## v0.3.3 [2017-12-05)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.3)
+
+* [FIX] Treat 409 report upload status as warning and exit 0 [#268][]
+
+[#268]: https://github.com/codeclimate/test-reporter/pull/268
+
 ## v0.3.2 [(2017-10-30)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.2)
 
 * [FIX] Update `coverage.py` formatter to parse `<source>` tags and correctly create
   source file paths. [#247][]
+
+[#247]: https://github.com/codeclimate/test-reporter/pull/247
 
 ## v0.3.1 [(2017-10-02)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.1)
 
