@@ -27,6 +27,14 @@ type Uploader struct {
 	Input       io.Reader
 }
 
+type ErrConflict struct {
+	message string
+}
+
+func (e *ErrConflict) Error() string {
+	return e.message
+}
+
 func (u Uploader) Upload() error {
 	if u.ReporterID == "" {
 		return errors.New("you must supply a CC_TEST_REPORTER_ID ENV variable or pass it via the -r flag")
@@ -58,7 +66,13 @@ func (u Uploader) Upload() error {
 
 	res, err := u.doRequest(pr, u.EndpointURL)
 	if err != nil {
-		return errors.WithStack(err)
+		switch err.(type) {
+		case *ErrConflict:
+			logrus.Warnf("%s, skipping upload", err.Error())
+			return nil
+		default:
+			return errors.WithStack(err)
+		}
 	}
 
 	batchLinks := struct {
@@ -146,6 +160,13 @@ func (u Uploader) doRequest(in io.Reader, url string) (*http.Response, error) {
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
+
+		if res.StatusCode == 409 {
+			return nil, &ErrConflict{
+				message: fmt.Sprintf("Conflict when uploading: %s", errorMessage),
+			}
+		}
+
 		return res, fmt.Errorf("response from %s.\nHTTP %d: %s", url, res.StatusCode, errorMessage)
 	}
 	return res, nil
