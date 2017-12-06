@@ -64,7 +64,6 @@ func (r Formatter) Format() (formatters.Report, error) {
 			}
 			for ln-curLine >= 1 {
 				sf.Coverage = append(sf.Coverage, formatters.NullInt{})
-				sf.CalcLineCounts()
 				curLine++
 			}
 			lh, err := strconv.Atoi(string(lineInfo[1]))
