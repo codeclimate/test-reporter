@@ -23,6 +23,9 @@ all: test-docker build-all $(MAN_PAGES)
 test:
 	go test $(shell go list ./... | grep -v /vendor/)
 
+benchmark:
+	go test -bench . $(shell go list ./... | grep -v /vendor/)
+
 build:
 	go build -v ${LDFLAGS} -o $(PREFIX)bin/test-reporter$(BINARY_SUFFIX)
 
@@ -39,6 +42,13 @@ test-docker:
 	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
 	  --workdir "/src/$(PROJECT)" \
 	  golang:1.8 make test
+
+benchmark-docker:
+	$(DOCKER_RUN) \
+	  --env GOPATH=/ \
+	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
+	  --workdir "/src/$(PROJECT)" \
+	  golang:1.8 make benchmark
 
 build-docker:
 	$(DOCKER_RUN) \
