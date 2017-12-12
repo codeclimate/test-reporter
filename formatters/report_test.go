@@ -35,6 +35,7 @@ func Test_Report_Merge_MismatchedCoverageLength(t *testing.T) {
 		SourceFiles: SourceFiles{
 			"a.go": {
 				Name:     "a.go",
+        BlobID: "a",
 				Coverage: Coverage{NewNullInt(1)},
 			},
 		},
@@ -46,13 +47,14 @@ func Test_Report_Merge_MismatchedCoverageLength(t *testing.T) {
 		SourceFiles: SourceFiles{
 			"a.go": {
 				Name:     "a.go",
+        BlobID: "different-blob",
 				Coverage: Coverage{NewNullInt(1), NewNullInt(2)},
 			},
 		},
 	}
 	err := a.Merge(b)
 	r.Error(err)
-	r.Equal("coverage length mismatch for a.go", err.Error())
+	r.Equal("Failed to merge coverage for source file a.go. BlobID mismatch", err.Error())
 }
 
 func Test_Report_Merge(t *testing.T) {

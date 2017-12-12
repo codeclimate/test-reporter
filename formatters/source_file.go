@@ -24,11 +24,19 @@ type SourceFile struct {
 }
 
 func (a SourceFile) Merge(b SourceFile) (SourceFile, error) {
-	if len(a.Coverage) != len(b.Coverage) {
-		return a, errors.Errorf("coverage length mismatch for %s", a.Name)
+  if a.BlobID != b.BlobID {
+		return a, errors.Errorf("Failed to merge coverage for source file %s. BlobID mismatch", a.Name)
 	}
+  lenA := len(a.Coverage)
+  lenB := len(b.Coverage)
 
-	for i, bc := range b.Coverage {
+  if lenA > lenB {
+    b.Coverage = b.Coverage.AppendNulls(lenA - lenB)
+  } else if lenA < lenB {
+    a.Coverage = a.Coverage.AppendNulls(lenB - lenA)
+  }
+
+  for i, bc := range b.Coverage {
 		ac := a.Coverage[i]
 		if ac.Valid && bc.Valid {
 			// they're both valid numbers so add them:
