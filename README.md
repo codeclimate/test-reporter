@@ -2,6 +2,8 @@
 
 Report information about your CI builds to Code Climate.
 
+For additional information, check out our docs on [Configuring Test Coverage](https://docs.codeclimate.com/docs/configuring-test-coverage) and [Test Coverage Troubleshooting Tips](https://docs.codeclimate.com/docs/test-coverage-troubleshooting-tips).
+
 ## Installation & Usage
 
 Most CI systems allow configuration of commands to run as part of setup, before,
