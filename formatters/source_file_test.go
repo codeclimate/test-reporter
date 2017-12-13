@@ -80,21 +80,20 @@ func Test_SourceFile_BlobID(t *testing.T) {
 func Test_SourceFile_Merge_With_Mismatch_Blob_Id(t *testing.T) {
 	r := require.New(t)
 	a := SourceFile{
-    Name: "test.go",
+		Name:     "test.go",
 		BlobID:   "a",
 		Coverage: Coverage{NewNullInt(0), NewNullInt(2), NewNullInt(3)},
 	}
 	b := SourceFile{
-    Name: "test.go",
+		Name:     "test.go",
 		BlobID:   "different-blob",
 		Coverage: Coverage{NewNullInt(1), NewNullInt(0), NewNullInt(1)},
 	}
 
 	_, err := a.Merge(b)
 	r.Error(err)
-  r.Equal("Failed to merge coverage for source file test.go. BlobID mismatch", err.Error())
+	r.Equal("failed to merge coverage for source file test.go: BlobID mismatch", err.Error())
 }
-
 
 func Test_SourceFile_AddPrefix(t *testing.T) {
 	envy.Temp(func() {

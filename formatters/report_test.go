@@ -26,7 +26,7 @@ func Test_Report_Merge_Bad_GitHead(t *testing.T) {
 	r.Equal("git heads do not match", err.Error())
 }
 
-func Test_Report_Merge_MismatchedCoverageLength(t *testing.T) {
+func Test_Report_Merge_MismatchedBlobID(t *testing.T) {
 	r := require.New(t)
 	a := &Report{
 		Git: ccGit{
@@ -35,7 +35,7 @@ func Test_Report_Merge_MismatchedCoverageLength(t *testing.T) {
 		SourceFiles: SourceFiles{
 			"a.go": {
 				Name:     "a.go",
-        BlobID: "a",
+				BlobID:   "a",
 				Coverage: Coverage{NewNullInt(1)},
 			},
 		},
@@ -47,14 +47,14 @@ func Test_Report_Merge_MismatchedCoverageLength(t *testing.T) {
 		SourceFiles: SourceFiles{
 			"a.go": {
 				Name:     "a.go",
-        BlobID: "different-blob",
+				BlobID:   "different-blob",
 				Coverage: Coverage{NewNullInt(1), NewNullInt(2)},
 			},
 		},
 	}
 	err := a.Merge(b)
 	r.Error(err)
-	r.Equal("Failed to merge coverage for source file a.go. BlobID mismatch", err.Error())
+	r.Equal("failed to merge coverage for source file a.go: BlobID mismatch", err.Error())
 }
 
 func Test_Report_Merge(t *testing.T) {
