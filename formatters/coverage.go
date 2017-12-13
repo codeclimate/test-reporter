@@ -47,3 +47,11 @@ func (c *Coverage) UnmarshalJSON(text []byte) error {
 	*c = cc
 	return nil
 }
+
+func (c *Coverage) AppendNulls(quantity int) Coverage {
+	newCoverage := *c
+	for i := 0; i < quantity; i++ {
+		newCoverage = append(newCoverage, NullInt{})
+	}
+	return newCoverage
+}
