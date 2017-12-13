@@ -1,6 +1,13 @@
 # Change log
 
-## v0.3.3 [2017-12-05)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.3)
+## v0.3.4 [(2017-12-05)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.4)
+
+* [FIX] `sum-coverage` command when merging source files with 
+        different coverage length but same blob ID [#272][]
+
+[#272][https://github.com/codeclimate/test-reporter/pull/272]
+
+## v0.3.3 [(2017-12-05)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.3)
 
 * [FIX] Treat 409 report upload status as warning and exit 0 [#268][]
 
