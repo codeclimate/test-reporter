@@ -1,8 +1,14 @@
 # Change log
 
+## v0.4.0 [(2017-12-19)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.0)
+
+* [NEW] Add support for `excoveralls` json report (Elixir) [#278][]
+
+[#278]: https://github.com/codeclimate/test-reporter/pull/278
+
 ## v0.3.4 [(2017-12-13)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.4)
 
-* [FIX] `sum-coverage` command when merging source files with 
+* [FIX] `sum-coverage` command when merging source files with
         different coverage length but same blob ID [#272][]
 
 [#272]: https://github.com/codeclimate/test-reporter/pull/272
