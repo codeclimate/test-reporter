@@ -38,3 +38,20 @@ func Test_Format(t *testing.T) {
 	r.Equal(lc.Missed, 1)
 	r.Equal(lc.Total, 15)
 }
+
+func Test_Format_MissingFile(t *testing.T) {
+	gb := env.GitBlob
+	defer func() { env.GitBlob = gb }()
+	env.GitBlob = func(s string, c *object.Commit) (string, error) {
+		return s, nil
+	}
+
+	r := require.New(t)
+
+	rb := Formatter{
+		Path: "./not_real.json",
+	}
+	_, err := rb.Format()
+	r.Error(err)
+	r.Equal("could not open coverage file ./not_real.json", err.Error())
+}
