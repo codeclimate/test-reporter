@@ -17,7 +17,8 @@ WORKDIR $CCTR
 COPY . .
 RUN go install -v
 
-RUN git clone https://github.com/ale7714/excoveralls.git
+# RUN git clone https://github.com/ale7714/excoveralls.git
+RUN git clone https://github.com/codeclimate-testing/excoveralls.git
 WORKDIR excoveralls
 
 RUN echo "testing" > ignore.me
@@ -29,6 +30,6 @@ ENV MIX_ENV=test
 RUN mix do local.hex --force, local.rebar --force, deps.get, compile, coveralls.json
 
 
-ENV CC_TEST_REPORTER_ID=871a78f3199b36b65af5e00b9395319d971d3c85e467450b53b386335a60a261
+ENV CC_TEST_REPORTER_ID=f611556edda9a27a3faace9b837185944ada203dfca1ec3242a4d0a35162f9fc
 
 RUN test-reporter after-build -s 2 -d
