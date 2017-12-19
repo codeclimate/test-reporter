@@ -1,4 +1,4 @@
-.PHONY: test-docker build-docker build-all build-all-latest release
+.PHONY: test-docker build-docker build-all build-all-latest release test-excoveralls
 
 AWS ?= $(shell which aws)
 DOCKER_RUN ?= $(shell which docker) run --rm
@@ -70,6 +70,9 @@ test-clover:
 
 test-cobertura:
 	docker build -f integration-tests/cobertura/Dockerfile .
+
+test-excoveralls:
+	docker build -f integration-tests/excoveralls/Dockerfile .
 
 publish-head:
 	$(AWS) s3 cp \
