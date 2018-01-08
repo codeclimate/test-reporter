@@ -1,5 +1,9 @@
 # Change log
 
+## v0.4.1 [(2018-01-08)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.1)
+
+* [FIX] Improved performance of the LCOV formatter [#270][]
+
 ## v0.4.0 [(2017-12-19)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.0)
 
 * [NEW] Add support for `excoveralls` json report (Elixir) [#278][]
