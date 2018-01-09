@@ -13,6 +13,7 @@ import (
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/pkg/errors"
+	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
 // Formatter collects GCov files, parses them, then formats them into a single report.
@@ -55,8 +56,9 @@ func (f *Formatter) Format() (formatters.Report, error) {
 		return rep, err
 	}
 
+	gitHead, _ := env.GetHead()
 	for _, file := range f.FileNames {
-		sf, err := parseSourceFile(file)
+		sf, err := parseSourceFile(file, gitHead)
 		if err != nil {
 			return rep, errors.WithStack(err)
 		}
@@ -70,8 +72,7 @@ func (f *Formatter) Format() (formatters.Report, error) {
 }
 
 // Parse a single GCov source file.
-func parseSourceFile(fileName string) (formatters.SourceFile, error) {
-	gitHead, _ := env.GetHead()
+func parseSourceFile(fileName string, gitHead *object.Commit) (formatters.SourceFile, error) {
 	sf, err := formatters.NewSourceFile(fileName, gitHead)
 	if err != nil {
 		return sf, errors.WithStack(err)
