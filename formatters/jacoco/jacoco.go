@@ -66,7 +66,6 @@ func (r Formatter) Format() (formatters.Report, error) {
 				sf.Coverage = append(sf.Coverage, ni)
 				num++
 			}
-			sf.CalcLineCounts()
 			err = rep.AddSourceFile(sf)
 			if err != nil {
 				return rep, errors.WithStack(err)
