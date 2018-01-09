@@ -1,5 +1,9 @@
 # Change log
 
+## v0.4.2 [(2018-01-09)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.2)
+
+* [FIX] Improved performance of the Cobertura, Gcov, and Jacoco formatters [#285][]
+
 ## v0.4.1 [(2018-01-08)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.1)
 
 * [FIX] Improved performance of the LCOV formatter [#270][]
