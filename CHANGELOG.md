@@ -1,5 +1,9 @@
 # Change log
 
+## v0.4.3 [(2018-01-18)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.3)
+
+* [FIX] Fix logging to not include extraneous newline, correct spelling [#288][]
+
 ## v0.4.2 [(2018-01-09)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.2)
 
 * [FIX] Improved performance of the Cobertura, Gcov, and Jacoco formatters [#285][]
