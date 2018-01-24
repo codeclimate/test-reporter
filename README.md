@@ -73,27 +73,27 @@ For example:
 
 1. After *each* batch of tests:
 
-   ```sh
-   ./cc-test-reporter format-coverage --output "coverage/codeclimate.$N.json"
-   aws s3 sync coverage/ "s3://my-bucket/coverage/$BUILD_NUMBER"
-   ```
+     ```sh
+     ./cc-test-reporter format-coverage --output "coverage/codeclimate.$N.json"
+     aws s3 sync coverage/ "s3://my-bucket/coverage/$BUILD_NUMBER"
+     ```
 
-   Where:
+     Where:
 
-   - `$N` should be a unique identifier for that batch of tests
-   - `$BUILD_NUMBER` should be the build number provided by your CI.
+     - `$N` should be a unique identifier for that batch of tests
+     - `$BUILD_NUMBER` should be the build number provided by your CI.
 
 1. After *all* tests:
 
-   ```sh
-   aws s3 sync "s3://my-bucket/coverage/$BUILD_NUMBER" coverage/
-   cc-test-reporter sum-coverage --output - --parts $PARTS coverage/codeclimate.*.json | \
-     cc-test-reporter upload-coverage --input -
-   ```
+     ```sh
+     aws s3 sync "s3://my-bucket/coverage/$BUILD_NUMBER" coverage/
+     cc-test-reporter sum-coverage --output - --parts $PARTS coverage/codeclimate.*.json | \
+       cc-test-reporter upload-coverage --input -
+     ```
 
-   Where:
+     Where:
 
-   - `$PARTS` should be the number of payloads to sum.
+     - `$PARTS` should be the number of payloads to sum.
 
 ## Multiple Suites
 
@@ -102,16 +102,17 @@ suite's results into one final report.
 
 1. After each test suite, run:
 
-  ```sh
-  ./cc-test-reporter format-coverage --output coverage/codeclimate.$SUITE.json
-  ```
+    ```sh
+    ./cc-test-reporter format-coverage --output coverage/codeclimate.$SUITE.json
+    ```
+    If format-coverage is not capturing the ideal format, use `--input-type` flag.
 
 1. After all test suites, run:
 
-  ```sh
-  ./cc-test-reporter sum-coverage coverage/codeclimate.*.json
-  ./cc-test-reporter upload-coverage
-  ```
+    ```sh
+    ./cc-test-reporter sum-coverage coverage/codeclimate.*.json
+    ./cc-test-reporter upload-coverage
+    ```
 
 ## Copyright
 
