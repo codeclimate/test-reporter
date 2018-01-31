@@ -99,3 +99,33 @@ script:
   - docker build -t app .
   - docker run --rm app ./codecoverage.sh
 ```
+
+
+## Example 3
+- Language: Go 1.9
+- CI: TravisCI
+- Coverage Tool: gocov
+- File: travis.yml
+- Single/Parallel: Single
+
+```
+language: go
+go:
+  - 1.9
+install:
+  - go get -v github.com/golang/dep/cmd/dep
+  - go get -v github.com/codeclimate/test-reporter
+  - cd $GOPATH/src/github.com/golang/dep/cmd/dep && git checkout tags/v0.4.1 && go install
+  - cd $GOPATH/src/github.com/codeclimate/test-reporter && git checkout tags/v0.4.3 && go install
+  - cd - && dep ensure -v -vendor-only
+before_script:
+  - test-reporter before-build
+script:
+  - go test -coverprofile c.out
+after_script:
+  - test-reporter after-build --input-type gocov --exit-code $TRAVIS_TEST_RESULT
+env:
+  global:
+    - secure: [REDACTED]
+    
+```
