@@ -28,7 +28,7 @@ script:
   - go test -coverprofile c.out ./...
 
 after_script:
-  - ./cc-test-reporter after-build -t go tool cover (go test -coverprofile) --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build -t go test -coverprofile=c.out --exit-code $TRAVIS_TEST_RESULT
 ```
 
 ## Example 2
@@ -123,7 +123,7 @@ before_script:
 script:
   - go test -coverprofile c.out
 after_script:
-  - test-reporter after-build --input-type go tool cover (go test -coverprofile) --exit-code $TRAVIS_TEST_RESULT
+  - test-reporter after-build --input-type go test -coverprofile=c.out --exit-code $TRAVIS_TEST_RESULT
 env:
   global:
     - secure: [REDACTED]
