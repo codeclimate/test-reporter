@@ -1,7 +1,7 @@
 ## Example 1
 - Language: Go
 - CI: TravisCI
-- Coverage Tool: gocov
+- Coverage Tool: Cover
 - File: travis.yml
 - Single/Parallel: Single
 - OSS Repo: https://github.com/bbqtd/rg-kit
@@ -28,13 +28,13 @@ script:
   - go test -coverprofile c.out ./...
 
 after_script:
-  - ./cc-test-reporter after-build -t gocov --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build -t go test -coverprofile=c.out --exit-code $TRAVIS_TEST_RESULT
 ```
 
 ## Example 2
 - Language: Go (version < 1.10)
 - CI: TravisCI
-- Coverage Tool: gocov
+- Coverage Tool: Cover
 - Files: codecoverage.sh, Dockerfile, travis.yml
 - Single/Parallel: Single
 - OSS Repo: https://github.com/nzin/dctycoon
@@ -104,7 +104,7 @@ script:
 ## Example 3
 - Language: Go 1.9
 - CI: TravisCI
-- Coverage Tool: gocov
+- Coverage Tool: Cover
 - File: travis.yml
 - Single/Parallel: Single
 
@@ -123,7 +123,7 @@ before_script:
 script:
   - go test -coverprofile c.out
 after_script:
-  - test-reporter after-build --input-type gocov --exit-code $TRAVIS_TEST_RESULT
+  - test-reporter after-build --input-type go test -coverprofile=c.out --exit-code $TRAVIS_TEST_RESULT
 env:
   global:
     - secure: [REDACTED]
