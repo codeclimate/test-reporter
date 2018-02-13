@@ -68,3 +68,13 @@ GIT_COMMIT_SHA=a12345
 GIT_COMMITTED_AT=1234`
 	r.Equal(exp, g.String())
 }
+
+func Test_loadGitFromENV_CI_TIMESTAMP(t *testing.T) {
+	r := require.New(t)
+	envy.Temp(func() {
+		envy.Set("CI_TIMESTAMP", "1345")
+		g, err := findGitInfo()
+		r.NoError(err)
+		r.Equal(g.CommittedAt, 1345)
+	})
+}
