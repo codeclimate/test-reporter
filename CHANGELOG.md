@@ -1,5 +1,9 @@
 # Change log
 
+## v0.4.4 [(2018-02-15)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.4)
+
+* [FIX] Add support for Codeship CI environment variables [#300][]
+
 ## v0.4.3 [(2018-01-18)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.3)
 
 * [FIX] Fix logging to not include extraneous newline, correct spelling [#288][]
