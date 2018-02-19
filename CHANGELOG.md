@@ -6,15 +6,23 @@
 
 ## v0.4.3 [(2018-01-18)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.3)
 
+[#300]: https://github.com/codeclimate/test-reporter/pull/300
+
 * [FIX] Fix logging to not include extraneous newline, correct spelling [#288][]
+
+[#288]: https://github.com/codeclimate/test-reporter/pull/288
 
 ## v0.4.2 [(2018-01-09)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.2)
 
 * [FIX] Improved performance of the Cobertura, Gcov, and Jacoco formatters [#285][]
 
+[#285]: https://github.com/codeclimate/test-reporter/pull/285
+
 ## v0.4.1 [(2018-01-08)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.1)
 
 * [FIX] Improved performance of the LCOV formatter [#270][]
+
+[#270]: https://github.com/codeclimate/test-reporter/pull/270
 
 ## v0.4.0 [(2017-12-19)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.0)
 
