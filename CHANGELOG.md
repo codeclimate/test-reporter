@@ -1,5 +1,11 @@
 # Change log
 
+## v0.4.5 [(2018-02-19)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.5)
+
+* [FIX] Add partial automated support for Heroku CI builds [#305][]
+
+[#305]: https://github.com/codeclimate/test-reporter/pull/305
+
 ## v0.4.4 [(2018-02-15)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.4)
 
 * [FIX] Add support for Codeship CI environment variables [#300][]
