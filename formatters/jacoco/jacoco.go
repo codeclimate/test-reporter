@@ -2,7 +2,6 @@ package jacoco
 
 import (
 	"encoding/xml"
-	"fmt"
 	"os"
 	"strings"
 
@@ -10,6 +9,8 @@ import (
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/pkg/errors"
+	"path/filepath"
+	"fmt"
 )
 
 var searchPaths = []string{"jacoco.xml"}
@@ -52,8 +53,25 @@ func (r Formatter) Format() (formatters.Report, error) {
 	for _, xmlPackage := range xmlJacoco.Packages {
 		for _, xmlSF := range xmlPackage.SourceFile {
 			num := 1
-			filepath := fmt.Sprintf("%s/%s", xmlPackage.Name, xmlSF.Name)
-			sf, err := formatters.NewSourceFile(filepath, gitHead)
+			defaultFilepath := fmt.Sprintf("%s/%s", xmlPackage.Name, xmlSF.Name)
+			filePathPatternForGrailsAppDir := "./grails-app/*/" + xmlPackage.Name + "/" + xmlSF.Name
+			filePathPatternForSrcDir := "./src/main/*/" + xmlPackage.Name + "/" + xmlSF.Name
+
+			logrus.Debugf("Searching for source file: " + xmlSF.Name  + " with search pattern: " +
+				filePathPatternForGrailsAppDir)
+			actualFilePath := getActualFilePath(filePathPatternForGrailsAppDir)
+
+			if (actualFilePath == "") {
+				logrus.Debugf("Searching for source file: " + xmlSF.Name  + " with search pattern: " +
+					filePathPatternForSrcDir)
+				actualFilePath = getActualFilePath(filePathPatternForSrcDir)
+
+				if (actualFilePath == "") {
+					actualFilePath = defaultFilepath
+				}
+			}
+
+			sf, err := formatters.NewSourceFile(actualFilePath, gitHead)
 			if err != nil {
 				return rep, errors.WithStack(err)
 			}
@@ -74,4 +92,15 @@ func (r Formatter) Format() (formatters.Report, error) {
 	}
 
 	return rep, nil
+}
+
+func getActualFilePath(filePathPattern string) (string) {
+	filePaths, _ := filepath.Glob(filePathPattern)
+	var numberOfMatches = len(filePaths)
+
+	if (numberOfMatches != 1) {
+		return ""
+	}
+
+	return filePaths[0]
 }

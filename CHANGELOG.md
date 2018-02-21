@@ -1,5 +1,9 @@
 # Change log
 
+## v0.4.6
+
+* [FIX] Customised jacoco test-reporter to support Grails 3.x applications.
+
 ## v0.4.5 [(2018-02-19)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.5)
 
 * [FIX] Add partial automated support for Heroku CI builds [#305][]
