@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -25,6 +26,7 @@ type Uploader struct {
 	EndpointURL string
 	BatchSize   int
 	Input       io.Reader
+	Insecure    bool
 }
 
 type ErrConflict struct {
@@ -86,7 +88,27 @@ func (u Uploader) Upload() error {
 		return errors.WithStack(err)
 	}
 
-	return u.SendBatches(testReport, batchLinks.Links.PostBatch)
+	postBatchURL, err := u.TransformPostBatchURL(batchLinks.Links.PostBatch)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	return u.SendBatches(testReport, postBatchURL)
+}
+
+func (u Uploader) TransformPostBatchURL(rawURL string) (string, error) {
+	parsed, err := url.Parse(rawURL)
+	if err != nil {
+		return "", err
+	}
+
+	if u.Insecure {
+		parsed.Scheme = "http"
+	} else {
+		parsed.Scheme = "https"
+	}
+
+	return parsed.String(), nil
 }
 
 func (u Uploader) SendBatches(rep *TestReport, url string) error {

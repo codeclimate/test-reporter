@@ -20,6 +20,7 @@ var afterBuildOptions = struct {
 	EndpointURL string
 	ReporterID  string
 	ExitCode    int
+	Insecure    bool
 }{}
 
 var afterBuildCmd = &cobra.Command{
@@ -49,6 +50,7 @@ var afterBuildCmd = &cobra.Command{
 			ReporterID:  afterBuildOptions.ReporterID,
 			EndpointURL: afterBuildOptions.EndpointURL,
 			BatchSize:   afterBuildOptions.BatchSize,
+			Insecure:    afterBuildOptions.Insecure,
 		}
 
 		logrus.Debug("about to run upload-coverage")
@@ -64,5 +66,6 @@ func init() {
 	afterBuildCmd.Flags().StringVarP(&afterBuildOptions.ReporterID, "id", "r", os.Getenv("CC_TEST_REPORTER_ID"), "reporter identifier")
 	afterBuildCmd.Flags().StringVarP(&afterBuildOptions.EndpointURL, "coverage-endpoint", "e", envy.Get("CC_TEST_REPORTER_COVERAGE_ENDPOINT", "https://api.codeclimate.com/v1/test_reports"), "endpoint to upload coverage information to")
 	afterBuildCmd.Flags().IntVarP(&afterBuildOptions.BatchSize, "batch-size", "s", 500, "batch size for source files")
+	afterBuildCmd.Flags().BoolVar(&afterBuildOptions.Insecure, "insecure", false, "send coverage insecurely (without HTTPS)")
 	RootCmd.AddCommand(afterBuildCmd)
 }
