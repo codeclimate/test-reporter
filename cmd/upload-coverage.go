@@ -35,5 +35,7 @@ func init() {
 	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.ReporterID, "id", "r", os.Getenv("CC_TEST_REPORTER_ID"), "reporter identifier")
 	uploadCoverageCmd.Flags().StringVarP(&uploadOptions.EndpointURL, "endpoint", "e", envy.Get("CC_TEST_REPORTER_COVERAGE_ENDPOINT", "https://api.codeclimate.com/v1/test_reports"), "endpoint to upload coverage information to")
 	uploadCoverageCmd.Flags().IntVarP(&uploadOptions.BatchSize, "batch-size", "s", 500, "batch size for source files")
+	uploadCoverageCmd.Flags().BoolVar(&uploadOptions.Insecure, "insecure", false, "send coverage insecurely (without HTTPS)")
+
 	RootCmd.AddCommand(uploadCoverageCmd)
 }
