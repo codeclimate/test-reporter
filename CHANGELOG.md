@@ -1,5 +1,11 @@
 # Change log
 
+## v0.5.0 [(2018-02-26)](https://github.com/codeclimate/test-reporter/releases/tag/v0.5.0)
+
+* [NEW] Add flag to upload coverage insecurely [#310][]
+
+[#310]: https://github.com/codeclimate/test-reporter/pull/310
+
 ## v0.4.5 [(2018-02-19)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.5)
 
 * [FIX] Add partial automated support for Heroku CI builds [#305][]
