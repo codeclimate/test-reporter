@@ -44,8 +44,6 @@ language: php
 php:
   - 7.0
 before_script:
-  - "composer require codeclimate/php-test-reporter --dev"
-  - "composer install"
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
