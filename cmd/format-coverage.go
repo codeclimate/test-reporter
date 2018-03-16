@@ -52,7 +52,7 @@ var formatterMap = map[string]formatters.Formatter{
 
 // formatCoverageCmd represents the format command
 var formatCoverageCmd = &cobra.Command{
-	Use:   "format-coverage",
+	Use:   "format-coverage [coverage file]",
 	Short: "Locate, parse, and re-format supported coverage sources.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 0 {
