@@ -4,15 +4,21 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/formatters"
+	"github.com/gobuffalo/envy"
 	"github.com/pkg/errors"
 )
 
 var searchPaths = []string{"jacoco.xml"}
+
+func getSourcePath() string {
+	return envy.Get("JACOCO_SOURCE_PATH", "")
+}
 
 type Formatter struct {
 	Path string
@@ -32,6 +38,8 @@ func (f *Formatter) Search(paths ...string) (string, error) {
 }
 
 func (r Formatter) Format() (formatters.Report, error) {
+	sourcePath := getSourcePath()
+
 	rep, err := formatters.NewReport()
 	if err != nil {
 		return rep, err
@@ -53,7 +61,7 @@ func (r Formatter) Format() (formatters.Report, error) {
 		for _, xmlSF := range xmlPackage.SourceFile {
 			num := 1
 			filepath := fmt.Sprintf("%s/%s", xmlPackage.Name, xmlSF.Name)
-			sf, err := formatters.NewSourceFile(filepath, gitHead)
+			sf, err := formatters.NewSourceFile(path.Join(sourcePath, filepath), gitHead)
 			if err != nil {
 				return rep, errors.WithStack(err)
 			}
