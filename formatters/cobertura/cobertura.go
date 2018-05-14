@@ -74,17 +74,21 @@ func (r Formatter) Format() (formatters.Report, error) {
 			}
 			sort.Sort(ByLineNum(pf.Lines))
 			for _, l := range pf.Lines {
-				for num < l.Num {
-					sf.Coverage = append(sf.Coverage, formatters.NullInt{})
-					num++
-				}
-				if l.Num <= len(sf.Coverage) {
-					hits := sf.Coverage[l.Num-1].Int + l.Hits
-					sf.Coverage[l.Num-1] = formatters.NewNullInt(hits)
+				if l.Num > 0 {
+					for num < l.Num {
+						sf.Coverage = append(sf.Coverage, formatters.NullInt{})
+						num++
+					}
+					if l.Num <= len(sf.Coverage) {
+						hits := sf.Coverage[l.Num-1].Int + l.Hits
+						sf.Coverage[l.Num-1] = formatters.NewNullInt(hits)
+					} else {
+						ni := formatters.NewNullInt(l.Hits)
+						sf.Coverage = append(sf.Coverage, ni)
+						num++
+					}
 				} else {
-					ni := formatters.NewNullInt(l.Hits)
-					sf.Coverage = append(sf.Coverage, ni)
-					num++
+					logrus.Warnf("Invalid line number %d in file %s", l.Num, fileName)
 				}
 			}
 			err = rep.AddSourceFile(sf)
