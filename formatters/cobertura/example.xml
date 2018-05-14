@@ -115,6 +115,7 @@
             <line number="20" hits="5" branch="false" />
             <line number="31" hits="3" branch="false" />
             <line number="20" hits="7" branch="false" />
+            <line number="0" hits="3" branch="false" />
           </lines>
         </class>
         <class name="search.ISortedArraySearch" filename="search/ISortedArraySearch.java" line-rate="1.0" branch-rate="1.0" complexity="1.0">
