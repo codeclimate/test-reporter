@@ -1,5 +1,12 @@
 # Change log
 
+## v0.5.2 [(2018-05-15)](https://github.com/codeclimate/test-reporter/releases/tag/v0.5.2)
+
+* [FIX] Update `Cobertura` formatter to ignore invalid line numbers in a
+  `cobertura.xml` file [#335][]
+
+[#335]: https://github.com/codeclimate/test-reporter/pull/335
+
 ## v0.5.1 [(2018-03-19)](https://github.com/codeclimate/test-reporter/releases/tag/v0.5.1)
 
 * [FIX] Fix bug with formatting JaCoCo test coverage [#318][]
