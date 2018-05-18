@@ -72,6 +72,9 @@ test-lcov:
 test-covpy:
 	docker build -f integration-tests/coverage_py/Dockerfile .
 
+test-gcov:
+	docker build -f integration-tests/gcov/Dockerfile .
+
 test-gocov:
 	docker build -f integration-tests/gocov/Dockerfile .
 

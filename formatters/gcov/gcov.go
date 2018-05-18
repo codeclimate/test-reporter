@@ -74,7 +74,7 @@ func (f *Formatter) Format() (formatters.Report, error) {
 // Parse a single GCov source file.
 func parseSourceFile(fileName string, gitHead *object.Commit) (formatters.SourceFile, error) {
 	var sf formatters.SourceFile
-	sourceFileName, err := getSourFileName(fileName)
+	sourceFileName, err := getSourceFileName(fileName)
 	if err != nil {
 		return sf, errors.WithStack(err)
 	}
@@ -124,7 +124,7 @@ func parseSourceFile(fileName string, gitHead *object.Commit) (formatters.Source
 	return sf, nil
 }
 
-func getSourFileName(coverageFileName string) (string, error) {
+func getSourceFileName(coverageFileName string) (string, error) {
 	coverageFile, err := os.Open(coverageFileName)
 	if err != nil {
 		return "", errors.WithStack(err)
