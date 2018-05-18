@@ -73,18 +73,25 @@ func (f *Formatter) Format() (formatters.Report, error) {
 
 // Parse a single GCov source file.
 func parseSourceFile(fileName string, gitHead *object.Commit) (formatters.SourceFile, error) {
-	sf, err := formatters.NewSourceFile(fileName, gitHead)
+	var sf formatters.SourceFile
+	sourceFileName, err := getSourFileName(fileName)
 	if err != nil {
 		return sf, errors.WithStack(err)
 	}
 
-	file, err := os.Open(fileName)
+	sf, err = formatters.NewSourceFile(sourceFileName, gitHead)
 	if err != nil {
 		return sf, errors.WithStack(err)
 	}
-	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
+	coverageFile, err := os.Open(fileName)
+	if err != nil {
+		return sf, errors.WithStack(err)
+	}
+	defer coverageFile.Close()
+
+	scanner := bufio.NewScanner(coverageFile)
+
 	for scanner.Scan() {
 		line := scanner.Text()
 
@@ -115,4 +122,28 @@ func parseSourceFile(fileName string, gitHead *object.Commit) (formatters.Source
 	}
 
 	return sf, nil
+}
+
+func getSourFileName(coverageFileName string) (string, error) {
+	coverageFile, err := os.Open(coverageFileName)
+	if err != nil {
+		return "", errors.WithStack(err)
+	}
+	defer coverageFile.Close()
+
+	scanner := bufio.NewScanner(coverageFile)
+	var sourceFileName string
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		split := strings.SplitN(string(line), ":", 4)
+		if len(split) != 4 {
+			return "", errors.WithStack(errors.Errorf("Could not find source file name: %s", coverageFile.Name() ))
+		}
+		sourceFileName = strings.TrimSpace(split[3])
+		return sourceFileName, nil
+	}
+
+	return sourceFileName, err
 }

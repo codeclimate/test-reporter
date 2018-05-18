@@ -17,13 +17,13 @@ func TestParse(t *testing.T) {
 	r.NoError(err)
 	r.Len(rep.SourceFiles, 3)
 
-	testCalculator(r, rep.SourceFiles["examples/Calculator.swift.gcov"])
-	testHamming(r, rep.SourceFiles["examples/hamming.c.gcov"])
+	testCalculator(r, rep.SourceFiles["examples/Calculator.swift"])
+	testHamming(r, rep.SourceFiles["examples/hamming.c"])
 	testReport(r, f)
 }
 
 func testCalculator(r *require.Assertions, sf formatters.SourceFile) {
-	r.Equal("examples/Calculator.swift.gcov", sf.Name)
+	r.Equal("examples/Calculator.swift", sf.Name)
 	r.InDelta(70.8, sf.CoveredPercent, 1)
 	r.Len(sf.Coverage, 61)
 	r.False(sf.Coverage[15].Valid)
@@ -35,7 +35,7 @@ func testCalculator(r *require.Assertions, sf formatters.SourceFile) {
 }
 
 func testHamming(r *require.Assertions, sf formatters.SourceFile) {
-	r.Equal("examples/hamming.c.gcov", sf.Name)
+	r.Equal("examples/hamming.c", sf.Name)
 	r.InDelta(83.3, sf.CoveredPercent, 1)
 	r.Len(sf.Coverage, 25)
 	r.False(sf.Coverage[2].Valid)
