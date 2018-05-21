@@ -1,5 +1,11 @@
 # Change log
 
+## v0.6.0 [(2018-05-21)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.0)
+
+* [FIX] Update `Gcov` formatter to report the correct source file paths [#338][]
+
+[#338]: https://github.com/codeclimate/test-reporter/pull/338
+
 ## v0.5.2 [(2018-05-15)](https://github.com/codeclimate/test-reporter/releases/tag/v0.5.2)
 
 * [FIX] Update `Cobertura` formatter to ignore invalid line numbers in a
