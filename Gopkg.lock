@@ -4,8 +4,8 @@
 [[projects]]
   name = "github.com/Sirupsen/logrus"
   packages = ["."]
-  revision = "418b41d23a1bf978c06faea5313ba194650ac088"
-  version = "v0.8.7"
+  revision = "c155da19408a8799da419ed3eeb0cb5db0ad5dbc"
+  version = "v1.0.5"
 
 [[projects]]
   name = "github.com/davecgh/go-spew"
@@ -95,9 +95,16 @@
     "ed25519",
     "ed25519/internal/edwards25519",
     "ssh",
-    "ssh/agent"
+    "ssh/agent",
+    "ssh/terminal"
   ]
   revision = "04eae0b62feaaf659a0ce2c4e8dc70b6ae2fff67"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "7138fd3d9dc8335c567ca206f4333fb75eb05d56"
 
 [[projects]]
   branch = "master"
