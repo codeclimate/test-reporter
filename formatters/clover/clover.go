@@ -56,7 +56,13 @@ func (r Formatter) Format() (formatters.Report, error) {
 
 	for _, pf := range files {
 		num := 1
-		sf, err := formatters.NewSourceFile(pf.Name, gitHead)
+
+		path := pf.Path
+		if len(path) == 0 {
+			path = pf.Name
+		}
+
+		sf, err := formatters.NewSourceFile(path, gitHead)
 		if err != nil {
 			return rep, errors.WithStack(err)
 		}
