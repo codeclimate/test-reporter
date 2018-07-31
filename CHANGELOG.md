@@ -1,5 +1,9 @@
 # Change log
 
+## v0.6.2 [(2018-07-31)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.2)
+
+* [NEW] Add support for multiple JaCoCo source paths [#348][]
+
 ## v0.6.1 [(2018-07-30)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.1)
 
 * [FIX] Support clover `path` attribute on file nodes in XML report [#349][]
