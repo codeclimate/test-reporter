@@ -16,8 +16,8 @@ import (
 
 var searchPaths = []string{"jacoco.xml"}
 
-func getSourcePath() string {
-	return envy.Get("JACOCO_SOURCE_PATH", "")
+func getSourcePaths() []string {
+	return strings.Fields(envy.Get("JACOCO_SOURCE_PATH", ""))
 }
 
 type Formatter struct {
@@ -38,7 +38,7 @@ func (f *Formatter) Search(paths ...string) (string, error) {
 }
 
 func (r Formatter) Format() (formatters.Report, error) {
-	sourcePath := getSourcePath()
+	sourcePaths := getSourcePaths()
 
 	rep, err := formatters.NewReport()
 	if err != nil {
@@ -61,7 +61,14 @@ func (r Formatter) Format() (formatters.Report, error) {
 		for _, xmlSF := range xmlPackage.SourceFile {
 			num := 1
 			filepath := fmt.Sprintf("%s/%s", xmlPackage.Name, xmlSF.Name)
-			sf, err := formatters.NewSourceFile(path.Join(sourcePath, filepath), gitHead)
+			absolutePath := filepath
+			for _, sourcePath := range sourcePaths {
+				absolutePath = path.Join(sourcePath, filepath)
+				if _, err := os.Stat(absolutePath); err == nil {
+					break
+				}
+			}
+			sf, err := formatters.NewSourceFile(absolutePath, gitHead)
 			if err != nil {
 				return rep, errors.WithStack(err)
 			}
