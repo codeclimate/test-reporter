@@ -1,5 +1,11 @@
 # Change log
 
+## v0.6.1 [(2018-07-30)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.1)
+
+* [FIX] Support clover `path` attribute on file nodes in XML report [#349][]
+
+[#349]: https://github.com/codeclimate/test-reporter/pull/349
+
 ## v0.6.0 [(2018-05-21)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.0)
 
 * [FIX] Update `Gcov` formatter to report the correct source file paths [#338][]
