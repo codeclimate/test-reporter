@@ -46,7 +46,7 @@ func Test_loadGitFromENV_Alt_Vars(t *testing.T) {
 	r := require.New(t)
 	envy.Temp(func() {
 		envy.Set("CIRCLE_BRANCH", "circle")
-		envy.Set("WERCKER_GIT_COMMIT", "b12345")
+		envy.Set("CIRCLE_SHA1", "b12345")
 		envy.Set("CI_COMMITED_AT", "1345")
 		g, err := findGitInfo()
 		r.NoError(err)
