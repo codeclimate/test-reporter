@@ -23,9 +23,10 @@ func Test_loadCIFromENV(t *testing.T) {
 func Test_loadCIFromENV_Alt_Vars(t *testing.T) {
 	r := require.New(t)
 	envy.Temp(func() {
+		envy.Set("CIRCLECI", "")
 		envy.Set("GITLAB_CI", "gitlab")
-		envy.Set("TDDIUM_SESSION_ID", "b12345")
-		envy.Set("BUILDKITE_BUILD_URL", "http://example.org")
+		envy.Set("CIRCLE_BUILD_NUM", "b12345")
+		envy.Set("CIRCLE_BUILD_URL", "http://example.org")
 		c := loadCIInfo()
 		r.Equal(c.Name, "gitlab")
 		r.Equal(c.BuildID, "b12345")
