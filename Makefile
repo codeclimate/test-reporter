@@ -1,4 +1,4 @@
-.PHONY: test-docker build-docker build-all build-all-latest release test-excoveralls
+.PHONY: test-docker build-docker build-linux-cgo build-all build-all-latest release test-excoveralls
 
 AWS ?= $(shell which aws)
 DOCKER_RUN ?= $(shell which docker) run --rm
@@ -10,7 +10,7 @@ MAN_FILES = $(wildcard man/*.md)
 MAN_PAGES = $(patsubst man/%.md,man/%,$(MAN_FILES))
 
 PROJECT = github.com/codeclimate/test-reporter
-VERSION ?= 0.6.2
+VERSION ?= netcgo
 BUILD_VERSION = $(shell git log -1 --pretty=format:'%H')
 BUILD_TIME = $(shell date +%FT%T%z)
 LDFLAGS = -ldflags "-X $(PROJECT)/version.Version=${VERSION} -X $(PROJECT)/version.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/version.BuildTime=${BUILD_TIME}"
@@ -26,12 +26,23 @@ test:
 benchmark:
 	go test -bench . $(shell go list ./... | grep -v /vendor/)
 
+build: BUILD_TAGS ?= ""
 build:
-	go build -v ${LDFLAGS} -o $(PREFIX)bin/test-reporter$(BINARY_SUFFIX)
+	go build -v ${LDFLAGS} -tags ${BUILD_TAGS} -o $(PREFIX)bin/test-reporter$(BINARY_SUFFIX)
 
 build-all:
-	$(MAKE) build-docker GOOS=darwin GOARCH=amd64
-	$(MAKE) build-docker GOOS=linux GOARCH=amd64
+	$(MAKE) build-linux
+	$(MAKE) build-linux-cgo
+	$(MAKE) build-darwin
+
+build-linux:
+	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=0
+
+build-linux-cgo:
+	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=1 BUILD_TAGS="netcgo"
+
+build-darwin:
+	$(MAKE) build PREFIX=artifacts/ BINARY_SUFFIX=-$(VERSION)-darwin-amd64
 
 build-all-latest:
 	$(MAKE) build-all VERSION=latest
@@ -57,11 +68,11 @@ build-docker:
 	  --env GOARCH \
 	  --env GOOS \
 	  --env GOPATH=/ \
-	  --env CGO_ENABLED=0 \
+	  --env CGO_ENABLED \
 	  --volume "$(PWD)"/artifacts:/artifacts \
 	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
 	  --workdir "/src/$(PROJECT)" \
-	  golang:1.8 make build
+	  golang:1.8 make build BUILD_TAGS=${BUILD_TAGS}
 
 test-simplecov:
 	docker build -f integration-tests/simplecov/Dockerfile .
