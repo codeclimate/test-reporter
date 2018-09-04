@@ -1,5 +1,12 @@
 # Change log
 
+## v0.6.3 [(2018-09-04)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.3)
+
+* [NEW] Updates release strategy to build a new Linux binary that uses
+  `netcgo` [#355][]
+
+[#355]: https://github.com/codeclimate/test-reporter/pull/355
+
 ## v0.6.2 [(2018-07-31)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.2)
 
 * [NEW] Add support for multiple JaCoCo source paths [#348][]
