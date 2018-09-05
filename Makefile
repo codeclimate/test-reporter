@@ -151,6 +151,7 @@ clean:
 	sudo $(RM) -r ./artifacts
 	$(RM) $(MAN_PAGES)
 
+# Must be run in a OS X machine. OS X binary is build natively. 
 release:
 	$(MAKE) build-docker-linux
 	$(MAKE) build-docker-linux-cgo
