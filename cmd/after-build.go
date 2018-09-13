@@ -14,13 +14,14 @@ import (
 )
 
 var afterBuildOptions = struct {
-	InputType   string
-	Prefix      string
-	BatchSize   int
-	EndpointURL string
-	ReporterID  string
-	ExitCode    int
-	Insecure    bool
+	CoveragePath string
+	InputType    string
+	Prefix       string
+	BatchSize    int
+	EndpointURL  string
+	ReporterID   string
+	ExitCode     int
+	Insecure     bool
 }{}
 
 var afterBuildCmd = &cobra.Command{
@@ -34,9 +35,10 @@ var afterBuildCmd = &cobra.Command{
 		bb := &bytes.Buffer{}
 
 		cf := CoverageFormatter{
-			Prefix:    afterBuildOptions.Prefix,
-			InputType: afterBuildOptions.InputType,
-			writer:    bb,
+			CoveragePath: afterBuildOptions.CoveragePath,
+			Prefix:       afterBuildOptions.Prefix,
+			InputType:    afterBuildOptions.InputType,
+			writer:       bb,
 		}
 
 		logrus.Debug("about to run format-coverage")
@@ -63,6 +65,7 @@ func init() {
 	afterBuildCmd.Flags().IntVar(&afterBuildOptions.ExitCode, "exit-code", 0, "exit code of the test run")
 	afterBuildCmd.Flags().StringVarP(&afterBuildOptions.Prefix, "prefix", "p", pwd, "the root directory where the coverage analysis was performed")
 	afterBuildCmd.Flags().StringVarP(&afterBuildOptions.InputType, "coverage-input-type", "t", "", fmt.Sprintf("type of input source to use [%s]", strings.Join(formatterList, ", ")))
+	afterBuildCmd.Flags().StringVarP(&afterBuildOptions.CoveragePath, "coverage-path", "f", "", fmt.Sprintf("additional path of input source to use"))
 	afterBuildCmd.Flags().StringVarP(&afterBuildOptions.ReporterID, "id", "r", os.Getenv("CC_TEST_REPORTER_ID"), "reporter identifier")
 	afterBuildCmd.Flags().StringVarP(&afterBuildOptions.EndpointURL, "coverage-endpoint", "e", envy.Get("CC_TEST_REPORTER_COVERAGE_ENDPOINT", "https://api.codeclimate.com/v1/test_reports"), "endpoint to upload coverage information to")
 	afterBuildCmd.Flags().IntVarP(&afterBuildOptions.BatchSize, "batch-size", "s", 500, "batch size for source files")
