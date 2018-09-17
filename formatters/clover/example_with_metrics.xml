@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1536823740104" clover="3.2.0">
+  <project timestamp="1536823740104" name="All files">
+    <metrics methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="44" coveredstatements="0" elements="46" coveredelements="0" >
+      <package name="frontend">
+        <file name="/Users/markbates/Dropbox/development/php-test-reporter/src/ConsoleCommands/SelfUpdateCommand.php">
+          <class name="SelfUpdateCommand" namespace="CodeClimate\PhpTestReporter\ConsoleCommands" fullPackage="CodeClimate" package="CodeClimate">
+            <metrics methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="44" coveredstatements="0" elements="46" coveredelements="0" />
+          </class>
+          <line num="24" type="method" name="configure" crap="2" count="0" />
+          <line num="25" type="stmt" count="0" />
+          <line num="26" type="stmt" count="0" />
+          <line num="27" type="stmt" count="0" />
+          <line num="29" type="stmt" count="0" />
+          <line num="30" type="stmt" count="0" />
+          <line num="31" type="stmt" count="0" />
+          <line num="32" type="stmt" count="0" />
+          <line num="33" type="stmt" count="0" />
+          <line num="34" type="stmt" count="0" />
+          <line num="35" type="stmt" count="0" />
+          <line num="36" type="stmt" count="0" />
+          <line num="37" type="stmt" count="0" />
+          <line num="38" type="stmt" count="0" />
+          <line num="39" type="stmt" count="0" />
+          <line num="40" type="stmt" count="0" />
+          <line num="41" type="stmt" count="0" />
+          <line num="43" type="method" name="execute" crap="30" count="0" />
+          <line num="44" type="stmt" count="0" />
+          <line num="45" type="stmt" count="0" />
+          <line num="46" type="stmt" count="0" />
+          <line num="49" type="stmt" count="0" />
+          <line num="51" type="stmt" count="0" />
+          <line num="52" type="stmt" count="0" />
+          <line num="53" type="stmt" count="0" />
+          <line num="55" type="stmt" count="0" />
+          <line num="56" type="stmt" count="0" />
+          <line num="58" type="stmt" count="0" />
+          <line num="59" type="stmt" count="0" />
+          <line num="60" type="stmt" count="0" />
+          <line num="62" type="stmt" count="0" />
+          <line num="63" type="stmt" count="0" />
+          <line num="65" type="stmt" count="0" />
+          <line num="66" type="stmt" count="0" />
+          <line num="67" type="stmt" count="0" />
+          <line num="68" type="stmt" count="0" />
+          <line num="69" type="stmt" count="0" />
+          <line num="70" type="stmt" count="0" />
+          <line num="71" type="stmt" count="0" />
+          <line num="72" type="stmt" count="0" />
+          <line num="74" type="stmt" count="0" />
+          <line num="75" type="stmt" count="0" />
+          <line num="76" type="stmt" count="0" />
+          <line num="78" type="stmt" count="0" />
+          <line num="79" type="stmt" count="0" />
+          <line num="80" type="stmt" count="0" />
+          <metrics loc="81" ncloc="73" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="44" coveredstatements="0" elements="46" coveredelements="0" />
+        </file>
+      </package>
+    </metrics>
+  </project>
+</coverage>
