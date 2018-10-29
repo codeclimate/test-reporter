@@ -11,7 +11,7 @@ Code Climate accepts test coverage data from virtually any location, including l
 
 For installation instructions, check out our docs on [Configuring Test Coverage](https://docs.codeclimate.com/docs/configuring-test-coverage) and [Test Coverage Troubleshooting Tips](https://docs.codeclimate.com/docs/test-coverage-troubleshooting-tips).
 
-To sign up for Code Climate, head [here].
+To sign up for Code Climate, head [here](https://codeclimate.com/quality/pricing/).
 
 
 ## Copyright
