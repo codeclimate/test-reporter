@@ -16,4 +16,4 @@ To sign up for Code Climate, head [here](https://codeclimate.com/quality/pricing
 
 ## Copyright
 
-See the [LICENSE](LICENSE).
+See the [LICENSE](https://github.com/codeclimate/test-reporter/blob/master/LICENSE).
