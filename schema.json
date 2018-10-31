@@ -52,7 +52,7 @@
       "$ref": "#/definitions/ci_service"
     }
   },
-  "required": ["source_files", "git"],
+  "required": ["source_files", "git", "covered_percent", "covered_strength", "line_counts"],
   "definitions": {
     "source_file": {
       "description": "Meta-data and coverage information for source file under test.",
@@ -82,7 +82,7 @@
           "$ref": "#/definitions/line_counts"
         }
       },
-      "required": ["name", "blob_id", "coverage"],
+      "required": ["name", "blob_id", "coverage", "covered_percent", "covered_strength", "line_counts"],
     },
 
     "environment": {

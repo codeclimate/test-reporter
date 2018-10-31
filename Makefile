@@ -1,4 +1,4 @@
-.PHONY: test-docker build-docker build-all build-all-latest release
+.PHONY: test-docker build-docker build-linux-cgo release test-excoveralls
 
 AWS ?= $(shell which aws)
 DOCKER_RUN ?= $(shell which docker) run --rm
@@ -10,7 +10,7 @@ MAN_FILES = $(wildcard man/*.md)
 MAN_PAGES = $(patsubst man/%.md,man/%,$(MAN_FILES))
 
 PROJECT = github.com/codeclimate/test-reporter
-VERSION ?= 0.3.2
+VERSION ?= 0.6.3
 BUILD_VERSION = $(shell git log -1 --pretty=format:'%H')
 BUILD_TIME = $(shell date +%FT%T%z)
 LDFLAGS = -ldflags "-X $(PROJECT)/version.Version=${VERSION} -X $(PROJECT)/version.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/version.BuildTime=${BUILD_TIME}"
@@ -23,15 +23,44 @@ all: test-docker build-all $(MAN_PAGES)
 test:
 	go test $(shell go list ./... | grep -v /vendor/)
 
+benchmark:
+	go test -bench . $(shell go list ./... | grep -v /vendor/)
+
 build:
-	go build -v ${LDFLAGS} -o $(PREFIX)bin/test-reporter$(BINARY_SUFFIX)
+	if [ -z "${BUILD_TAGS}" ]; then \
+		go build -v ${LDFLAGS} -o $(PREFIX)bin/test-reporter$(BINARY_SUFFIX); \
+	else \
+		go build -v ${LDFLAGS} -tags ${BUILD_TAGS} -o $(PREFIX)bin/test-reporter$(BINARY_SUFFIX); \
+	fi
 
-build-all:
-	$(MAKE) build-docker GOOS=darwin GOARCH=amd64
-	$(MAKE) build-docker GOOS=linux GOARCH=amd64
+build-linux-all:
+	$(MAKE) build-linux
+	$(MAKE) build-linux-cgo
 
-build-all-latest:
-	$(MAKE) build-all VERSION=latest
+build-linux:
+	$(MAKE) build \
+	  PREFIX=artifacts/ \
+	  BINARY_SUFFIX=-$(VERSION)-linux-amd64 \
+	  CGO_ENABLED=0
+
+build-docker-linux:
+	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=0
+
+build-docker-linux-cgo:
+	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=1 \
+		BUILD_TAGS="netcgo" BINARY_SUFFIX=-$(VERSION)-netcgo-linux-amd64
+
+build-linux-cgo:
+	$(MAKE) build \
+	  PREFIX=artifacts/ \
+	  BINARY_SUFFIX=-$(VERSION)-netcgo-linux-amd64 \
+	  CGO_ENABLED=1 \
+	  BUILD_TAGS="netcgo"
+
+build-darwin:
+	$(MAKE) build \
+	  PREFIX=artifacts/ \
+	  BINARY_SUFFIX=-$(VERSION)-darwin-amd64
 
 test-docker:
 	$(DOCKER_RUN) \
@@ -40,18 +69,26 @@ test-docker:
 	  --workdir "/src/$(PROJECT)" \
 	  golang:1.8 make test
 
+benchmark-docker:
+	$(DOCKER_RUN) \
+	  --env GOPATH=/ \
+	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
+	  --workdir "/src/$(PROJECT)" \
+	  golang:1.8 make benchmark
+
+build-docker: BINARY_SUFFIX ?= -$(VERSION)-$$GOOS-$$GOARCH
 build-docker:
 	$(DOCKER_RUN) \
 	  --env PREFIX=/artifacts/ \
-	  --env BINARY_SUFFIX=-$(VERSION)-$$GOOS-$$GOARCH \
+	  --env BINARY_SUFFIX=${BINARY_SUFFIX} \
 	  --env GOARCH \
 	  --env GOOS \
 	  --env GOPATH=/ \
-	  --env CGO_ENABLED=0 \
+	  --env CGO_ENABLED \
 	  --volume "$(PWD)"/artifacts:/artifacts \
 	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
 	  --workdir "/src/$(PROJECT)" \
-	  golang:1.8 make build
+	  golang:1.8 make build BUILD_TAGS=${BUILD_TAGS}
 
 test-simplecov:
 	docker build -f integration-tests/simplecov/Dockerfile .
@@ -62,6 +99,9 @@ test-lcov:
 test-covpy:
 	docker build -f integration-tests/coverage_py/Dockerfile .
 
+test-gcov:
+	docker build -f integration-tests/gcov/Dockerfile .
+
 test-gocov:
 	docker build -f integration-tests/gocov/Dockerfile .
 
@@ -70,6 +110,9 @@ test-clover:
 
 test-cobertura:
 	docker build -f integration-tests/cobertura/Dockerfile .
+
+test-excoveralls:
+	docker build -f integration-tests/excoveralls/Dockerfile .
 
 publish-head:
 	$(AWS) s3 cp \
@@ -108,4 +151,14 @@ clean:
 	sudo $(RM) -r ./artifacts
 	$(RM) $(MAN_PAGES)
 
-release: build-all build-all-latest publish-version publish-latest tag
+# Must be run in a OS X machine. OS X binary is build natively. 
+release:
+	$(MAKE) build-docker-linux
+	$(MAKE) build-docker-linux-cgo
+	$(MAKE) build-darwin
+	$(MAKE) build-docker-linux VERSION=latest
+	$(MAKE) build-docker-linux-cgo VERSION=latest
+	$(MAKE) build-darwin VERSION=latest
+	$(MAKE) publish-version
+	$(MAKE) publish-latest
+	$(MAKE) tag

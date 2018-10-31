@@ -1,4 +1,4 @@
-        -:    0:Source:hamming.c
+        -:    0:Source:examples/hamming.c
         -:    0:Graph:hamming.gcno
         -:    0:Data:hamming.gcda
         -:    0:Runs:1
@@ -35,7 +35,7 @@ branch  2 taken 100%
     #####:   19:		printf("Test failed");
 call    0 never executed
         -:   20:	}
-        -:   21:	
+        -:   21:
         1:   22:	if(compute("AGA", "AGC") != 1) {
 call    0 returned 100%
 branch  1 taken 0% (fallthrough)

@@ -1,0 +1,96 @@
+version: 2
+jobs:
+  test_linux:
+    docker:
+      - image: circleci/golang
+    working_directory: /go/src/github.com/codeclimate/test-reporter
+    setup_remote_docker:
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - run: make test
+
+  release_linux:
+    docker:
+      - image: circleci/golang
+    working_directory: /go/src/github.com/codeclimate/test-reporter
+    setup_remote_docker:
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - run: sudo apt-get install awscli
+      - run: make build-linux-all VERSION=head
+      - run: make publish-head
+
+  test_macos:
+    macos:
+      xcode: "9.0"
+    steps:
+      - checkout
+      - run: brew install golang
+      - run:
+          name: Setup gopath
+          command: |
+            mkdir -p ~/gopath/src/github.com/codeclimate/test-reporter
+            echo 'export GOPATH=$HOME/gopath' >> "$BASH_ENV"
+            . "$BASH_ENV"
+            cd $GOPATH/src/github.com/codeclimate/test-reporter
+            cp -r ~/project/ $GOPATH/src/github.com/codeclimate/test-reporter/
+      - run:
+          name: Run tests
+          command: |
+            cd $GOPATH/src/github.com/codeclimate/test-reporter
+            make test
+
+  release_macos:
+    macos:
+      xcode: "9.0"
+    steps:
+      - checkout
+      - run: pip install awscli
+      - run: brew install golang
+      - run:
+          name: Setup gopath
+          command: |
+            mkdir -p ~/gopath/src/github.com/codeclimate/test-reporter
+            echo 'export GOPATH=$HOME/gopath' >> "$BASH_ENV"
+            . "$BASH_ENV"
+            cd $GOPATH/src/github.com/codeclimate/test-reporter
+            cp -r ~/project/ $GOPATH/src/github.com/codeclimate/test-reporter/
+      - run:
+          name: Build
+          command: |
+            cd $GOPATH/src/github.com/codeclimate/test-reporter
+            make build-darwin VERSION=head
+      - run:
+          name: Publish
+          command: |
+            cd $GOPATH/src/github.com/codeclimate/test-reporter
+            make publish-head
+
+workflows:
+  version: 2
+  build_deploy:
+    jobs:
+      - test_linux
+      - test_macos
+      - release_linux:
+          requires:
+            - test_linux
+            - test_macos
+          filters:
+            branches:
+              only:
+                - master
+      - release_macos:
+          requires:
+            - test_linux
+            - test_macos
+          filters:
+            branches:
+              only:
+                - master
+
+notify:
+  webhooks:
+    - url: https://cc-slack-proxy.herokuapp.com/circle

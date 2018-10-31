@@ -13,6 +13,7 @@ import (
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/pkg/errors"
+	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
 // Formatter collects GCov files, parses them, then formats them into a single report.
@@ -55,8 +56,9 @@ func (f *Formatter) Format() (formatters.Report, error) {
 		return rep, err
 	}
 
+	gitHead, _ := env.GetHead()
 	for _, file := range f.FileNames {
-		sf, err := parseSourceFile(file)
+		sf, err := parseSourceFile(file, gitHead)
 		if err != nil {
 			return rep, errors.WithStack(err)
 		}
@@ -70,20 +72,26 @@ func (f *Formatter) Format() (formatters.Report, error) {
 }
 
 // Parse a single GCov source file.
-func parseSourceFile(fileName string) (formatters.SourceFile, error) {
-	gitHead, _ := env.GetHead()
-	sf, err := formatters.NewSourceFile(fileName, gitHead)
+func parseSourceFile(fileName string, gitHead *object.Commit) (formatters.SourceFile, error) {
+	var sf formatters.SourceFile
+	sourceFileName, err := getSourceFileName(fileName)
 	if err != nil {
 		return sf, errors.WithStack(err)
 	}
 
-	file, err := os.Open(fileName)
+	sf, err = formatters.NewSourceFile(sourceFileName, gitHead)
 	if err != nil {
 		return sf, errors.WithStack(err)
 	}
-	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
+	coverageFile, err := os.Open(fileName)
+	if err != nil {
+		return sf, errors.WithStack(err)
+	}
+	defer coverageFile.Close()
+
+	scanner := bufio.NewScanner(coverageFile)
+
 	for scanner.Scan() {
 		line := scanner.Text()
 
@@ -114,4 +122,28 @@ func parseSourceFile(fileName string) (formatters.SourceFile, error) {
 	}
 
 	return sf, nil
+}
+
+func getSourceFileName(coverageFileName string) (string, error) {
+	coverageFile, err := os.Open(coverageFileName)
+	if err != nil {
+		return "", errors.WithStack(err)
+	}
+	defer coverageFile.Close()
+
+	scanner := bufio.NewScanner(coverageFile)
+	var sourceFileName string
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		split := strings.SplitN(string(line), ":", 4)
+		if len(split) != 4 {
+			return "", errors.WithStack(errors.Errorf("Could not find source file name: %s", coverageFile.Name() ))
+		}
+		sourceFileName = strings.TrimSpace(split[3])
+		return sourceFileName, nil
+	}
+
+	return sourceFileName, err
 }

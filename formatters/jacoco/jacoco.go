@@ -4,15 +4,21 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/formatters"
+	"github.com/gobuffalo/envy"
 	"github.com/pkg/errors"
 )
 
 var searchPaths = []string{"jacoco.xml"}
+
+func getSourcePaths() []string {
+	return strings.Fields(envy.Get("JACOCO_SOURCE_PATH", ""))
+}
 
 type Formatter struct {
 	Path string
@@ -32,6 +38,8 @@ func (f *Formatter) Search(paths ...string) (string, error) {
 }
 
 func (r Formatter) Format() (formatters.Report, error) {
+	sourcePaths := getSourcePaths()
+
 	rep, err := formatters.NewReport()
 	if err != nil {
 		return rep, err
@@ -53,7 +61,14 @@ func (r Formatter) Format() (formatters.Report, error) {
 		for _, xmlSF := range xmlPackage.SourceFile {
 			num := 1
 			filepath := fmt.Sprintf("%s/%s", xmlPackage.Name, xmlSF.Name)
-			sf, err := formatters.NewSourceFile(filepath, gitHead)
+			absolutePath := filepath
+			for _, sourcePath := range sourcePaths {
+				absolutePath = path.Join(sourcePath, filepath)
+				if _, err := os.Stat(absolutePath); err == nil {
+					break
+				}
+			}
+			sf, err := formatters.NewSourceFile(absolutePath, gitHead)
 			if err != nil {
 				return rep, errors.WithStack(err)
 			}
@@ -66,7 +81,6 @@ func (r Formatter) Format() (formatters.Report, error) {
 				sf.Coverage = append(sf.Coverage, ni)
 				num++
 			}
-			sf.CalcLineCounts()
 			err = rep.AddSourceFile(sf)
 			if err != nil {
 				return rep, errors.WithStack(err)

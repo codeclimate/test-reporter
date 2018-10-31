@@ -98,6 +98,11 @@ and `constant` (by source file) records.
 
 TODO
 
+## Before Releasing
+
+* Ensure that you have [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/installing.html) installed
+* You'll also need to have GPG setup
+
 ## Releasing
 
 To release a new version,

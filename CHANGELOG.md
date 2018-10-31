@@ -1,9 +1,102 @@
 # Change log
 
+## v0.6.3 [(2018-09-04)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.3)
+
+* [NEW] Updates release strategy to build a new Linux binary that uses
+  `netcgo` [#355][]
+
+[#355]: https://github.com/codeclimate/test-reporter/pull/355
+
+## v0.6.2 [(2018-07-31)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.2)
+
+* [NEW] Add support for multiple JaCoCo source paths [#348][]
+
+## v0.6.1 [(2018-07-30)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.1)
+
+* [FIX] Support clover `path` attribute on file nodes in XML report [#349][]
+
+[#349]: https://github.com/codeclimate/test-reporter/pull/349
+
+## v0.6.0 [(2018-05-21)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.0)
+
+* [FIX] Update `Gcov` formatter to report the correct source file paths [#338][]
+
+[#338]: https://github.com/codeclimate/test-reporter/pull/338
+
+## v0.5.2 [(2018-05-15)](https://github.com/codeclimate/test-reporter/releases/tag/v0.5.2)
+
+* [FIX] Update `Cobertura` formatter to ignore invalid line numbers in a
+  `cobertura.xml` file [#335][]
+
+[#335]: https://github.com/codeclimate/test-reporter/pull/335
+
+## v0.5.1 [(2018-03-19)](https://github.com/codeclimate/test-reporter/releases/tag/v0.5.1)
+
+* [FIX] Fix bug with formatting JaCoCo test coverage [#318][]
+
+[#318]: https://github.com/codeclimate/test-reporter/pull/318
+
+## v0.5.0 [(2018-02-26)](https://github.com/codeclimate/test-reporter/releases/tag/v0.5.0)
+
+* [NEW] Add flag to upload coverage insecurely [#310][]
+
+[#310]: https://github.com/codeclimate/test-reporter/pull/310
+
+## v0.4.5 [(2018-02-19)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.5)
+
+* [FIX] Add partial automated support for Heroku CI builds [#305][]
+
+[#305]: https://github.com/codeclimate/test-reporter/pull/305
+
+## v0.4.4 [(2018-02-15)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.4)
+
+* [FIX] Add support for Codeship CI environment variables [#300][]
+
+## v0.4.3 [(2018-01-18)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.3)
+
+[#300]: https://github.com/codeclimate/test-reporter/pull/300
+
+* [FIX] Fix logging to not include extraneous newline, correct spelling [#288][]
+
+[#288]: https://github.com/codeclimate/test-reporter/pull/288
+
+## v0.4.2 [(2018-01-09)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.2)
+
+* [FIX] Improved performance of the Cobertura, Gcov, and Jacoco formatters [#285][]
+
+[#285]: https://github.com/codeclimate/test-reporter/pull/285
+
+## v0.4.1 [(2018-01-08)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.1)
+
+* [FIX] Improved performance of the LCOV formatter [#270][]
+
+[#270]: https://github.com/codeclimate/test-reporter/pull/270
+
+## v0.4.0 [(2017-12-19)](https://github.com/codeclimate/test-reporter/releases/tag/v0.4.0)
+
+* [NEW] Add support for `excoveralls` json report (Elixir) [#278][]
+
+[#278]: https://github.com/codeclimate/test-reporter/pull/278
+
+## v0.3.4 [(2017-12-13)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.4)
+
+* [FIX] `sum-coverage` command when merging source files with
+        different coverage length but same blob ID [#272][]
+
+[#272]: https://github.com/codeclimate/test-reporter/pull/272
+
+## v0.3.3 [(2017-12-05)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.3)
+
+* [FIX] Treat 409 report upload status as warning and exit 0 [#268][]
+
+[#268]: https://github.com/codeclimate/test-reporter/pull/268
+
 ## v0.3.2 [(2017-10-30)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.2)
 
 * [FIX] Update `coverage.py` formatter to parse `<source>` tags and correctly create
   source file paths. [#247][]
+
+[#247]: https://github.com/codeclimate/test-reporter/pull/247
 
 ## v0.3.1 [(2017-10-02)](https://github.com/codeclimate/test-reporter/releases/tag/v0.3.1)
 

@@ -24,8 +24,16 @@ type SourceFile struct {
 }
 
 func (a SourceFile) Merge(b SourceFile) (SourceFile, error) {
-	if len(a.Coverage) != len(b.Coverage) {
-		return a, errors.Errorf("coverage length mismatch for %s", a.Name)
+	if a.BlobID != b.BlobID {
+		return a, errors.Errorf("failed to merge coverage for source file %s: BlobID mismatch", a.Name)
+	}
+	lenA := len(a.Coverage)
+	lenB := len(b.Coverage)
+
+	if lenA > lenB {
+		b.Coverage = b.Coverage.AppendNulls(lenA - lenB)
+	} else if lenA < lenB {
+		a.Coverage = a.Coverage.AppendNulls(lenB - lenA)
 	}
 
 	for i, bc := range b.Coverage {
@@ -75,10 +83,10 @@ func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 	if prefix, err := envy.MustGet("PREFIX"); err == nil {
 		if strings.HasSuffix(prefix, string(os.PathSeparator)) {
 			name = strings.TrimPrefix(name, prefix)
-			logrus.Printf("triming with prefix %s\n", prefix)
+			logrus.Printf("trimming with prefix %s", prefix)
 		} else {
 			prefix = fmt.Sprintf("%s%s", prefix, string(os.PathSeparator))
-			logrus.Printf("triming with prefix %s\n", prefix)
+			logrus.Printf("trimming with prefix %s", prefix)
 			name = strings.TrimPrefix(name, prefix)
 		}
 	}

@@ -36,3 +36,7 @@ RUN test-reporter after-build -s 5 -d
 # RUN mv coverage custom-coverage
 # RUN test-reporter format-coverage -d -t simplecov custom-coverage/.resultset.json
 # RUN test-reporter upload-coverage -d -s 5
+
+# test coverage on conflict uploads
+# RUN test-reporter after-build -s 5 -d
+# RUN test-reporter after-build -s 5 -d

@@ -43,13 +43,14 @@ func (r Formatter) Format() (formatters.Report, error) {
 		return rep, errors.WithStack(err)
 	}
 
+	var gitHead, _ = env.GetHead()
+
 	var sf formatters.SourceFile
 	curLine := 1
 
 	for _, line := range bytes.Split(b, []byte("\n")) {
 		if bytes.HasPrefix(line, []byte("SF:")) {
 			name := string(bytes.TrimSpace(bytes.TrimPrefix(line, []byte("SF:"))))
-			var gitHead, _ = env.GetHead()
 			sf, err = formatters.NewSourceFile(name, gitHead)
 			if err != nil {
 				return rep, errors.WithStack(err)
@@ -64,7 +65,6 @@ func (r Formatter) Format() (formatters.Report, error) {
 			}
 			for ln-curLine >= 1 {
 				sf.Coverage = append(sf.Coverage, formatters.NullInt{})
-				sf.CalcLineCounts()
 				curLine++
 			}
 			lh, err := strconv.Atoi(string(lineInfo[1]))
