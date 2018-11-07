@@ -27,7 +27,7 @@ Some installations may require the use of the following [subcommands](https://do
 
 
 
-## `sum-coverage` - combines test reports from multiple sources (i.e. multiple test suites or parallelized CI builds) into one test report which is readable by Code Climate
+#### `sum-coverage` - combines test reports from multiple sources (i.e. multiple test suites or parallelized CI builds) into one test report which is readable by Code Climate
 
 - `-o PATH` or  `--output PATH` - Output to PATH. If - is given, content will be written to stdout. Defaults to coverage/codeclimate.json.
 
