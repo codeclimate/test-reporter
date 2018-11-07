@@ -11,11 +11,11 @@ Code Climate accepts test coverage data from virtually any location, including l
 
 For installation instructions, check out our docs on [Configuring Test Coverage](https://docs.codeclimate.com/docs/configuring-test-coverage) and [Test Coverage Troubleshooting Tips](https://docs.codeclimate.com/docs/test-coverage-troubleshooting-tips).
 
-Some installations may require the use of [additional subcommands](https://docs.codeclimate.com/docs/configuring-test-coverage#section-list-of-subcommands):
+Some installations may require the use of [subcommands](https://docs.codeclimate.com/docs/configuring-test-coverage#section-list-of-subcommands):
 
 - `$EXIT_CODE` should be the exit code of your test suite process. Some CI system expose this as an environment variable; for others, you may need to manually capture `$?` to provide it to `after-build` later. Providing this will prevent sending test coverage results for failed tests.
 
-Subcommands for `format-coverage`:
+Flags for `format-coverage`:
 
 - `-t` or  `--input-type` *simplecov | lcov | coverage.py | gcov | clover* - Identifies the input type (format) of the COVERAGE_FILE
 
@@ -25,13 +25,13 @@ Subcommands for `format-coverage`:
 
 - `COVERAGE_FILE` - Path to the coverage file to process. Defaults to searching known paths where coverage files could exist and selecting the first one found.
 
-Subcommands for `sum-coverage`:
+Flags for `sum-coverage`:
 
 - `-o PATH` or  `--output PATH` - Output to PATH. If - is given, content will be written to stdout. Defaults to coverage/codeclimate.json.
 
 - `-p NUMBER` or `--parts NUMBER` - Expect NUMBER payloads to sum. If this many arguments are not present, command will error. This ensures you don't accidentally sum incomplete results.
 
-Subcommands for `upload-coverage`:
+Flags for `upload-coverage`:
 
 - `-i PATH` or `--input PATH` - Read payload from PATH. If - is given, the payload will be read from stdin. Defaults to coverage/codeclimate.json.
 
