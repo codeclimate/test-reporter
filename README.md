@@ -15,7 +15,7 @@ Some installations may require the use of the following [subcommands](https://do
 
 
 
-## `format-coverage` - formats test report from local test suite into generalized format, readable by Code Climate
+### `format-coverage` - formats test report from local test suite into generalized format, readable by Code Climate
 
 - `-t` or  `--input-type` *simplecov | lcov | coverage.py | gcov | clover* - Identifies the input type (format) of the COVERAGE_FILE
 
