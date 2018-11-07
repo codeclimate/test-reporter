@@ -47,12 +47,11 @@ Some installations may require the use of the following [subcommands](https://do
 
 - `-e URL` or `--endpoint URL` - The endpoint to upload coverage information to. Defaults to the value in the CC_TEST_REPORTER_COVERAGE_ENDPOINT environment variable, or a hard-coded default (currently "https://codeclimate.com/test_reports").
 
-- `--exit-code $EXIT_CODE` - `$EXIT_CODE` should be the exit code of your test suite process. Some CI system expose this as an environment variable; for others, you may need to manually capture `$?` to provide it to `after-build` later. Providing this will prevent sending test coverage results for failed tests.
-
 
 
 #### `after-build` - combines `format-coverage` and `upload-coverage`
 
+- `--exit-code $EXIT_CODE` - `$EXIT_CODE` should be the exit code of your test suite process. Some CI system expose this as an environment variable; for others, you may need to manually capture `$?` to provide it to `after-build` later. Providing this will prevent sending test coverage results for failed tests.
 
 
 To sign up for Code Climate, head [here](https://codeclimate.com/quality/pricing/).
