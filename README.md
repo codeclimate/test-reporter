@@ -11,9 +11,8 @@ Code Climate accepts test coverage data from virtually any location, including l
 
 For installation instructions, check out our docs on [Configuring Test Coverage](https://docs.codeclimate.com/docs/configuring-test-coverage) and [Test Coverage Troubleshooting Tips](https://docs.codeclimate.com/docs/test-coverage-troubleshooting-tips).
 
-Some installations may require the use of [subcommands](https://docs.codeclimate.com/docs/configuring-test-coverage#section-list-of-subcommands):
+Some installations may require the use of [subcommands](https://docs.codeclimate.com/docs/configuring-test-coverage#section-list-of-subcommands). The subcommands accept the following flags:
 
-- `$EXIT_CODE` should be the exit code of your test suite process. Some CI system expose this as an environment variable; for others, you may need to manually capture `$?` to provide it to `after-build` later. Providing this will prevent sending test coverage results for failed tests.
 
 Flags for `format-coverage`:
 
@@ -38,6 +37,8 @@ Flags for `upload-coverage`:
 - `-r ID` or  `--id ID` - The reporter identifier to use when reporting coverage information. The appropriate value can be found in your Repository Settings page on codeclimate.com. Defaults to the value in the `CC_TEST_REPORTER_ID` environment variable. The uploader will error if a value is not found.
 
 - `-e URL` or `--endpoint URL` - The endpoint to upload coverage information to. Defaults to the value in the CC_TEST_REPORTER_COVERAGE_ENDPOINT environment variable, or a hard-coded default (currently "https://codeclimate.com/test_reports").
+
+- `--exit-code $EXIT_CODE` - `$EXIT_CODE` should be the exit code of your test suite process. Some CI system expose this as an environment variable; for others, you may need to manually capture `$?` to provide it to `after-build` later. Providing this will prevent sending test coverage results for failed tests.
 
 
 To sign up for Code Climate, head [here](https://codeclimate.com/quality/pricing/).
