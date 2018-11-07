@@ -13,15 +13,9 @@ For installation instructions, check out our docs on [Configuring Test Coverage]
 
 Some installations may require the use of [additional subcommands](https://docs.codeclimate.com/docs/configuring-test-coverage#section-list-of-subcommands):
 
-- `before-build` - notifies the test reporter of a pending test report
+- `$EXIT_CODE` should be the exit code of your test suite process. Some CI system expose this as an environment variable; for others, you may need to manually capture `$?` to provide it to `after-build` later. Providing this will prevent sending test coverage results for failed tests.
 
-- `after-build`- combines `format-coverage` and `upload-coverage`
-
-- `sum-coverage`- combines test reports from multiple sources (i.e. multiple test suites or parallelized CI builds) into one test report which is readable by Code Climate
-
-- `format-coverage` - formats test report from local test suite into generalized format, readable by Code Climate
-
-- `upload-coverage` - uploads formatted, singular test report to Code Climate API
+Subcommands for `format-coverage`:
 
 - `-t` or  `--input-type` *simplecov | lcov | coverage.py | gcov | clover* - Identifies the input type (format) of the COVERAGE_FILE
 
@@ -29,13 +23,22 @@ Some installations may require the use of [additional subcommands](https://docs.
 
 - `-p PATH` or `--prefix PATH` - The prefix to remove from absolute paths in coverage payloads, to make them relative to the project root. This is usually the directory in which the tests were run. Defaults to current working directory.
 
+- `COVERAGE_FILE` - Path to the coverage file to process. Defaults to searching known paths where coverage files could exist and selecting the first one found.
+
+Subcommands for `sum-coverage`:
+
+- `-o PATH` or  `--output PATH` - Output to PATH. If - is given, content will be written to stdout. Defaults to coverage/codeclimate.json.
+
 - `-p NUMBER` or `--parts NUMBER` - Expect NUMBER payloads to sum. If this many arguments are not present, command will error. This ensures you don't accidentally sum incomplete results.
+
+Subcommands for `upload-coverage`:
 
 - `-i PATH` or `--input PATH` - Read payload from PATH. If - is given, the payload will be read from stdin. Defaults to coverage/codeclimate.json.
 
 - `-r ID` or  `--id ID` - The reporter identifier to use when reporting coverage information. The appropriate value can be found in your Repository Settings page on codeclimate.com. Defaults to the value in the `CC_TEST_REPORTER_ID` environment variable. The uploader will error if a value is not found.
 
-- `$EXIT_CODE` should be the exit code of your test suite process. Some CI system expose this as an environment variable; for others, you may need to manually capture `$?` to provide it to `after-build` later. Providing this will prevent sending test coverage results for failed tests.
+- `-e URL` or `--endpoint URL` - The endpoint to upload coverage information to. Defaults to the value in the CC_TEST_REPORTER_COVERAGE_ENDPOINT environment variable, or a hard-coded default (currently "https://codeclimate.com/test_reports").
+
 
 To sign up for Code Climate, head [here](https://codeclimate.com/quality/pricing/).
 
