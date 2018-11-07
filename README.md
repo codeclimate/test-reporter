@@ -11,7 +11,20 @@ Code Climate accepts test coverage data from virtually any location, including l
 
 For installation instructions, check out our docs on [Configuring Test Coverage](https://docs.codeclimate.com/docs/configuring-test-coverage) and [Test Coverage Troubleshooting Tips](https://docs.codeclimate.com/docs/test-coverage-troubleshooting-tips).
 
-Some installations may require the use of [subcommands](https://docs.codeclimate.com/docs/configuring-test-coverage#section-list-of-subcommands). The subcommands accept the following flags:
+Some installations may require the use of the following [subcommands](https://docs.codeclimate.com/docs/configuring-test-coverage#section-list-of-subcommands):
+
+- `before-build` - notifies the test reporter of a pending test report
+
+- `after-build` - combines format-coverage and upload-coverage
+
+- `sum-coverage` - combines test reports from multiple sources (i.e. multiple test suites or parallelized CI builds) into one test report which is readable by Code Climate
+
+- `format-coverage` - formats test report from local test suite into generalized format, readable by Code Climate
+
+- `upload-coverage` - uploads formatted, singular test report to Code Climate API
+
+
+The subcommands accept the following flags:
 
 
 Flags for `format-coverage`:
