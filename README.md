@@ -15,7 +15,7 @@ Some installations may require the use of the following [subcommands](https://do
 
 
 
-### `format-coverage` - formats test report from local test suite into generalized format, readable by Code Climate
+#### `format-coverage` - formats test report from local test suite into generalized format, readable by Code Climate
 
 - `-t` or  `--input-type` *simplecov | lcov | coverage.py | gcov | clover* - Identifies the input type (format) of the COVERAGE_FILE
 
@@ -39,7 +39,7 @@ Some installations may require the use of the following [subcommands](https://do
 
 
 
-## `upload-coverage` - uploads formatted, singular test report to Code Climate API
+#### `upload-coverage` - uploads formatted, singular test report to Code Climate API
 
 - `-i PATH` or `--input PATH` - Read payload from PATH. If - is given, the payload will be read from stdin. Defaults to coverage/codeclimate.json.
 
@@ -51,7 +51,7 @@ Some installations may require the use of the following [subcommands](https://do
 
 
 
-## `after-build` - combines `format-coverage` and `upload-coverage`
+#### `after-build` - combines `format-coverage` and `upload-coverage`
 
 
 
