@@ -87,8 +87,7 @@ Combines `format-coverage` and `upload-coverage`
 - `-d` or `--debug`
   - Outputs debug messages during operation.
 
-
-
+---
 ## Copyright
 
 See the [LICENSE](https://github.com/codeclimate/test-reporter/blob/master/LICENSE).
