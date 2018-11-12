@@ -15,7 +15,7 @@ To sign up for Code Climate, head [here](https://codeclimate.com/quality/pricing
 
 ---
 
-### Subcommands
+## Subcommands
 
 Some installations may require the use of the below subcommands (and their supported flags). 
 
