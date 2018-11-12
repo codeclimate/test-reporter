@@ -11,9 +11,9 @@ Code Climate accepts test coverage data from virtually any location, including l
 
 For installation instructions, check out our docs on [Configuring Test Coverage](https://docs.codeclimate.com/docs/configuring-test-coverage) and [Test Coverage Troubleshooting Tips](https://docs.codeclimate.com/docs/test-coverage-troubleshooting-tips).
 
-Some installations may require the use of the following [subcommands](https://docs.codeclimate.com/docs/configuring-test-coverage#section-list-of-subcommands): 
-
 ---
+
+Some installations may require the use of the following [subcommands](https://docs.codeclimate.com/docs/configuring-test-coverage#section-list-of-subcommands): 
 
 #### `format-coverage` 
 Formats test report from local test suite into generalized format, readable by Code Climate
