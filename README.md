@@ -17,7 +17,7 @@ To sign up for Code Climate, head [here](https://codeclimate.com/quality/pricing
 
 ### Subcommands
 
-Some installations may require the use of the following [subcommands](https://docs.codeclimate.com/docs/configuring-test-coverage#section-list-of-subcommands): 
+Some installations may require the use of the below subcommands (and their supported flags). For example, here's an example of using the `--prefix` flag under the `after-build` subcommand: `cc-test-reporter after-build --prefix /home/rof/src/github.com/user_or_org_name/repo_name` 
 
 #### `format-coverage` 
 Formats test report from local test suite into generalized format, readable by Code Climate
@@ -68,6 +68,9 @@ Combines `format-coverage` and `upload-coverage`
 
 - `--exit-code $EXIT_CODE` - `$EXIT_CODE` should be the exit code of your test suite process. 
   - Some CI system expose this as an environment variable; for others, you may need to manually capture `$?` to provide it to `after-build` later. Providing this will prevent sending test coverage results for failed tests.
+  
+- `-p PATH` or `--prefix PATH` 
+  - The prefix to remove from absolute paths in coverage payloads, to make them relative to the project root. This is usually the directory in which the tests were run. Defaults to current working directory.
 
 
 
