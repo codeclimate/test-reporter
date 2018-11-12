@@ -17,7 +17,7 @@ To sign up for Code Climate, head [here](https://codeclimate.com/quality/pricing
 
 ### Subcommands
 
-Some installations may require the use of the below subcommands (and their supported flags). For example, here's an example of using the `--prefix` flag under the `after-build` subcommand: `cc-test-reporter after-build --prefix /home/rof/src/github.com/user_or_org_name/repo_name` 
+Some installations may require the use of the below subcommands (and their supported flags). For example, here's an example of using the `--prefix` flag under the `after-build` subcommand: ```cc-test-reporter after-build --prefix /home/rof/src/github.com/user_or_org_name/repo_name```
 
 #### `format-coverage` 
 Formats test report from local test suite into generalized format, readable by Code Climate
