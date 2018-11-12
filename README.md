@@ -23,6 +23,8 @@ For example, here's an example of using the `--prefix` flag under the `after-bui
 
 ```cc-test-reporter after-build --prefix /home/rof/src/github.com/user_or_org_name/repo_name```
 
+---
+
 #### `format-coverage` 
 Formats test report from local test suite into generalized format, readable by Code Climate
 
