@@ -13,6 +13,8 @@ For installation instructions, check out our docs on [Configuring Test Coverage]
 
 ---
 
+### Subcommands
+
 Some installations may require the use of the following [subcommands](https://docs.codeclimate.com/docs/configuring-test-coverage#section-list-of-subcommands): 
 
 #### `format-coverage` 
