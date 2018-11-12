@@ -39,7 +39,10 @@ Formats test report from local test suite into generalized format, readable by C
 
 - `COVERAGE_FILE` 
   - Path to the coverage file to process. Defaults to searching known paths where coverage files could exist and selecting the first one found.
-
+  
+- `-d` or `--debug`
+  - Outputs debug messages during operation.
+  
 ---
 
 #### `sum-coverage` 
@@ -66,6 +69,9 @@ Uploads formatted, singular test report to Code Climate API
 
 - `-e URL` or `--endpoint URL` 
   - The endpoint to upload coverage information to. Defaults to the value in the `CC_TEST_REPORTER_COVERAGE_ENDPOINT` environment variable, or a hard-coded default (currently `https://codeclimate.com/test_reports`).
+  
+- `-d` or `--debug`
+  - Outputs debug messages during operation.
 
 ---
 
@@ -77,6 +83,9 @@ Combines `format-coverage` and `upload-coverage`
   
 - `-p PATH` or `--prefix PATH` 
   - The prefix to remove from absolute paths in coverage payloads, to make them relative to the project root. This is usually the directory in which the tests were run. Defaults to current working directory.
+  
+- `-d` or `--debug`
+  - Outputs debug messages during operation.
 
 
 
