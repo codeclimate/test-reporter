@@ -18,8 +18,7 @@ For installation instructions, check out our docs on [Configuring Test Coverage]
 Some installations may require the use of the following [subcommands](https://docs.codeclimate.com/docs/configuring-test-coverage#section-list-of-subcommands): 
 
 
-
-* `format-coverage` - formats test report from local test suite into generalized format, readable by Code Climate
+##### `format-coverage` - formats test report from local test suite into generalized format, readable by Code Climate
 
 - `-t` or  `--input-type` *simplecov | lcov | coverage.py | gcov | clover* - Identifies the input type (format) of the COVERAGE_FILE
 
@@ -31,7 +30,7 @@ Some installations may require the use of the following [subcommands](https://do
 
 
 
-* `sum-coverage` - combines test reports from multiple sources (i.e. multiple test suites or parallelized CI builds) into one test report which is readable by Code Climate
+##### `sum-coverage` - combines test reports from multiple sources (i.e. multiple test suites or parallelized CI builds) into one test report which is readable by Code Climate
 
 - `-o PATH` or  `--output PATH` - Output to PATH. If - is given, content will be written to stdout. Defaults to coverage/codeclimate.json.
 
@@ -42,7 +41,7 @@ Some installations may require the use of the following [subcommands](https://do
 
 
 
-* `upload-coverage` - uploads formatted, singular test report to Code Climate API
+##### `upload-coverage` - uploads formatted, singular test report to Code Climate API
 
 - `-i PATH` or `--input PATH` - Read payload from PATH. If - is given, the payload will be read from stdin. Defaults to coverage/codeclimate.json.
 
@@ -52,7 +51,7 @@ Some installations may require the use of the following [subcommands](https://do
 
 
 
-* `after-build` - combines `format-coverage` and `upload-coverage`
+##### `after-build` - combines `format-coverage` and `upload-coverage`
 
 - `--exit-code $EXIT_CODE` - `$EXIT_CODE` should be the exit code of your test suite process. Some CI system expose this as an environment variable; for others, you may need to manually capture `$?` to provide it to `after-build` later. Providing this will prevent sending test coverage results for failed tests.
 
