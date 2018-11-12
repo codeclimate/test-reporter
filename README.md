@@ -55,7 +55,7 @@ Uploads formatted, singular test report to Code Climate API
   - The reporter identifier to use when reporting coverage information. The appropriate value can be found in your Repository Settings page on codeclimate.com. Defaults to the value in the `CC_TEST_REPORTER_ID` environment variable. The uploader will error if a value is not found.
 
 - `-e URL` or `--endpoint URL` 
-  - The endpoint to upload coverage information to. Defaults to the value in the CC_TEST_REPORTER_COVERAGE_ENDPOINT environment variable, or a hard-coded default (currently "https://codeclimate.com/test_reports").
+  - The endpoint to upload coverage information to. Defaults to the value in the `CC_TEST_REPORTER_COVERAGE_ENDPOINT` environment variable, or a hard-coded default (currently `https://codeclimate.com/test_reports`).
 
 ---
 
