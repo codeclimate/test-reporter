@@ -70,7 +70,8 @@ func (r Formatter) Format() (formatters.Report, error) {
 			}
 			sf, err := formatters.NewSourceFile(absolutePath, gitHead)
 			if err != nil {
-				return rep, errors.WithStack(err)
+				logrus.Warnf("Couldn't find file for path \"%s\" from %s coverage data. Ignore if the path doesn't correspond to an existent file in your repo.", absolutePath, r.Path)
+				continue
 			}
 			for _, l := range xmlSF.Lines {
 				for num < l.Num {
