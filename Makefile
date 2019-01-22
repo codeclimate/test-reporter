@@ -10,7 +10,7 @@ MAN_FILES = $(wildcard man/*.md)
 MAN_PAGES = $(patsubst man/%.md,man/%,$(MAN_FILES))
 
 PROJECT = github.com/codeclimate/test-reporter
-VERSION ?= 0.6.3
+VERSION ?= 0.6.4
 BUILD_VERSION = $(shell git log -1 --pretty=format:'%H')
 BUILD_TIME = $(shell date +%FT%T%z)
 LDFLAGS = -ldflags "-X $(PROJECT)/version.Version=${VERSION} -X $(PROJECT)/version.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/version.BuildTime=${BUILD_TIME}"
@@ -151,7 +151,7 @@ clean:
 	sudo $(RM) -r ./artifacts
 	$(RM) $(MAN_PAGES)
 
-# Must be run in a OS X machine. OS X binary is build natively. 
+# Must be run in a OS X machine. OS X binary is build natively.
 release:
 	$(MAKE) build-docker-linux
 	$(MAKE) build-docker-linux-cgo

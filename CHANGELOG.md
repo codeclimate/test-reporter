@@ -1,5 +1,12 @@
 # Change log
 
+## v0.6.4 [(2019-01-22)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.4)
+
+* [NEW] Updates release strategy to build a new Linux binary that uses
+  `netcgo` [#382][]
+
+[#382]: https://github.com/codeclimate/test-reporter/pull/382
+
 ## v0.6.3 [(2018-09-04)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.3)
 
 * [NEW] Updates release strategy to build a new Linux binary that uses
