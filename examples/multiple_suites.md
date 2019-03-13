@@ -1,4 +1,5 @@
 ## Example 1
+- Multi-language
 - Languages:
   - Ruby
   - Javascript
@@ -104,3 +105,78 @@ workflows:
              - frontend-tests
 ```
 
+## Example 2
+- Parallel processes
+- Languages:
+  - Ruby
+- CI: Travis CI
+- Coverage Tools: 
+  - Simplecov
+- File: .travis.yml
+
+```
+language: ruby
+rvm: "2.5.1"
+sudo: true
+filter_secrets: false
+
+before_install:
+  - 'curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"'
+  - 'unzip awscli-bundle.zip'
+  - './awscli-bundle/install -b ~/bin/aws'
+  - 'export PATH=~/bin:$PATH'
+  - gem update --system
+  - gem install bundler -v 1.16.1
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+
+before_script:
+  - bin/setup
+  - ./cc-test-reporter before-build
+
+script:
+  - "bundle exec rake knapsack:rspec"
+  - "bundle exec rake assets:precompile"
+
+branches:
+  only:
+    - develop
+    - master
+
+cache:
+  bundler: true
+  yarn: true
+  directories:
+    - node_modules
+
+env:
+  global:
+    - CC_TEST_REPORTER_ID=id
+    - CI_NODE_TOTAL=5
+    - AWS_ACCESS_KEY_ID=foo
+    - AWS_SECRET_ACCESS_KEY=bar
+    - AWS_DEFAULT_REGION=us-east-1
+  matrix:
+    - CI_NODE_INDEX=0
+    - CI_NODE_INDEX=1
+    - CI_NODE_INDEX=2
+    - CI_NODE_INDEX=3
+    - CI_NODE_INDEX=4
+
+addons:
+    postgresql: "9.6"
+    elasticsearch: "5.x"
+    chrome: stable
+
+services:
+  - postgresql
+  - redis-server
+  - elasticsearch
+
+# Pipe the coverage data to Code Climate
+after_script:
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter format-coverage -t simplecov -o ./coverage/codeclimate.$CI_NODE_INDEX.json ./coverage/spec/.resultset.json; fi
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then aws s3 sync coverage/ "s3://s3-bucket/coverage/$TRAVIS_BUILD_NUMBER"; fi
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then aws s3 sync "s3://s3-bucket/coverage/$TRAVIS_BUILD_NUMBER" coverage/; fi
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter sum-coverage --output - --parts $CI_NODE_TOTAL coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --input -; fi
+```
