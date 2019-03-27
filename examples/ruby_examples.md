@@ -112,3 +112,137 @@ after_script:
   - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter upload-coverage; fi  # Upload coverage/codeclimate.json
   ```
 
+## Example 3
+- Language: Ruby
+- CI: CircleCI
+- Coverage Tool: RSpec
+- File: .circleci/config.yml
+- Single/Parallel: Parallel
+- OSS Repo: [This repo](https://github.com/FlorinPopaCodes/bike_index/blob/master/.circleci/config.yml), based on [this conversation](https://github.com/codeclimate/test-reporter/issues/386#issuecomment-473684517)
+
+```
+version: 2
+jobs:
+  build:
+    working_directory: ~/bikeindex/bike_index
+    parallelism: 4
+    shell: /bin/bash --login
+    environment:
+      RAILS_ENV: test
+      RACK_ENV: test
+      COVERAGE: true
+      TZ: /usr/share/zoneinfo/America/Chicago
+    docker:
+      - image: circleci/ruby:2.5.1-stretch-node
+        environment:
+          PGHOST: 127.0.0.1
+          PGUSER: root
+      - image: circleci/postgres:10.4-alpine-postgis
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: bikeindex_test
+      - image: redis:4.0.9
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            # This branch if available
+            - v2-dep-{{ .Branch }}-
+            # Default branch if not
+            - v2-dep-master-
+            # Any branch if there are none on the default branch - this should be unnecessary if you have your default branch configured correctly
+            - v2-dep-
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.6.1
+      - run:
+          name: install system libraries
+          command: sudo apt-get update && sudo apt-get -y install imagemagick postgresql-client
+      - run:
+          name: install bundler
+          command: gem install bundler
+      - run:
+          name: bundle gems
+          command: bundle install --path=vendor/bundle --jobs=4 --retry=3
+      # So that we can compile assets, since we use node & yarn
+      - run:
+          name: Yarn Install
+          command: yarn install --cache-folder ~/.cache/yarn
+      - run: bundle exec rake assets:precompile
+      - run:
+          name: Install Code Climate Test Reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          name: Wait for PostgreSQL to start
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - save_cache:
+          key: v2-dep-{{ .Branch }}-{{ epoch }}
+          paths:
+            - ./vendor/bundle
+            - ~/.bundle
+            - public/assets
+            - tmp/cache/assets/sprockets
+            - ~/.cache/yarn
+      - run:
+          name: Setup Database
+          command: |
+            bundle exec rake db:create db:structure:load
+      - run:
+          name: Run tests
+          command: |
+            mkdir -p test-results/rspec test-artifacts
+            ./cc-test-reporter before-build
+            TESTFILES=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+            bundle exec rspec --profile 10 \
+                              --color \
+                              --order random \
+                              --format RspecJunitFormatter \
+                              --out test-results/rspec/rspec.xml \
+                              --format progress \
+                              -- ${TESTFILES}
+      - run:
+          name: Code Climate Test Coverage
+          command: |
+            ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+      - persist_to_workspace:
+          root: coverage
+          paths:
+            - codeclimate.*.json
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-artifacts
+
+  upload-coverage:
+    docker:
+      - image: circleci/ruby:2.5.1-stretch-node
+    environment:
+      CC_TEST_REPORTER_ID: c3ff91e23ea0fea718bb62dae0a8a5440dc082d5d2bb508af6b33d0babac479a
+    working_directory: ~/bikeindex/bike_index
+
+    steps:
+      - attach_workspace:
+          at: ~/bikeindex/bike_index
+      - run:
+          name: Install Code Climate Test Reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          command: |
+            ./cc-test-reporter sum-coverage --output - codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input -
+
+workflows:
+  version: 2
+
+  commit:
+    jobs:
+      - build
+      - upload-coverage:
+          requires:
+             - build
+```
