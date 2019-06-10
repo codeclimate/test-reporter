@@ -32,6 +32,10 @@ The prefix to remove from absolute paths in coverage payloads, to make
 them relative to the project root. This is usually the directory in which the
 tests were run. Defaults to current working directory.
 
+## --add-prefix *PATH*
+
+The prefix to add to file paths in coverage payloads, to make them match the project's directory structure.
+
 ## COVERAGE_FILE
 
 Path to the coverage file to process. Defaults to searching known paths where
