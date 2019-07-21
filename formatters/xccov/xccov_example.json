@@ -1,0 +1,87 @@
+{
+  "coveredLines": 27,
+  "lineCoverage": 0.20930232558,
+  "errors": [
+    {
+      "code": 0,
+      "localizedDescription": "Failed to generate coverage for target 'Pods_SuperAppTests.framework' at path \/Library\/Developer\/Xcode\/DerivedData\/SuperApp-enbcwwvvobzujubcgbepwgrjngiy\/Build\/Products\/Debug-iphonesimulator\/Pods_SuperAppTests.framework\/Pods_SuperAppTests: Malformed coverage data",
+      "domain": "IDECoverageReportGenerationErrorDomain"
+    },
+    {
+      "code": 0,
+      "localizedDescription": "Failed to generate coverage for target 'Pods_SuperAppSiri.framework' at path \/Library\/Developer\/Xcode\/DerivedData\/SuperApp-enbcwwvvobzujubcgbepwgrjngiy\/Build\/Products\/Debug-iphonesimulator\/Pods_SuperAppSiri.framework\/Pods_SuperAppSiri: Malformed coverage data",
+      "domain": "IDECoverageReportGenerationErrorDomain"
+    }
+  ],
+  "targets": [
+    {
+      "coveredLines": 0,
+      "lineCoverage": 0,
+      "files": [
+        {
+          "coveredLines": 0,
+          "lineCoverage": 0,
+          "path": "Documents\/github\/ww\/ios-SuperApp\/Pods\/BundleA\/BundleA\/BundleA.m",
+          "functions": [
+            {
+              "coveredLines": 0,
+              "lineCoverage": 0,
+              "lineNumber": 3,
+              "executionCount": 0,
+              "name": "Some_function",
+              "executableLines": 10
+            }
+          ],
+          "name": "SomeClass.m",
+          "executableLines": 10
+        }
+      ],
+      "name": "BundleA.bundle",
+      "executableLines": 10,
+      "buildProductPath": "\/Library\/Developer\/Xcode\/DerivedData\/SuperApp-enbcwwvvobzujubcgbepwgrjngiy\/Build\/Products\/Debug-iphonesimulator\/BundleA\/BundleA.bundle\/BundleA"
+    },
+    {
+      "coveredLines": 27,
+      "lineCoverage": 0.2268907563,
+      "files": [
+        {
+          "coveredLines": 27,
+          "lineCoverage": 0.2268907563,
+          "path": "Documents\/github\/ww\/ios-SuperApp\/Pods\/SuperClass\/SuperClass\/SuperClass.m",
+          "functions": [
+            {
+              "coveredLines": 0,
+              "lineCoverage": 0,
+              "lineNumber": 85,
+              "executionCount": 0,
+              "name": "FLoat_ceil",
+              "executableLines": 45
+            },
+            {
+              "coveredLines": 24,
+              "lineCoverage": 1,
+              "lineNumber": 259,
+              "executionCount": 1,
+              "name": "+[SuperClass load]",
+              "executableLines": 24
+            },
+            {
+              "coveredLines": 3,
+              "lineCoverage": 0.14285714285714285,
+              "lineNumber": 311,
+              "executionCount": 1,
+              "name": "__26+[SuperClass load]_block",
+              "executableLines": 50
+            }
+          ],
+          "name": "SuperClass.m",
+          "executableLines": 119
+        }
+      ],
+      "name": "SuperClass.framework",
+      "executableLines": 119,
+      "buildProductPath": "\/Library\/Developer\/Xcode\/DerivedData\/SuperApp-enbcwwvvobzujubcgbepwgrjngiy\/Build\/Products\/Debug-iphonesimulator\/SuperClass\/SuperClass.framework\/SuperClass"
+    }
+  ],
+  "executableLines": 129
+}
