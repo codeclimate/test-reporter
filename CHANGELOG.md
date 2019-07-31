@@ -1,5 +1,10 @@
 # Change log
 
+## v0.7.0 [(2019-07-31)](https://github.com/codeclimate/test-reporter/releases/tag/v0.7.0)
+
+* [NEW] Add support to xccov JSON report (Swift/Xcode 11) [#399][]
+
+
 ## v0.6.4 [(2019-01-22)](https://github.com/codeclimate/test-reporter/releases/tag/v0.6.4)
 
 * [NEW] Updates release strategy to build a new Linux binary that uses
