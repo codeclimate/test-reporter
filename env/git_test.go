@@ -46,8 +46,8 @@ func Test_loadGitFromENVOrGit(t *testing.T) {
 func Test_loadGitFromENV_GitHub_Vars(t *testing.T) {
 	r := require.New(t)
 	envy.Temp(func() {
-		envy.Set("GITHUB_REF", "master")
-		envy.Set("GITHUB_SHA", "a12345")
+		envy.MustSet("GITHUB_REF", "master")
+		envy.MustSet("GITHUB_SHA", "a12345")
 		g, err := findGitInfo()
 		r.NoError(err)
 		r.Equal(g.Branch, "master")
