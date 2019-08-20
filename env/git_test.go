@@ -42,6 +42,20 @@ func Test_loadGitFromENVOrGit(t *testing.T) {
 		r.NotZero(g.CommittedAt)
 	})
 }
+
+func Test_loadGitFromENV_GitHub_Vars(t *testing.T) {
+	r := require.New(t)
+	envy.Temp(func() {
+		envy.Set("GITHUB_REF", "master")
+		envy.Set("GITHUB_SHA", "a12345")
+		g, err := findGitInfo()
+		r.NoError(err)
+		r.Equal(g.Branch, "master")
+		r.Equal(g.CommitSHA, "a12345")
+		r.NotZero(g.CommittedAt)
+	})
+}
+
 func Test_loadGitFromENV_Alt_Vars(t *testing.T) {
 	r := require.New(t)
 	envy.Temp(func() {
