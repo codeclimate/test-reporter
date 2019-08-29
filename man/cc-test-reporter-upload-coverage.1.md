@@ -34,7 +34,7 @@ The uploader will error if a value is not found.
 
 The endpoint to upload coverage information to. Defaults to the value in the
 *CC_TEST_REPORTER_COVERAGE_ENDPOINT* environment variable, or a hard-coded
-default (currently *"https://codeclimate.com/test_reports"*).
+default (currently *"https://api.codeclimate.com/v1/test_reports"*).
 
 # ENVIRONMENT VARIABLES
 
