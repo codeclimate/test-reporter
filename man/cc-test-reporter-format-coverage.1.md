@@ -9,7 +9,7 @@ This is a sub-command of **cc-test-reporter**(1).
 # SYNOPSIS
 
 **cc-test-reporter-format-coverage** [--output=\<path>] [--prefix=<path>]
-**cc-test-reporter-format-coverage** [--input-type=\<coverage type>] [--output=\<path>] [--prefix=\<path>] [COVERAGE_FILE]
+**cc-test-reporter-format-coverage** [--input-type=\<coverage type>] [--output=\<path>] [--prefix=\<path>] [--add-prefix=\<path>] [COVERAGE_FILE]
 
 # DESCRIPTION
 
