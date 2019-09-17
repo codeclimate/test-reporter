@@ -42,6 +42,7 @@ func Test_loadGitFromENVOrGit(t *testing.T) {
 		r.NotZero(g.CommittedAt)
 	})
 }
+
 func Test_loadGitFromENV_Alt_Vars(t *testing.T) {
 	r := require.New(t)
 	envy.Temp(func() {
