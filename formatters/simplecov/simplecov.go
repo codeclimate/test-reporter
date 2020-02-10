@@ -49,12 +49,12 @@ func (r Formatter) Format() (formatters.Report, error) {
 
 	gitHead, _ := env.GetHead()
 	for _, v := range m {
-		for n, ls := range v.Coverage {
+		for n, ls := range v.CoverageType {
 			fe, err := formatters.NewSourceFile(n, gitHead)
 			if err != nil {
 				return rep, errors.WithStack(err)
 			}
-			fe.Coverage = ls
+			fe.Coverage = ls.LineCoverage
 			err = rep.AddSourceFile(fe)
 			if err != nil {
 				return rep, errors.WithStack(err)
@@ -65,6 +65,11 @@ func (r Formatter) Format() (formatters.Report, error) {
 	return rep, nil
 }
 
+type jsonSourceFileCoverage struct {
+  LineCoverage formatters.Coverage `json:"lines"`
+  BranchCoverage formatters.Coverage `json:"branches"`
+}
+
 type input struct {
-	Coverage map[string]formatters.Coverage `json:"coverage"`
+	CoverageType map[string]jsonSourceFileCoverage `json:"coverage"`
 }
