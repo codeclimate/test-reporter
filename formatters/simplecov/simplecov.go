@@ -44,20 +44,47 @@ func (r Formatter) Format() (formatters.Report, error) {
 	m := map[string]input{}
 	err = json.NewDecoder(jf).Decode(&m)
 	if err != nil {
-		return rep, errors.WithStack(err)
-	}
+		logrus.Debugf("couldn't parse latest simplecov format, falling back to old 0.17.x format")
 
-	gitHead, _ := env.GetHead()
-	for _, v := range m {
-		for n, ls := range v.CoverageType {
-			fe, err := formatters.NewSourceFile(n, gitHead)
-			if err != nil {
-				return rep, errors.WithStack(err)
+		jf, err := os.Open(r.Path)
+		if err != nil {
+			return rep, errors.WithStack(errors.Errorf("could not open coverage file %s", r.Path))
+		}
+
+		m := map[string]input017{}
+		err = json.NewDecoder(jf).Decode(&m)
+
+		if err != nil {
+			return rep, errors.WithStack(err)
+		}
+
+		gitHead, _ := env.GetHead()
+		for _, v := range m {
+			for n, ls := range v.Coverage {
+				fe, err := formatters.NewSourceFile(n, gitHead)
+				if err != nil {
+					return rep, errors.WithStack(err)
+				}
+				fe.Coverage = ls
+				err = rep.AddSourceFile(fe)
+				if err != nil {
+					return rep, errors.WithStack(err)
+				}
 			}
-			fe.Coverage = ls.LineCoverage
-			err = rep.AddSourceFile(fe)
-			if err != nil {
-				return rep, errors.WithStack(err)
+		}
+	} else {
+		gitHead, _ := env.GetHead()
+		for _, v := range m {
+			for n, ls := range v.CoverageType {
+				fe, err := formatters.NewSourceFile(n, gitHead)
+				if err != nil {
+					return rep, errors.WithStack(err)
+				}
+				fe.Coverage = ls.LineCoverage
+				err = rep.AddSourceFile(fe)
+				if err != nil {
+					return rep, errors.WithStack(err)
+				}
 			}
 		}
 	}
@@ -66,10 +93,14 @@ func (r Formatter) Format() (formatters.Report, error) {
 }
 
 type jsonSourceFileCoverage struct {
-  LineCoverage formatters.Coverage `json:"lines"`
-  BranchCoverage formatters.Coverage `json:"branches"`
+	LineCoverage formatters.Coverage `json:"lines"`
+	BranchCoverage formatters.Coverage `json:"branches"`
 }
 
 type input struct {
 	CoverageType map[string]jsonSourceFileCoverage `json:"coverage"`
+}
+
+type input017 struct {
+	Coverage map[string]formatters.Coverage `json:"coverage"`
 }
