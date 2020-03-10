@@ -6,17 +6,17 @@ import (
   "io/ioutil"
   "encoding/json"
 
-	"github.com/pkg/errors"
+  "github.com/pkg/errors"
   "github.com/spf13/cobra"
 )
 
 var showCoverageCmd = &cobra.Command{
-	Use:   "show-coverage",
-	Short: "Show coverage results in standard output",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 0 {
-			return errors.New("you must pass in one file with the coverage results")
-		}
+  Use:   "show-coverage",
+  Short: "Show coverage results in standard output",
+  RunE: func(cmd *cobra.Command, args []string) error {
+    if len(args) == 0 {
+      return errors.New("you must pass in one file with the coverage results")
+    }
 
     dat, err := ioutil.ReadFile(args[0])
     if err != nil {
@@ -48,10 +48,10 @@ var showCoverageCmd = &cobra.Command{
       }
     }
 
-		return nil
-	},
+    return nil
+  },
 }
 
 func init() {
-	RootCmd.AddCommand(showCoverageCmd)
+  RootCmd.AddCommand(showCoverageCmd)
 }
