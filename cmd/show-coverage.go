@@ -10,6 +10,29 @@ import (
   "github.com/spf13/cobra"
 )
 
+func getLineCount(result map[string]interface{}, key string) int {
+  line_counts := result["line_counts"].(map[string]interface{})
+  return int(line_counts[key].(float64))
+}
+
+func printHeader(result map[string]interface{}) {
+  header := "Coverage: %.2f%% (%d/%d lines covered, %d missing)"
+  fmt.Println(fmt.Sprintf(header, result["covered_percent"], getLineCount(result, "covered"), getLineCount(result, "total"), getLineCount(result, "missed")))
+}
+
+func printUncoveredLinesFromFile(file map[string]interface{}) {
+  var uncovered_lines []int
+  var values []interface{}
+  json.Unmarshal([]byte(file["coverage"].(string)), &values)
+  for i, value := range values {
+    if value != nil && int(value.(float64)) == 0 {
+      uncovered_lines = append(uncovered_lines, i + 1)
+    }
+  }
+  uncovered_lines_str := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(uncovered_lines)), ", "), "[]")
+  fmt.Println(fmt.Sprintf("%s: %s", file["name"], uncovered_lines_str))
+}
+
 var showCoverageCmd = &cobra.Command{
   Use:   "show-coverage",
   Short: "Show coverage results in standard output",
@@ -23,27 +46,22 @@ var showCoverageCmd = &cobra.Command{
       return errors.New("could not open input file")
     }
 
+    // Parse JSON from coverage file
     var result map[string]interface{}
     json.Unmarshal([]byte(string(dat)), &result)
-    line_counts := result["line_counts"].(map[string]interface{})
-    header := "Coverage: %.2f%% (%d/%d lines covered, %d missing)"
-    fmt.Println(fmt.Sprintf(header, result["covered_percent"], int(line_counts["covered"].(float64)), int(line_counts["total"].(float64)), int(line_counts["missed"].(float64))))
-    if int(line_counts["missed"].(float64)) > 0 {
+
+    printHeader(result)
+
+    // If there is any missed lines, print which are them, by file
+    if getLineCount(result, "missed") > 0 {
+
       fmt.Println("Uncovered lines by file:")
       files := result["source_files"].([]interface{})
+
       for _, file_obj := range files {
         file := file_obj.(map[string]interface{})
         if file["covered_percent"].(float64) < 100 {
-          var uncovered_lines []int
-          var values []interface{}
-          json.Unmarshal([]byte(file["coverage"].(string)), &values)
-          for i, value := range values {
-            if value != nil && int(value.(float64)) == 0 {
-              uncovered_lines = append(uncovered_lines, i + 1)
-            }
-          }
-          uncovered_lines_str := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(uncovered_lines)), ", "), "[]")
-          fmt.Println(fmt.Sprintf("%s: %s", file["name"], uncovered_lines_str))
+          printUncoveredLinesFromFile(file)
         }
       }
     }
