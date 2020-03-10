@@ -20,6 +20,21 @@ func printHeader(result map[string]interface{}) {
   fmt.Println(fmt.Sprintf(header, result["covered_percent"], getLineCount(result, "covered"), getLineCount(result, "total"), getLineCount(result, "missed")))
 }
 
+func printUncoveredLines(result map[string]interface{}) {
+  if getLineCount(result, "missed") > 0 {
+
+    fmt.Println("Uncovered lines by file:")
+    files := result["source_files"].([]interface{})
+
+    for _, file_obj := range files {
+      file := file_obj.(map[string]interface{})
+      if file["covered_percent"].(float64) < 100 {
+        printUncoveredLinesFromFile(file)
+      }
+    }
+  }
+}
+
 func printUncoveredLinesFromFile(file map[string]interface{}) {
   var uncovered_lines []int
   var values []interface{}
@@ -52,19 +67,8 @@ var showCoverageCmd = &cobra.Command{
 
     printHeader(result)
 
-    // If there is any missed lines, print which are them, by file
-    if getLineCount(result, "missed") > 0 {
-
-      fmt.Println("Uncovered lines by file:")
-      files := result["source_files"].([]interface{})
-
-      for _, file_obj := range files {
-        file := file_obj.(map[string]interface{})
-        if file["covered_percent"].(float64) < 100 {
-          printUncoveredLinesFromFile(file)
-        }
-      }
-    }
+    // If there are missed lines, print which are them, by file
+    printUncoveredLines(result)
 
     return nil
   },
