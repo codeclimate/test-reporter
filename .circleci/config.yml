@@ -8,6 +8,7 @@ jobs:
       docker_layer_caching: true
     steps:
       - checkout
+      - run: go version
       - run: make test
 
   release_linux:
@@ -39,6 +40,7 @@ jobs:
       - run:
           name: Run tests
           command: |
+            go version
             cd $GOPATH/src/github.com/codeclimate/test-reporter
             make test
 
