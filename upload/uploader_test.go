@@ -44,5 +44,5 @@ func Test_TransformPostBatchURL_Insecure_Error(t *testing.T) {
 	actualURL, err := uploader.TransformPostBatchURL(rawURL)
 
 	r.Equal("", actualURL)
-	r.Equal("parse ://example.com/: missing protocol scheme", err.Error())
+	r.Equal("parse \"://example.com/\": missing protocol scheme", err.Error())
 }
