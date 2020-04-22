@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/gobuffalo/envy"
 	"github.com/pkg/errors"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing"
@@ -131,6 +132,16 @@ var GitBlob = func(path string, commit *object.Commit) (string, error) {
 }
 
 func fallbackBlob(path string) (string, error) {
+	if addPrefix, err := envy.MustGet("ADD_PREFIX"); err == nil {
+		if addPrefix != "" {
+			path = filepath.Join(addPrefix, path)
+		}
+	}
+
+	if prefix, err := envy.MustGet("PREFIX"); err == nil {
+		path = filepath.Join(prefix, path)
+	}
+
 	logrus.Debugf("getting fallback blob_id for source file %s", path)
 	file, err := ioutil.ReadFile(path)
 
