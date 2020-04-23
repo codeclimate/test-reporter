@@ -3,7 +3,6 @@ package env
 import (
 	"bytes"
 	"fmt"
-	"github.com/gobuffalo/envy"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -11,6 +10,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/gobuffalo/envy"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/pkg/errors"
@@ -132,15 +133,18 @@ var GitBlob = func(path string, commit *object.Commit) (string, error) {
 }
 
 func fallbackBlob(path string) (string, error) {
+	logrus.Debugf("using fallbackBlob on path %s", path)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		logrus.Debugf("source file %s not found, adding prefixes")
 		if addPrefix, err := envy.MustGet("ADD_PREFIX"); err == nil {
 			if addPrefix != "" {
 				path = filepath.Join(addPrefix, path)
+				logrus.Debugf("ADD_PREFIX found, adding prefix on path: %s", path)
 			}
 		}
 		if prefix, err := envy.MustGet("PREFIX"); err == nil {
 			path = filepath.Join(prefix, path)
+			logrus.Debugf("PREFIX found, setting prefix on path: %s", path)
 		}
 	}
 
