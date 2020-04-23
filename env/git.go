@@ -137,10 +137,8 @@ func fallbackBlob(path string) (string, error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		logrus.Debugf("source file %s not found, adding prefixes")
 		if addPrefix, err := envy.MustGet("ADD_PREFIX"); err == nil {
-			if addPrefix != "" {
-				path = filepath.Join(addPrefix, path)
-				logrus.Debugf("ADD_PREFIX found, adding prefix on path: %s", path)
-			}
+			path = filepath.Join(addPrefix, path)
+			logrus.Debugf("ADD_PREFIX found, adding prefix on path: %s", path)
 		}
 		if prefix, err := envy.MustGet("PREFIX"); err == nil {
 			path = filepath.Join(prefix, path)
