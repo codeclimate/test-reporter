@@ -135,7 +135,7 @@ var GitBlob = func(path string, commit *object.Commit) (string, error) {
 func fallbackBlob(path string) (string, error) {
 	logrus.Debugf("using fallbackBlob on path %s", path)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		logrus.Debugf("source file %s not found, adding prefixes")
+		logrus.Debugf("source file %s not found, adding prefixes", path)
 		if addPrefix, err := envy.MustGet("ADD_PREFIX"); err == nil {
 			path = filepath.Join(addPrefix, path)
 			logrus.Debugf("ADD_PREFIX found, adding prefix on path: %s", path)
