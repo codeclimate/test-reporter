@@ -1,5 +1,12 @@
 # Change log
 
+## v0.8.0 [(2019-07-31)](https://github.com/codeclimate/test-reporter/releases/tag/v0.8.0)
+
+* [NEW] Add `show-coverage` command [#424](https://github.com/codeclimate/test-reporter/pull/424)
+* [NEW] Add Bitrise.io vars [#421](https://github.com/codeclimate/test-reporter/pull/421)
+* [FIX] Docs [#405](https://github.com/codeclimate/test-reporter/pull/405)
+
+
 ## v0.7.0 [(2019-07-31)](https://github.com/codeclimate/test-reporter/releases/tag/v0.7.0)
 
 * [NEW] Add support to xccov JSON report (Swift/Xcode 11) [#399](https://github.com/codeclimate/test-reporter/pull/399)
