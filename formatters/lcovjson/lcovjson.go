@@ -11,14 +11,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-var searchPaths = []string{"coverage.json"}
-
 type Formatter struct {
 	Path string
 }
 
 func (f *Formatter) Search(paths ...string) (string, error) {
-	paths = append(paths, searchPaths...)
+	paths = append(paths)
 	for _, p := range paths {
 		logrus.Debugf("checking search path %s for lcov-json formatter", p)
 		if _, err := os.Stat(p); err == nil {
