@@ -52,12 +52,6 @@ func (r Formatter) Format() (formatters.Report, error) {
 
 		for _, function := range target.Functions {
 			for _, filename := range function.Filenames {
-				// Ignore dependencies.
-				if strings.Contains(filename, ".build/checkouts") {
-					logrus.Warnf("Ignored dependency file at path \"%s\".", filename)
-					continue
-				}
-
 				regionsByFilename[filename] = append(regionsByFilename[filename], function.Regions...)
 			}
 		}
