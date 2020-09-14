@@ -21,7 +21,7 @@ func Test_Parse(t *testing.T) {
 	r := require.New(t)
 
 	f := Formatter{
-		Path: "./simplecov-example.json",
+		Path: "./simplecov-example-legacy-resultset.json",
 	}
 	rep, err := f.Format()
 	r.NoError(err)
@@ -46,7 +46,7 @@ func Test_Format(t *testing.T) {
 	r := require.New(t)
 
 	rb := Formatter{
-		Path: "./simplecov-example.json",
+		Path: "./simplecov-example-legacy-resultset.json",
 	}
 	rep, err := rb.Format()
 	r.NoError(err)
@@ -72,7 +72,7 @@ func Test_Format_Merged(t *testing.T) {
 	r := require.New(t)
 
 	rb := Formatter{
-		Path: "./simplecov-merged.json",
+		Path: "./simplecov-merged-legacy-resultset.json",
 	}
 
 	rep, err := rb.Format()
