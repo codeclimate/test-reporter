@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_Parse(t *testing.T) {
+func Test_ParseLegacy(t *testing.T) {
 	ogb := env.GitBlob
 	defer func() {
 		env.GitBlob = ogb
@@ -36,7 +36,88 @@ func Test_Parse(t *testing.T) {
 	}
 }
 
-func Test_Format(t *testing.T) {
+func Test_Parse(t *testing.T) {
+	ogb := env.GitBlob
+	defer func() {
+		env.GitBlob = ogb
+	}()
+	env.GitBlob = func(s string, c *object.Commit) (string, error) {
+		return s, nil
+	}
+
+	r := require.New(t)
+
+	f := Formatter{
+		Path: "./simplecov-simple-example.json",
+	}
+	rep, err := f.Format()
+	r.NoError(err)
+
+	r.Len(rep.SourceFiles, 7)
+
+	cf := rep.SourceFiles["development/mygem/lib/mygem/wrap.rb"]
+	r.Len(cf.Coverage, 10)
+	for i, x := range []interface{}{1, nil, 1, 17, 20, 16, 16, 12, nil, nil} {
+		l := cf.Coverage[i]
+		r.Equal(x, l.Interface())
+	}
+}
+
+func Test_ParseWithBranch(t *testing.T) {
+	ogb := env.GitBlob
+	defer func() {
+		env.GitBlob = ogb
+	}()
+	env.GitBlob = func(s string, c *object.Commit) (string, error) {
+		return s, nil
+	}
+
+	r := require.New(t)
+
+	f := Formatter{
+		Path: "./simplecov-branch-example.json",
+	}
+	rep, err := f.Format()
+	r.NoError(err)
+
+	r.Len(rep.SourceFiles, 7)
+
+	cf := rep.SourceFiles["development/mygem/lib/mygem/wrap.rb"]
+	r.Len(cf.Coverage, 10)
+	for i, x := range []interface{}{1, nil, 1, 17, 20, 16, 16, 12, nil, nil} {
+		l := cf.Coverage[i]
+		r.Equal(x, l.Interface())
+	}
+}
+
+func Test_ParseWithBranchWithNoCov(t *testing.T) {
+	ogb := env.GitBlob
+	defer func() {
+		env.GitBlob = ogb
+	}()
+	env.GitBlob = func(s string, c *object.Commit) (string, error) {
+		return s, nil
+	}
+
+	r := require.New(t)
+
+	f := Formatter{
+		Path: "./simplecov-branch-with-nocov-example.json",
+	}
+	rep, err := f.Format()
+	r.NoError(err)
+
+	r.Len(rep.SourceFiles, 7)
+
+	cf := rep.SourceFiles["development/mygem/lib/mygem/wrap.rb"]
+	r.Len(cf.Coverage, 12)
+	for i, x := range []interface{}{1, nil, 1, 17, nil, 0, nil, 16, 12, 0, nil, nil} {
+		l := cf.Coverage[i]
+		r.Equal(x, l.Interface())
+	}
+}
+
+func Test_FormatLegacy(t *testing.T) {
 	gb := env.GitBlob
 	defer func() { env.GitBlob = gb }()
 	env.GitBlob = func(s string, c *object.Commit) (string, error) {
@@ -59,6 +140,84 @@ func Test_Format(t *testing.T) {
 	lc := rep.LineCounts
 	r.Equal(lc.Covered, 56)
 	r.Equal(lc.Missed, 1)
+	r.Equal(lc.Total, 57)
+}
+
+func Test_Format(t *testing.T) {
+	gb := env.GitBlob
+	defer func() { env.GitBlob = gb }()
+	env.GitBlob = func(s string, c *object.Commit) (string, error) {
+		return s, nil
+	}
+
+	r := require.New(t)
+
+	rb := Formatter{
+		Path: "./simplecov-simple-example.json",
+	}
+	rep, err := rb.Format()
+	r.NoError(err)
+
+	r.InDelta(97.95, rep.CoveredPercent, 1)
+
+	sf := rep.SourceFiles["development/mygem/lib/mygem/wrap.rb"]
+	r.InDelta(100, sf.CoveredPercent, 1)
+
+	lc := rep.LineCounts
+	r.Equal(lc.Covered, 56)
+	r.Equal(lc.Missed, 1)
+	r.Equal(lc.Total, 57)
+}
+
+func Test_FormatWithBranch(t *testing.T) {
+	gb := env.GitBlob
+	defer func() { env.GitBlob = gb }()
+	env.GitBlob = func(s string, c *object.Commit) (string, error) {
+		return s, nil
+	}
+
+	r := require.New(t)
+
+	rb := Formatter{
+		Path: "./simplecov-branch-example.json",
+	}
+	rep, err := rb.Format()
+	r.NoError(err)
+
+	r.InDelta(97.95, rep.CoveredPercent, 1)
+
+	sf := rep.SourceFiles["development/mygem/lib/mygem/wrap.rb"]
+	r.InDelta(100, sf.CoveredPercent, 1)
+
+	lc := rep.LineCounts
+	r.Equal(lc.Covered, 56)
+	r.Equal(lc.Missed, 1)
+	r.Equal(lc.Total, 57)
+}
+
+func Test_FormatWithBranchWithNoCovLines(t *testing.T) {
+	gb := env.GitBlob
+	defer func() { env.GitBlob = gb }()
+	env.GitBlob = func(s string, c *object.Commit) (string, error) {
+		return s, nil
+	}
+
+	r := require.New(t)
+
+	rb := Formatter{
+		Path: "./simplecov-branch-with-nocov-example.json",
+	}
+	rep, err := rb.Format()
+	r.NoError(err)
+
+	r.InDelta(94.73, rep.CoveredPercent, 1)
+
+	sf := rep.SourceFiles["development/mygem/lib/mygem/wrap.rb"]
+	r.InDelta(71.42, sf.CoveredPercent, 1)
+
+	lc := rep.LineCounts
+	r.Equal(lc.Covered, 54)
+	r.Equal(lc.Missed, 3)
 	r.Equal(lc.Total, 57)
 }
 

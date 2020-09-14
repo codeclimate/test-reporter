@@ -1,0 +1,202 @@
+{
+  "meta": {
+    "simplecov_version": "0.19.0"
+  },
+  "coverage": {
+    "development/mygem/lib/mygem/errors.rb": {
+      "lines": [
+        1,
+        null,
+        1,
+        1,
+        0,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+        1,
+        null,
+        "ignored",
+        "ignored",
+        "ignored"
+      ],
+      "branches": [
+      ]
+    },
+    "development/mygem/lib/mygem/definition_manager.rb": {
+      "lines": [
+        1,
+        1,
+        1,
+        null,
+        1,
+        null,
+        1,
+        1,
+        null,
+        null,
+        1,
+        8,
+        null,
+        null,
+        1,
+        19,
+        null,
+        null,
+        1,
+        null,
+        1,
+        8,
+        null,
+        null,
+        1,
+        11,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "branches": [
+        {
+          "type": "then",
+          "start_line": 14,
+          "end_line": 14,
+          "coverage": 0
+        },
+        {
+          "type": "else",
+          "start_line": 16,
+          "end_line": 16,
+          "coverage": 1
+        },
+        {
+          "type": "then",
+          "start_line": 39,
+          "end_line": 39,
+          "coverage": 0
+        },
+        {
+          "type": "else",
+          "start_line": 41,
+          "end_line": 41,
+          "coverage": 0
+        }
+      ]
+    },
+    "development/mygem/lib/mygem/interface.rb": {
+      "lines": [
+        1,
+        null,
+        1,
+        1,
+        "ignored",
+        1,
+        8,
+        null,
+        null,
+        null,
+        null
+      ],
+      "branches": [
+
+      ]
+    },
+    "development/mygem/lib/mygem/implements.rb": {
+      "lines": [
+        1,
+        null,
+        1,
+        9,
+        null,
+        null,
+        null
+      ],
+      "branches": [
+
+      ]
+    },
+    "development/mygem/lib/mygem/implementation_manager.rb": {
+      "lines": [
+        1,
+        1,
+        1,
+        null,
+        1,
+        null,
+        1,
+        1,
+        null,
+        null,
+        1,
+        9,
+        null,
+        null,
+        1,
+        82,
+        null,
+        null,
+        1,
+        null,
+        1,
+        9,
+        "ignored",
+        "ignored",
+        1,
+        73,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "branches": [
+
+      ]
+    },
+    "development/mygem/lib/mygem/wrap.rb": {
+      "lines": [
+        1,
+        null,
+        1,
+        17,
+        "ignored",
+        0,
+        "ignored",
+        16,
+        12,
+        0,
+        null,
+        null
+      ],
+      "branches": [
+
+      ]
+    },
+    "development/mygem/lib/mygem/type_check.rb": {
+      "lines": [
+        1,
+        null,
+        1,
+        7,
+        7,
+        7,
+        null,
+        null,
+        null
+      ],
+      "branches": [
+
+      ]
+    }
+  }
+}
