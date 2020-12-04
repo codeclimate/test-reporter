@@ -15,7 +15,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/codeclimate/test-reporter/version"
 	"github.com/pkg/errors"

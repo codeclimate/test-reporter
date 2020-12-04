@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/upload"
 	"github.com/gobuffalo/envy"
 	"github.com/pkg/errors"

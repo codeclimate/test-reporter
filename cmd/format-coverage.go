@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/codeclimate/test-reporter/formatters/clover"
 	"github.com/codeclimate/test-reporter/formatters/cobertura"
