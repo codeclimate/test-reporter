@@ -9,9 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-var simpleCovJsonFormatterPath, legacyPath string = "coverage/coverage.json", "coverage/.resultset.json"
-
-var searchPaths = []string{simpleCovJsonFormatterPath, legacyPath}
+var searchPaths = []string{"coverage/coverage.json", "coverage/.resultset.json"}
 
 type Formatter struct {
 	Path string
