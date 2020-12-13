@@ -38,7 +38,7 @@ func (r Formatter) Format() (formatters.Report, error) {
 	rep, err = jsonFormat(r,rep)
 
 	if err != nil {
-		return legacyFormat(r, rep)
+		rep, err = legacyFormat(r, rep)
 	}
 
 	return rep, err
