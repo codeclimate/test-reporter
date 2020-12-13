@@ -52,11 +52,11 @@ func transformLineCoverageToCoverage(ln []interface{}) formatters.Coverage {
 	return coverage
 }
 
-func jsonFormat(r Formatter, rep formatters.Report) (formatters.Report, error) {
+func jsonFormat(r Formatter, rep formatters.Report) (error) {
 	logrus.Debugf("Analyzing simplecov json output from latest format %s", r.Path)
 	jf, err := os.Open(r.Path)
 	if err != nil {
-		return rep, errors.WithStack(errors.Errorf("could not open coverage file %s", r.Path))
+		return errors.WithStack(errors.Errorf("could not open coverage file %s", r.Path))
 	}
 
 	var m simplecovJsonFormatterReport
@@ -66,21 +66,21 @@ func jsonFormat(r Formatter, rep formatters.Report) (formatters.Report, error) {
 	err = decoder.Decode(&m)
 
 	if err != nil {
-		return rep, errors.WithStack(err)
+		return errors.WithStack(err)
 	}
 
 	gitHead, _ := env.GetHead()
 	for n, ls := range m.CoverageType {
 		fe, err := formatters.NewSourceFile(n, gitHead)
 		if err != nil {
-			return rep, errors.WithStack(err)
+			return errors.WithStack(err)
 		}
 		fe.Coverage = transformLineCoverageToCoverage(ls.LineCoverage)
 		err = rep.AddSourceFile(fe)
 		if err != nil {
-			return rep, errors.WithStack(err)
+			return errors.WithStack(err)
 		}
 	}
 
-	return rep, nil
+	return nil
 }
