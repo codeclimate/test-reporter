@@ -1,17 +1,15 @@
 package simplecov
 
 import (
-	"encoding/json"
 	"os"
 	"strings"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/codeclimate/test-reporter/env"
 	"github.com/codeclimate/test-reporter/formatters"
 	"github.com/pkg/errors"
 )
 
-var searchPaths = []string{"coverage/.resultset.json"}
+var searchPaths = []string{"coverage/coverage.json", "coverage/.resultset.json"}
 
 type Formatter struct {
 	Path string
@@ -32,39 +30,16 @@ func (f *Formatter) Search(paths ...string) (string, error) {
 
 func (r Formatter) Format() (formatters.Report, error) {
 	rep, err := formatters.NewReport()
+
 	if err != nil {
 		return rep, err
 	}
 
-	jf, err := os.Open(r.Path)
+	rep, err = jsonFormat(r,rep)
+
 	if err != nil {
-		return rep, errors.WithStack(errors.Errorf("could not open coverage file %s", r.Path))
+		rep, err = legacyFormat(r, rep)
 	}
 
-	m := map[string]input{}
-	err = json.NewDecoder(jf).Decode(&m)
-	if err != nil {
-		return rep, errors.WithStack(err)
-	}
-
-	gitHead, _ := env.GetHead()
-	for _, v := range m {
-		for n, ls := range v.Coverage {
-			fe, err := formatters.NewSourceFile(n, gitHead)
-			if err != nil {
-				return rep, errors.WithStack(err)
-			}
-			fe.Coverage = ls
-			err = rep.AddSourceFile(fe)
-			if err != nil {
-				return rep, errors.WithStack(err)
-			}
-		}
-	}
-
-	return rep, nil
-}
-
-type input struct {
-	Coverage map[string]formatters.Coverage `json:"coverage"`
+	return rep, err
 }
