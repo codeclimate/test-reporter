@@ -1,0 +1,456 @@
+{
+  "data": [
+    {
+      "files": [
+        {
+          "expansions": [],
+          "filename": "/Users/paulo/Development/GitHub/paulofaria/Codecov/Sources/Codecov/User.swift",
+          "segments": [
+            [
+              12,
+              7,
+              1,
+              true,
+              true
+            ],
+            [
+              17,
+              6,
+              0,
+              false,
+              false
+            ],
+            [
+              19,
+              26,
+              0,
+              true,
+              true
+            ],
+            [
+              21,
+              6,
+              0,
+              false,
+              false
+            ]
+          ],
+          "summary": {
+            "functions": {
+              "count": 2,
+              "covered": 1,
+              "percent": 50
+            },
+            "instantiations": {
+              "count": 2,
+              "covered": 1,
+              "percent": 50
+            },
+            "lines": {
+              "count": 9,
+              "covered": 6,
+              "percent": 66.666666666666657
+            },
+            "regions": {
+              "count": 2,
+              "covered": 1,
+              "notcovered": 1,
+              "percent": 50
+            }
+          }
+        },
+        {
+          "expansions": [],
+          "filename": "/Users/paulo/Development/GitHub/paulofaria/Codecov/Tests/CodecovTests/CodecovTests.swift",
+          "segments": [
+            [
+              5,
+              24,
+              1,
+              true,
+              true
+            ],
+            [
+              18,
+              24,
+              1,
+              true,
+              true
+            ],
+            [
+              18,
+              37,
+              1,
+              true,
+              false
+            ],
+            [
+              18,
+              39,
+              1,
+              true,
+              true
+            ],
+            [
+              18,
+              47,
+              1,
+              true,
+              false
+            ],
+            [
+              19,
+              24,
+              1,
+              true,
+              true
+            ],
+            [
+              19,
+              37,
+              1,
+              true,
+              false
+            ],
+            [
+              19,
+              39,
+              1,
+              true,
+              true
+            ],
+            [
+              19,
+              47,
+              1,
+              true,
+              false
+            ],
+            [
+              20,
+              24,
+              1,
+              true,
+              true
+            ],
+            [
+              20,
+              38,
+              1,
+              true,
+              false
+            ],
+            [
+              20,
+              40,
+              1,
+              true,
+              true
+            ],
+            [
+              20,
+              49,
+              1,
+              true,
+              false
+            ],
+            [
+              21,
+              24,
+              1,
+              true,
+              true
+            ],
+            [
+              21,
+              37,
+              1,
+              true,
+              false
+            ],
+            [
+              21,
+              39,
+              1,
+              true,
+              true
+            ],
+            [
+              21,
+              47,
+              1,
+              true,
+              false
+            ],
+            [
+              22,
+              6,
+              0,
+              false,
+              false
+            ]
+          ],
+          "summary": {
+            "functions": {
+              "count": 9,
+              "covered": 9,
+              "percent": 100
+            },
+            "instantiations": {
+              "count": 9,
+              "covered": 9,
+              "percent": 100
+            },
+            "lines": {
+              "count": 26,
+              "covered": 26,
+              "percent": 100
+            },
+            "regions": {
+              "count": 9,
+              "covered": 9,
+              "notcovered": 0,
+              "percent": 100
+            }
+          }
+        }
+      ],
+      "functions": [
+        {
+          "count": 1,
+          "filenames": [
+            "/Users/paulo/Development/GitHub/paulofaria/Codecov/Sources/Codecov/User.swift"
+          ],
+          "name": "$s7Codecov4UserV8username8password9firstName04lastF0ACSS_S3StcfC",
+          "regions": [
+            [
+              12,
+              7,
+              17,
+              6,
+              1,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "count": 0,
+          "filenames": [
+            "/Users/paulo/Development/GitHub/paulofaria/Codecov/Sources/Codecov/User.swift"
+          ],
+          "name": "$s7Codecov4UserV8fullNameSSvg",
+          "regions": [
+            [
+              19,
+              26,
+              21,
+              6,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "count": 1,
+          "filenames": [
+            "/Users/paulo/Development/GitHub/paulofaria/Codecov/Tests/CodecovTests/CodecovTests.swift"
+          ],
+          "name": "$s12CodecovTestsAAC11testExampleyyF",
+          "regions": [
+            [
+              5,
+              24,
+              22,
+              6,
+              1,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "count": 1,
+          "filenames": [
+            "/Users/paulo/Development/GitHub/paulofaria/Codecov/Tests/CodecovTests/CodecovTests.swift"
+          ],
+          "name": "$s12CodecovTestsAAC11testExampleyyFSSyKXEfu_",
+          "regions": [
+            [
+              18,
+              24,
+              18,
+              37,
+              1,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "count": 1,
+          "filenames": [
+            "/Users/paulo/Development/GitHub/paulofaria/Codecov/Tests/CodecovTests/CodecovTests.swift"
+          ],
+          "name": "$s12CodecovTestsAAC11testExampleyyFSSyKXEfu0_",
+          "regions": [
+            [
+              18,
+              39,
+              18,
+              47,
+              1,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "count": 1,
+          "filenames": [
+            "/Users/paulo/Development/GitHub/paulofaria/Codecov/Tests/CodecovTests/CodecovTests.swift"
+          ],
+          "name": "$s12CodecovTestsAAC11testExampleyyFSSyKXEfu1_",
+          "regions": [
+            [
+              19,
+              24,
+              19,
+              37,
+              1,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "count": 1,
+          "filenames": [
+            "/Users/paulo/Development/GitHub/paulofaria/Codecov/Tests/CodecovTests/CodecovTests.swift"
+          ],
+          "name": "$s12CodecovTestsAAC11testExampleyyFSSyKXEfu2_",
+          "regions": [
+            [
+              19,
+              39,
+              19,
+              47,
+              1,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "count": 1,
+          "filenames": [
+            "/Users/paulo/Development/GitHub/paulofaria/Codecov/Tests/CodecovTests/CodecovTests.swift"
+          ],
+          "name": "$s12CodecovTestsAAC11testExampleyyFSSyKXEfu3_",
+          "regions": [
+            [
+              20,
+              24,
+              20,
+              38,
+              1,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "count": 1,
+          "filenames": [
+            "/Users/paulo/Development/GitHub/paulofaria/Codecov/Tests/CodecovTests/CodecovTests.swift"
+          ],
+          "name": "$s12CodecovTestsAAC11testExampleyyFSSyKXEfu4_",
+          "regions": [
+            [
+              20,
+              40,
+              20,
+              49,
+              1,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "count": 1,
+          "filenames": [
+            "/Users/paulo/Development/GitHub/paulofaria/Codecov/Tests/CodecovTests/CodecovTests.swift"
+          ],
+          "name": "$s12CodecovTestsAAC11testExampleyyFSSyKXEfu5_",
+          "regions": [
+            [
+              21,
+              24,
+              21,
+              37,
+              1,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "count": 1,
+          "filenames": [
+            "/Users/paulo/Development/GitHub/paulofaria/Codecov/Tests/CodecovTests/CodecovTests.swift"
+          ],
+          "name": "$s12CodecovTestsAAC11testExampleyyFSSyKXEfu6_",
+          "regions": [
+            [
+              21,
+              39,
+              21,
+              47,
+              1,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      ],
+      "totals": {
+        "functions": {
+          "count": 11,
+          "covered": 10,
+          "percent": 90.909090909090907
+        },
+        "instantiations": {
+          "count": 11,
+          "covered": 10,
+          "percent": 90.909090909090907
+        },
+        "lines": {
+          "count": 35,
+          "covered": 32,
+          "percent": 91.428571428571431
+        },
+        "regions": {
+          "count": 11,
+          "covered": 10,
+          "notcovered": 1,
+          "percent": 90.909090909090907
+        }
+      }
+    }
+  ],
+  "type": "llvm.coverage.json.export",
+  "version": "2.0.0"
+}
