@@ -1,0 +1,22 @@
+mode: set
+github.com/codeclimate/test-reporter/formatters/gocov/example/foo/foo.go:9.32,13.2 1 0
+github.com/codeclimate/test-reporter/formatters/gocov/example/foo/foo.go:15.31,17.8 2 0
+github.com/codeclimate/test-reporter/formatters/gocov/example/foo/foo.go:20.2,20.14 1 0
+github.com/codeclimate/test-reporter/formatters/gocov/example/foo/foo.go:17.8,19.3 1 0
+github.com/codeclimate/test-reporter/formatters/gocov/example/bar/bar.go:5.17,7.2 1 1
+github.com/codeclimate/test-reporter/formatters/gocov/example/bar/bar.go:9.31,11.2 1 1
+github.com/codeclimate/test-reporter/formatters/gocov/example/bar/bar.go:13.30,15.2 1 0
+github.com/codeclimate/test-reporter/formatters/gocov/example/foo/foo.go:9.32,13.2 1 1
+github.com/codeclimate/test-reporter/formatters/gocov/example/foo/foo.go:15.31,17.8 2 1
+github.com/codeclimate/test-reporter/formatters/gocov/example/foo/foo.go:20.2,20.14 1 0
+github.com/codeclimate/test-reporter/formatters/gocov/example/foo/foo.go:17.8,19.3 1 1
+github.com/codeclimate/test-reporter/formatters/gocov/example/bar/bar.go:5.17,7.2 1 1
+github.com/codeclimate/test-reporter/formatters/gocov/example/bar/bar.go:9.31,11.2 1 1
+github.com/codeclimate/test-reporter/formatters/gocov/example/bar/bar.go:13.30,15.2 1 0
+github.com/codeclimate/test-reporter/formatters/gocov/example/bar/bar.go:5.17,7.2 1 0
+github.com/codeclimate/test-reporter/formatters/gocov/example/bar/bar.go:9.31,11.2 1 0
+github.com/codeclimate/test-reporter/formatters/gocov/example/bar/bar.go:13.30,15.2 1 0
+github.com/codeclimate/test-reporter/formatters/gocov/example/foo/foo.go:9.32,13.2 1 0
+github.com/codeclimate/test-reporter/formatters/gocov/example/foo/foo.go:15.31,17.8 2 1
+github.com/codeclimate/test-reporter/formatters/gocov/example/foo/foo.go:20.2,20.14 1 1
+github.com/codeclimate/test-reporter/formatters/gocov/example/foo/foo.go:17.8,19.3 1 0
