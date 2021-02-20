@@ -52,7 +52,7 @@ func Test_Parse(t *testing.T) {
 
 		r := require.New(t)
 
-		f := &Formatter{Path: "./example_foobar.out"}
+		f := &Formatter{Path: "./example/foobar_test.out"}
 		rep, err := f.Format()
 		r.NoError(err)
 
