@@ -12,7 +12,7 @@ jobs:
 
   release_linux:
     docker:
-      - image: circleci/golang
+      - image: circleci/golang:1.15
     working_directory: /go/src/github.com/codeclimate/test-reporter
     setup_remote_docker:
       docker_layer_caching: true
@@ -27,7 +27,12 @@ jobs:
       xcode: "11.3.0"
     steps:
       - checkout
-      - run: brew install golang
+      - run:
+          name: Install go
+          command: |
+            curl -O https://dl.google.com/go/go1.15.darwin-amd64.tar.gz
+            tar -xzf go1.15.darwin-amd64.tar.gz
+            echo 'export PATH=$PATH:$PWD/go/bin' >> "$BASH_ENV"
       - run:
           name: Setup gopath
           command: |
@@ -48,7 +53,12 @@ jobs:
     steps:
       - checkout
       - run: pip install awscli
-      - run: brew install golang
+      - run:
+          name: Install go
+          command: |
+            curl -O https://dl.google.com/go/go1.15.darwin-amd64.tar.gz
+            tar -xzf go1.15.darwin-amd64.tar.gz
+            echo 'export PATH=$PATH:$PWD/go/bin' >> "$BASH_ENV"
       - run:
           name: Setup gopath
           command: |
