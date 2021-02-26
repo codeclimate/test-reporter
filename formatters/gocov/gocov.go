@@ -61,7 +61,16 @@ func (r Formatter) Format() (formatters.Report, error) {
 			return rep, errors.WithStack(err)
 		}
 		num := 0
+		blocks := []cover.ProfileBlock{}
 		for _, b := range p.Blocks {
+			lstIdx := len(blocks) - 1
+			if lstIdx < 0 || blocks[lstIdx].StartLine != b.StartLine || blocks[lstIdx].EndLine != b.EndLine {
+				blocks = append(blocks, b)
+				continue
+			}
+			blocks[lstIdx].Count += b.Count
+		}
+		for _, b := range blocks {
 			for num < b.StartLine {
 				sf.Coverage = append(sf.Coverage, formatters.NullInt{})
 				num++
