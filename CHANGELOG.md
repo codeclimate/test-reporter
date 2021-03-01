@@ -1,5 +1,9 @@
 # Change log
 
+## v0.10.0 [(2021-03-01)](https://github.com/codeclimate/test-reporter/releases/tag/v0.10.0)
+
+* [NEW] Add support for Golang coverage generated using `-coverpkg` flag [#461](https://github.com/codeclimate/test-reporter/pull/461)
+
 ## v0.9.0 [(2020-12-15)](https://github.com/codeclimate/test-reporter/releases/tag/v0.9.0)
 
 * [NEW] Add support for Simplecov `0.20.0` [#441](https://github.com/codeclimate/test-reporter/pull/441)
