@@ -1,21 +1,22 @@
-version: 2.1
-executors:
-  linux:
+version: 2
+
+jobs:
+  test_linux:
     docker:
       - image: circleci/golang:1.15
     working_directory: /go/src/github.com/codeclimate/test-reporter
     setup_remote_docker:
       docker_layer_caching: true
-
-jobs:
-  test_linux:
-    executor: linux
     steps:
       - checkout
       - run: make test
 
   release_head_linux:
-    executor: linux
+    docker:
+      - image: circleci/golang:1.15
+    working_directory: /go/src/github.com/codeclimate/test-reporter
+    setup_remote_docker:
+      docker_layer_caching: true
     steps:
       - checkout
       - run: sudo apt-get install awscli
@@ -23,7 +24,11 @@ jobs:
       - run: make publish-head
 
   release_linux:
-    executor: linux
+    docker:
+      - image: circleci/golang:1.15
+    working_directory: /go/src/github.com/codeclimate/test-reporter
+    setup_remote_docker:
+      docker_layer_caching: true
     steps:
       - checkout
       - run: sudo apt-get install awscli
