@@ -88,7 +88,7 @@ build-docker:
 	  --volume "$(PWD)"/artifacts:/artifacts \
 	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
 	  --workdir "/src/$(PROJECT)" \
-	  golang:1.8 make build BUILD_TAGS=${BUILD_TAGS}
+	  golang:1.15 make build BUILD_TAGS=${BUILD_TAGS}
 
 test-simplecov:
 	docker build -f integration-tests/simplecov/Dockerfile .
@@ -130,7 +130,20 @@ publish-latest:
 	  --include "test-reporter-latest-*" \
 	  artifacts/bin/ s3://codeclimate/test-reporter/
 
-publish-version:
+publish-macos-version:
+	if [ "$(shell curl https://s3.amazonaws.com/codeclimate/test-reporter/test-reporter-$(VERSION)-darwin-amd64 --output /dev/null --write-out %{http_code})" -eq 403 ]; then \
+	  $(AWS) s3 cp \
+	    --acl public-read \
+	    --recursive \
+	    --exclude "*" \
+	    --include "test-reporter-$(VERSION)-*" \
+	    artifacts/bin/ s3://codeclimate/test-reporter/; \
+	else \
+	  echo "Version $(VERSION) already published"; \
+	  exit 1; \
+	fi
+
+publish-linux-version:
 	if [ "$(shell curl https://s3.amazonaws.com/codeclimate/test-reporter/test-reporter-$(VERSION)-linux-amd64 --output /dev/null --write-out %{http_code})" -eq 403 ]; then \
 	  $(AWS) s3 cp \
 	    --acl public-read \
@@ -152,6 +165,9 @@ clean:
 	$(RM) $(MAN_PAGES)
 
 # Must be run in a OS X machine. OS X binary is build natively.
+#release-linux:
+  
+
 release:
 	$(MAKE) build-docker-linux
 	$(MAKE) build-docker-linux-cgo

@@ -1,26 +1,34 @@
 version: 2
-jobs:
-  test_linux:
+executors:
+  linux:
     docker:
       - image: circleci/golang:1.15
     working_directory: /go/src/github.com/codeclimate/test-reporter
     setup_remote_docker:
       docker_layer_caching: true
+
+jobs:
+  test_linux:
+    executor: linux
     steps:
       - checkout
       - run: make test
 
-  release_linux:
-    docker:
-      - image: circleci/golang:1.15
-    working_directory: /go/src/github.com/codeclimate/test-reporter
-    setup_remote_docker:
-      docker_layer_caching: true
+  release_head_linux:
+    executor: linux
     steps:
       - checkout
       - run: sudo apt-get install awscli
       - run: make build-linux-all VERSION=head
       - run: make publish-head
+
+  release_linux:
+    executor: linux
+    steps:
+      - checkout
+      - run: sudo apt-get install awscli
+      - run: make build-linux-all
+      - run: make publish-linux-version
 
   test_macos:
     macos:
@@ -47,7 +55,7 @@ jobs:
             cd $GOPATH/src/github.com/codeclimate/test-reporter
             make test
 
-  release_macos:
+  release_head_macos:
     macos:
       xcode: "11.3.0"
     steps:
@@ -84,22 +92,35 @@ workflows:
     jobs:
       - test_linux
       - test_macos
+      - release_head_linux:
+          requires:
+            - test_linux
+            - test_macos
+          filters:
+            branches:
+              only:
+                - master
+      - release_head_macos:
+          requires:
+            - test_linux
+            - test_macos
+          filters:
+            branches:
+              only:
+                - master
       - release_linux:
           requires:
             - test_linux
             - test_macos
-          filters:
-            branches:
-              only:
-                - master
       - release_macos:
           requires:
             - test_linux
             - test_macos
-          filters:
-            branches:
-              only:
-                - master
+      #- publish_version:
+      #    requires:
+      #      - release_linux
+      #      - release_macos
+        
 
 notify:
   webhooks:
