@@ -13,7 +13,6 @@ macos_image: &macos_image
 
 setup_macos_env: &setup_macos_env
 
-
 jobs:
   test_linux:
     <<: *linux_image
@@ -44,7 +43,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: sh .circleci/install_go.sh 
+          command: sh .circleci/xcode_install_go.sh
       - run:
           name: Run tests
           command: |
@@ -57,7 +56,7 @@ jobs:
       - checkout
       - run: pip install awscli
       - run:
-          command: sh .circleci/install_go.sh
+          command: sh .circleci/xcode_install_go.sh
       - run:
           name: Build
           command: |
@@ -66,6 +65,31 @@ jobs:
             make build-darwin VERSION=latest
             make publish-latest
             make publish-version
+
+  release_macos:
+    <<: *macos_image
+    steps:
+      - checkout
+      - run: pip install awscli
+      - run:
+          command: sh .circleci/xcode_install_go.sh
+      - run:
+          name: Build
+          command: |
+            cd $GOPATH/src/github.com/codeclimate/test-reporter
+            make build-darwin
+            make build-darwin VERSION=latest
+            make publish-latest
+            make publish-version
+
+  github-release:
+    <<: *linux_image
+    steps:
+      - run: sudo apt install hub
+      - checkout
+      - run:
+          name: Crea new GH release
+          command: sh .circleci/create_gh_release.sh
 
 workflows:
   version: 2
