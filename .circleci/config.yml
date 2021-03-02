@@ -1,4 +1,23 @@
-version: 2
+version: 2.1
+
+commands:
+  install-go:
+    steps:
+      - checkout
+      - run:
+          name: Install go
+          command: |
+            curl -O https://dl.google.com/go/go1.15.darwin-amd64.tar.gz
+            tar -xzf go1.15.darwin-amd64.tar.gz
+            echo 'export PATH=$PATH:$PWD/go/bin' >> "$BASH_ENV"
+      - run:
+          name: Setup gopath
+          command: |
+            mkdir -p ~/gopath/src/github.com/codeclimate/test-reporter
+            echo 'export GOPATH=$HOME/gopath' >> "$BASH_ENV"
+            . "$BASH_ENV"
+            cd $GOPATH/src/github.com/codeclimate/test-reporter
+            cp -r ~/project/ $GOPATH/src/github.com/codeclimate/test-reporter/
 
 jobs:
   test_linux:
@@ -64,22 +83,7 @@ jobs:
     macos:
       xcode: "11.3.0"
     steps:
-      - checkout
-      - run: pip install awscli
-      - run:
-          name: Install go
-          command: |
-            curl -O https://dl.google.com/go/go1.15.darwin-amd64.tar.gz
-            tar -xzf go1.15.darwin-amd64.tar.gz
-            echo 'export PATH=$PATH:$PWD/go/bin' >> "$BASH_ENV"
-      - run:
-          name: Setup gopath
-          command: |
-            mkdir -p ~/gopath/src/github.com/codeclimate/test-reporter
-            echo 'export GOPATH=$HOME/gopath' >> "$BASH_ENV"
-            . "$BASH_ENV"
-            cd $GOPATH/src/github.com/codeclimate/test-reporter
-            cp -r ~/project/ $GOPATH/src/github.com/codeclimate/test-reporter/
+      - install-go
       - run:
           name: Build
           command: |
@@ -122,6 +126,16 @@ jobs:
           command: |
             cd $GOPATH/src/github.com/codeclimate/test-reporter
             make publish-macos-version
+  tag-version:
+    macos:
+      xcode: "11.3.0"
+    steps:
+      - checkout
+      - run: pip install awscli
+      - run:
+        name: import GPG key
+        command: echo -e "$GPG_KEY" | gpg --import
+      - run: make tag
 
 workflows:
   version: 2
@@ -153,10 +167,10 @@ workflows:
           requires:
             - test_linux
             - test_macos
-      #- publish_version:
-      #    requires:
-      #      - release_linux
-      #      - release_macos
+      - publish_version:
+          requires:
+            - release_linux
+            - release_macos
         
 
 notify:

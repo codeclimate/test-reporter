@@ -33,22 +33,12 @@ build:
 		go build -v ${LDFLAGS} -tags ${BUILD_TAGS} -o $(PREFIX)bin/test-reporter$(BINARY_SUFFIX); \
 	fi
 
-build-linux-all:
-	$(MAKE) build-linux
-	$(MAKE) build-linux-cgo
 
 build-linux:
 	$(MAKE) build \
 	  PREFIX=artifacts/ \
 	  BINARY_SUFFIX=-$(VERSION)-linux-amd64 \
 	  CGO_ENABLED=0
-
-build-docker-linux:
-	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=0
-
-build-docker-linux-cgo:
-	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=1 \
-		BUILD_TAGS="netcgo" BINARY_SUFFIX=-$(VERSION)-netcgo-linux-amd64
 
 build-linux-cgo:
 	$(MAKE) build \
@@ -57,24 +47,14 @@ build-linux-cgo:
 	  CGO_ENABLED=1 \
 	  BUILD_TAGS="netcgo"
 
+build-linux-all:
+	$(MAKE) build-linux
+	$(MAKE) build-linux-cgo
+
 build-darwin:
 	$(MAKE) build \
 	  PREFIX=artifacts/ \
 	  BINARY_SUFFIX=-$(VERSION)-darwin-amd64
-
-test-docker:
-	$(DOCKER_RUN) \
-	  --env GOPATH=/ \
-	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
-	  --workdir "/src/$(PROJECT)" \
-	  golang:1.8 make test
-
-benchmark-docker:
-	$(DOCKER_RUN) \
-	  --env GOPATH=/ \
-	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
-	  --workdir "/src/$(PROJECT)" \
-	  golang:1.8 make benchmark
 
 build-docker: BINARY_SUFFIX ?= -$(VERSION)-$$GOOS-$$GOARCH
 build-docker:
@@ -89,6 +69,27 @@ build-docker:
 	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
 	  --workdir "/src/$(PROJECT)" \
 	  golang:1.15 make build BUILD_TAGS=${BUILD_TAGS}
+
+build-docker-linux:
+	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=0
+
+build-docker-linux-cgo:
+	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=1 \
+		BUILD_TAGS="netcgo" BINARY_SUFFIX=-$(VERSION)-netcgo-linux-amd64
+
+test-docker:
+	$(DOCKER_RUN) \
+	  --env GOPATH=/ \
+	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
+	  --workdir "/src/$(PROJECT)" \
+	  golang:1.8 make test
+
+benchmark-docker:
+	$(DOCKER_RUN) \
+	  --env GOPATH=/ \
+	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
+	  --workdir "/src/$(PROJECT)" \
+	  golang:1.8 make benchmark
 
 test-simplecov:
 	docker build -f integration-tests/simplecov/Dockerfile .
@@ -164,11 +165,9 @@ clean:
 	sudo $(RM) -r ./artifacts
 	$(RM) $(MAN_PAGES)
 
-# Must be run in a OS X machine. OS X binary is build natively.
-#release-linux:
-  
 
-release:
+# Must be run in a OS X machine. OS X binary is build natively.
+manual-release:
 	$(MAKE) build-docker-linux
 	$(MAKE) build-docker-linux-cgo
 	$(MAKE) build-darwin
