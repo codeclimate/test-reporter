@@ -29,6 +29,16 @@ jobs:
       - run: make build-linux-all VERSION=head
       - run: make publish-head
 
+  release_linux:
+    <<: *linux_image
+    steps:
+      - checkout
+      - run: sudo apt-get install awscli
+      - run: make build-linux-all
+      - run: make build-linux-all VERSION=head
+      - run: make publish-latest
+      - run: make publish-version
+
   test_macos:
     <<: *macos_image
     steps:
@@ -52,12 +62,10 @@ jobs:
           name: Build
           command: |
             cd $GOPATH/src/github.com/codeclimate/test-reporter
-            make build-darwin VERSION=head
-      - run:
-          name: Publish
-          command: |
-            cd $GOPATH/src/github.com/codeclimate/test-reporter
-            make publish-head
+            make build-darwin
+            make build-darwin VERSION=latest
+            make publish-version
+            make publish-latest
 
 workflows:
   version: 2
