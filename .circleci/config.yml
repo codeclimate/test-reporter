@@ -34,7 +34,7 @@ jobs:
       - checkout
       - run: sudo apt-get install awscli
       - run: make build-linux-all
-      - run: make build-linux-all VERSION=head
+      - run: make build-linux-all VERSION=latest
       - run: make publish-latest
       - run: make publish-version
 
@@ -58,13 +58,11 @@ jobs:
       - run:
           command: sh .circleci/xcode_install_go.sh
       - run:
-          name: Build
+          name: Build & Upload artifacts to S3
           command: |
             cd $GOPATH/src/github.com/codeclimate/test-reporter
-            make build-darwin
-            make build-darwin VERSION=latest
-            make publish-latest
-            make publish-version
+            make build-darwin VERSION=head
+            make publish-head
 
   release_macos:
     <<: *macos_image
@@ -74,7 +72,7 @@ jobs:
       - run:
           command: sh .circleci/xcode_install_go.sh
       - run:
-          name: Build
+          name: Build & Upload artifacts to S3
           command: |
             cd $GOPATH/src/github.com/codeclimate/test-reporter
             make build-darwin
