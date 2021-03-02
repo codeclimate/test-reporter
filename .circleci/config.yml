@@ -95,7 +95,7 @@ workflows:
     jobs:
       - test_linux
       - test_macos
-      - release_linux:
+      - release_head_linux:
           requires:
             - test_linux
             - test_macos
@@ -103,7 +103,7 @@ workflows:
             branches:
               only:
                 - master
-      - release_macos:
+      - release_head_macos:
           requires:
             - test_linux
             - test_macos
@@ -111,7 +111,6 @@ workflows:
             branches:
               only:
                 - master
-
 notify:
   webhooks:
     - url: https://cc-slack-proxy.herokuapp.com/circle
