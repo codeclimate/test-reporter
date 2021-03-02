@@ -15,6 +15,15 @@ BUILD_VERSION = $(shell git log -1 --pretty=format:'%H')
 BUILD_TIME = $(shell date +%FT%T%z)
 LDFLAGS = -ldflags "-X $(PROJECT)/version.Version=${VERSION} -X $(PROJECT)/version.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/version.BuildTime=${BUILD_TIME}"
 
+define upload_artifacts
+	$(AWS) s3 cp \
+	  --acl public-read \
+	  --recursive \
+	  --exclude "*" \
+	  --include "test-reporter-$(1)-*" \
+	  artifacts/bin/ s3://codeclimate/test-reporter/;
+endef
+
 man/%: man/%.md
 	$(PANDOC) -s -t man $< -o $@
 
@@ -116,46 +125,13 @@ test-excoveralls:
 	docker build -f integration-tests/excoveralls/Dockerfile .
 
 publish-head:
-	$(AWS) s3 cp \
-	  --acl public-read \
-	  --recursive \
-	  --exclude "*" \
-	  --include "test-reporter-head-*" \
-	  artifacts/bin/ s3://codeclimate/test-reporter/
+    $(call upload_artifacts, "head")
 
 publish-latest:
-	$(AWS) s3 cp \
-	  --acl public-read \
-	  --recursive \
-	  --exclude "*" \
-	  --include "test-reporter-latest-*" \
-	  artifacts/bin/ s3://codeclimate/test-reporter/
+    $(call upload_artifacts, "latest")
 
-publish-macos-version:
-	if [ "$(shell curl https://s3.amazonaws.com/codeclimate/test-reporter/test-reporter-$(VERSION)-darwin-amd64 --output /dev/null --write-out %{http_code})" -eq 403 ]; then \
-	  $(AWS) s3 cp \
-	    --acl public-read \
-	    --recursive \
-	    --exclude "*" \
-	    --include "test-reporter-$(VERSION)-*" \
-	    artifacts/bin/ s3://codeclimate/test-reporter/; \
-	else \
-	  echo "Version $(VERSION) already published"; \
-	  exit 1; \
-	fi
-
-publish-linux-version:
-	if [ "$(shell curl https://s3.amazonaws.com/codeclimate/test-reporter/test-reporter-$(VERSION)-linux-amd64 --output /dev/null --write-out %{http_code})" -eq 403 ]; then \
-	  $(AWS) s3 cp \
-	    --acl public-read \
-	    --recursive \
-	    --exclude "*" \
-	    --include "test-reporter-$(VERSION)-*" \
-	    artifacts/bin/ s3://codeclimate/test-reporter/; \
-	else \
-	  echo "Version $(VERSION) already published"; \
-	  exit 1; \
-	fi
+publish-version:
+	$(call upload_artifacts, $(VERSION))
 
 tag:
 	$(GIT_TAG) --message v$(VERSION) v$(VERSION)
