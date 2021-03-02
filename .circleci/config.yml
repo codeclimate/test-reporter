@@ -1,22 +1,20 @@
 version: 2
-commands:
-  set-up-mac-os-env:
-    steps:
-      - checkout
-      - run:
-          name: Install go
-          command: |
-            curl -O https://dl.google.com/go/go1.15.darwin-amd64.tar.gz
-            tar -xzf go1.15.darwin-amd64.tar.gz
-            echo 'export PATH=$PATH:$PWD/go/bin' >> "$BASH_ENV"
-      - run:
-          name: Setup gopath
-          command: |
-            mkdir -p ~/gopath/src/github.com/codeclimate/test-reporter
-            echo 'export GOPATH=$HOME/gopath' >> "$BASH_ENV"
-            . "$BASH_ENV"
-            cd $GOPATH/src/github.com/codeclimate/test-reporter
-            cp -r ~/project/ $GOPATH/src/github.com/codeclimate/test-reporter/
+set-up-macos-env: &set-up-macos-env
+  - checkout
+  - run:
+      name: Install go
+      command: |
+        curl -O https://dl.google.com/go/go1.15.darwin-amd64.tar.gz
+        tar -xzf go1.15.darwin-amd64.tar.gz
+        echo 'export PATH=$PATH:$PWD/go/bin' >> "$BASH_ENV"
+  - run:
+      name: Setup gopath
+      command: |
+        mkdir -p ~/gopath/src/github.com/codeclimate/test-reporter
+        echo 'export GOPATH=$HOME/gopath' >> "$BASH_ENV"
+        . "$BASH_ENV"
+        cd $GOPATH/src/github.com/codeclimate/test-reporter
+        cp -r ~/project/ $GOPATH/src/github.com/codeclimate/test-reporter/
 
 jobs:
   test_linux:
@@ -45,7 +43,7 @@ jobs:
     macos:
       xcode: "11.3.0"
     steps:
-      - set-up-mac-os-env:
+      <<: *set-up-macos-env
       - run:
           name: Run tests
           command: |
