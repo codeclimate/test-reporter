@@ -7,6 +7,10 @@ linux_image: &linux_image
   setup_remote_docker:
     docker_layer_caching: true
 
+macos_image: &macos_image
+  macos:
+    xcode: "11.3.0"
+
 setup_macos_env: &setup_macos_env
 
 
@@ -26,8 +30,7 @@ jobs:
       - run: make publish-head
 
   test_macos:
-    macos:
-      xcode: "11.3.0"
+    <<: *macos_image
     steps:
       - checkout
       - run:
@@ -39,8 +42,7 @@ jobs:
             make test
 
   release_head_macos:
-    macos:
-      xcode: "11.3.0"
+    <<: *macos_image
     steps:
       - checkout
       - run: pip install awscli
