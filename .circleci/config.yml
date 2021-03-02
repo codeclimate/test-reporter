@@ -1,7 +1,6 @@
-version: 2.1
-
+version: 2
 commands:
-  install-go:
+  set-up-mac-os-env:
     steps:
       - checkout
       - run:
@@ -30,7 +29,7 @@ jobs:
       - checkout
       - run: make test
 
-  release_head_linux:
+  release_linux:
     docker:
       - image: circleci/golang:1.15
     working_directory: /go/src/github.com/codeclimate/test-reporter
@@ -41,18 +40,6 @@ jobs:
       - run: sudo apt-get install awscli
       - run: make build-linux-all VERSION=head
       - run: make publish-head
-
-  release_linux:
-    docker:
-      - image: circleci/golang:1.15
-    working_directory: /go/src/github.com/codeclimate/test-reporter
-    setup_remote_docker:
-      docker_layer_caching: true
-    steps:
-      - checkout
-      - run: sudo apt-get install awscli
-      - run: make build-linux-all
-      - run: make publish-linux-version
 
   test_macos:
     macos:
@@ -79,22 +66,6 @@ jobs:
             cd $GOPATH/src/github.com/codeclimate/test-reporter
             make test
 
-  release_head_macos:
-    macos:
-      xcode: "11.3.0"
-    steps:
-      - install-go
-      - run:
-          name: Build
-          command: |
-            cd $GOPATH/src/github.com/codeclimate/test-reporter
-            make build-darwin VERSION=head
-      - run:
-          name: Publish
-          command: |
-            cd $GOPATH/src/github.com/codeclimate/test-reporter
-            make publish-head
-
   release_macos:
     macos:
       xcode: "11.3.0"
@@ -119,23 +90,12 @@ jobs:
           name: Build
           command: |
             cd $GOPATH/src/github.com/codeclimate/test-reporter
-            make build-darwin
-            make build-darwin VERSION=latest
+            make build-darwin VERSION=head
       - run:
           name: Publish
           command: |
             cd $GOPATH/src/github.com/codeclimate/test-reporter
-            make publish-macos-version
-  tag-version:
-    macos:
-      xcode: "11.3.0"
-    steps:
-      - checkout
-      - run: pip install awscli
-      - run:
-        name: import GPG key
-        command: echo -e "$GPG_KEY" | gpg --import
-      - run: make tag
+            make publish-head
 
 workflows:
   version: 2
@@ -143,35 +103,22 @@ workflows:
     jobs:
       - test_linux
       - test_macos
-      - release_head_linux:
-          requires:
-            - test_linux
-            - test_macos
-          filters:
-            branches:
-              only:
-                - master
-      - release_head_macos:
-          requires:
-            - test_linux
-            - test_macos
-          filters:
-            branches:
-              only:
-                - master
       - release_linux:
           requires:
             - test_linux
             - test_macos
+          filters:
+            branches:
+              only:
+                - master
       - release_macos:
           requires:
             - test_linux
             - test_macos
-      - publish_version:
-          requires:
-            - release_linux
-            - release_macos
-        
+          filters:
+            branches:
+              only:
+                - master
 
 notify:
   webhooks:
