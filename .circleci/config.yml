@@ -17,7 +17,7 @@ jobs:
       - checkout
       - run: make test
 
-  release_linux:
+  release_head_linux:
     <<: *linux_image
     steps:
       - checkout
@@ -38,26 +38,14 @@ jobs:
             cd $GOPATH/src/github.com/codeclimate/test-reporter
             make test
 
-  release_macos:
+  release_head_macos:
     macos:
       xcode: "11.3.0"
     steps:
       - checkout
       - run: pip install awscli
       - run:
-          name: Install go
-          command: |
-            curl -O https://dl.google.com/go/go1.15.darwin-amd64.tar.gz
-            tar -xzf go1.15.darwin-amd64.tar.gz
-            echo 'export PATH=$PATH:$PWD/go/bin' >> "$BASH_ENV"
-      - run:
-          name: Setup gopath
-          command: |
-            mkdir -p ~/gopath/src/github.com/codeclimate/test-reporter
-            echo 'export GOPATH=$HOME/gopath' >> "$BASH_ENV"
-            . "$BASH_ENV"
-            cd $GOPATH/src/github.com/codeclimate/test-reporter
-            cp -r ~/project/ $GOPATH/src/github.com/codeclimate/test-reporter/
+          command: sh .circleci/install_go.sh
       - run:
           name: Build
           command: |
