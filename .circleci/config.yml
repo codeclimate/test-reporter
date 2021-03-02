@@ -1,28 +1,14 @@
 version: 2
-set-up-macos-env: &set-up-macos-env
-  - checkout
-  - run:
-      name: Install go
-      command: |
-        curl -O https://dl.google.com/go/go1.15.darwin-amd64.tar.gz
-        tar -xzf go1.15.darwin-amd64.tar.gz
-        echo 'export PATH=$PATH:$PWD/go/bin' >> "$BASH_ENV"
-  - run:
-      name: Setup gopath
-      command: |
-        mkdir -p ~/gopath/src/github.com/codeclimate/test-reporter
-        echo 'export GOPATH=$HOME/gopath' >> "$BASH_ENV"
-        . "$BASH_ENV"
-        cd $GOPATH/src/github.com/codeclimate/test-reporter
-        cp -r ~/project/ $GOPATH/src/github.com/codeclimate/test-reporter/
+linux_image: &:linux_image
+  docker:
+    - image: circleci/golang:1.15
+  working_directory: /go/src/github.com/codeclimate/test-reporter
+  setup_remote_docker:
+    docker_layer_caching: true
 
 jobs:
   test_linux:
-    docker:
-      - image: circleci/golang:1.15
-    working_directory: /go/src/github.com/codeclimate/test-reporter
-    setup_remote_docker:
-      docker_layer_caching: true
+    <<: *linux_image
     steps:
       - checkout
       - run: make test
@@ -43,7 +29,21 @@ jobs:
     macos:
       xcode: "11.3.0"
     steps:
-      <<: *set-up-macos-env
+      - checkout
+      - run:
+          name: Install go
+          command: |
+            curl -O https://dl.google.com/go/go1.15.darwin-amd64.tar.gz
+            tar -xzf go1.15.darwin-amd64.tar.gz
+            echo 'export PATH=$PATH:$PWD/go/bin' >> "$BASH_ENV"
+      - run:
+          name: Setup gopath
+          command: |
+            mkdir -p ~/gopath/src/github.com/codeclimate/test-reporter
+            echo 'export GOPATH=$HOME/gopath' >> "$BASH_ENV"
+            . "$BASH_ENV"
+            cd $GOPATH/src/github.com/codeclimate/test-reporter
+            cp -r ~/project/ $GOPATH/src/github.com/codeclimate/test-reporter/
       - run:
           name: Run tests
           command: |
