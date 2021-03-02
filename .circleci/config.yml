@@ -45,7 +45,7 @@ jobs:
     macos:
       xcode: "11.3.0"
     steps:
-      - set-up-mac-os-env
+      - set-up-mac-os-env:
       - run:
           name: Run tests
           command: |
