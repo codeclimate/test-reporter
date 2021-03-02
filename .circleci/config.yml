@@ -1,5 +1,5 @@
 version: 2
-linux_image: &:linux_image
+linux_image: &linux_image
   docker:
     - image: circleci/golang:1.15
   working_directory: /go/src/github.com/codeclimate/test-reporter
