@@ -64,8 +64,8 @@ jobs:
             cd $GOPATH/src/github.com/codeclimate/test-reporter
             make build-darwin
             make build-darwin VERSION=latest
-            make publish-version
             make publish-latest
+            make publish-version
 
 workflows:
   version: 2
