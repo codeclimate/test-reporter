@@ -7,26 +7,6 @@ linux_image: &linux_image
   setup_remote_docker:
     docker_layer_caching: true
 
-commands:
-  setup_macos_env:
-    steps:
-      - run:
-          name: Install go
-          command: |
-            curl -O https://dl.google.com/go/go1.15.darwin-amd64.tar.gz
-            tar -xzf go1.15.darwin-amd64.tar.gz
-            echo 'export PATH=$PATH:$PWD/go/bin' >> "$BASH_ENV"
-      - run:
-          name: Setup gopath
-          command: |
-            mkdir -p ~/gopath/src/github.com/codeclimate/test-reporter
-            echo 'export GOPATH=$HOME/gopath' >> "$BASH_ENV"
-            . "$BASH_ENV"
-            cd $GOPATH/src/github.com/codeclimate/test-reporter
-            cp -r ~/project/ $GOPATH/src/github.com/codeclimate/test-reporter/
-
-
-
 jobs:
   test_linux:
     <<: *linux_image
@@ -47,7 +27,7 @@ jobs:
       xcode: "11.3.0"
     steps:
       - checkout
-      - setup_macos_env
+      - run: sh .circleci/install_go.sh
       - run:
           name: Run tests
           command: |
