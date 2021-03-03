@@ -1,82 +1,93 @@
 version: 2
+
+linux_image: &linux_image
+  docker:
+    - image: circleci/golang:1.15
+  working_directory: /go/src/github.com/codeclimate/test-reporter
+  setup_remote_docker:
+    docker_layer_caching: true
+
+macos_image: &macos_image
+  macos:
+    xcode: "11.3.0"
+
+setup_macos_env: &setup_macos_env
+
 jobs:
   test_linux:
-    docker:
-      - image: circleci/golang:1.15
-    working_directory: /go/src/github.com/codeclimate/test-reporter
-    setup_remote_docker:
-      docker_layer_caching: true
+    <<: *linux_image
     steps:
       - checkout
       - run: make test
 
-  release_linux:
-    docker:
-      - image: circleci/golang:1.15
-    working_directory: /go/src/github.com/codeclimate/test-reporter
-    setup_remote_docker:
-      docker_layer_caching: true
+  release_head_linux:
+    <<: *linux_image
     steps:
       - checkout
       - run: sudo apt-get install awscli
       - run: make build-linux-all VERSION=head
       - run: make publish-head
 
+  release_linux:
+    <<: *linux_image
+    steps:
+      - checkout
+      - run: sudo apt-get install awscli
+      - run: make build-linux-all
+      - run: make build-linux-all VERSION=latest
+      - run: make publish-latest
+      - run: make publish-version
+
   test_macos:
-    macos:
-      xcode: "11.3.0"
+    <<: *macos_image
     steps:
       - checkout
       - run:
-          name: Install go
-          command: |
-            curl -O https://dl.google.com/go/go1.15.darwin-amd64.tar.gz
-            tar -xzf go1.15.darwin-amd64.tar.gz
-            echo 'export PATH=$PATH:$PWD/go/bin' >> "$BASH_ENV"
-      - run:
-          name: Setup gopath
-          command: |
-            mkdir -p ~/gopath/src/github.com/codeclimate/test-reporter
-            echo 'export GOPATH=$HOME/gopath' >> "$BASH_ENV"
-            . "$BASH_ENV"
-            cd $GOPATH/src/github.com/codeclimate/test-reporter
-            cp -r ~/project/ $GOPATH/src/github.com/codeclimate/test-reporter/
+          command: sh .circleci/xcode_install_go
       - run:
           name: Run tests
           command: |
             cd $GOPATH/src/github.com/codeclimate/test-reporter
             make test
 
-  release_macos:
-    macos:
-      xcode: "11.3.0"
+  release_head_macos:
+    <<: *macos_image
     steps:
       - checkout
       - run: pip install awscli
       - run:
-          name: Install go
-          command: |
-            curl -O https://dl.google.com/go/go1.15.darwin-amd64.tar.gz
-            tar -xzf go1.15.darwin-amd64.tar.gz
-            echo 'export PATH=$PATH:$PWD/go/bin' >> "$BASH_ENV"
+          command: sh .circleci/xcode_install_go
       - run:
-          name: Setup gopath
-          command: |
-            mkdir -p ~/gopath/src/github.com/codeclimate/test-reporter
-            echo 'export GOPATH=$HOME/gopath' >> "$BASH_ENV"
-            . "$BASH_ENV"
-            cd $GOPATH/src/github.com/codeclimate/test-reporter
-            cp -r ~/project/ $GOPATH/src/github.com/codeclimate/test-reporter/
-      - run:
-          name: Build
+          name: Build & Upload artifacts to S3
           command: |
             cd $GOPATH/src/github.com/codeclimate/test-reporter
             make build-darwin VERSION=head
+            make publish-head
+
+  release_macos:
+    <<: *macos_image
+    steps:
+      - checkout
+      - run: pip install awscli
       - run:
-          name: Publish
+          command: sh .circleci/xcode_install_go
+      - run:
+          name: Build & Upload artifacts to S3
           command: |
             cd $GOPATH/src/github.com/codeclimate/test-reporter
-            make publish-head
+            make build-darwin
+            make build-darwin VERSION=latest
+            make publish-latest
+            make publish-version
+
+  github_release:
+    <<: *linux_image
+    steps:
+      - run: sudo apt install hub
+      - checkout
+      - run:
+          name: Create new GH release
+          command: sh release-scripts/gh_release
 
 workflows:
   version: 2
@@ -84,22 +95,42 @@ workflows:
     jobs:
       - test_linux
       - test_macos
+      - release_head_linux:
+          requires:
+            - test_linux
+            - test_macos
+          filters:
+            branches:
+              only:
+                - master
+      - release_head_macos:
+          requires:
+            - test_linux
+            - test_macos
+          filters:
+            branches:
+              only:
+                - master
       - release_linux:
           requires:
             - test_linux
             - test_macos
           filters:
             branches:
-              only:
-                - master
+              only: /^v\d+\.\d+\.\d+$/
       - release_macos:
           requires:
             - test_linux
             - test_macos
           filters:
             branches:
-              only:
-                - master
+              only: /^v\d+\.\d+\.\d+$/
+      - github_release:
+          requires:
+            - release_linux
+          filters:
+            branches:
+              only: /^v\d+\.\d+\.\d+$/
 
 notify:
   webhooks:
