@@ -125,13 +125,13 @@ test-excoveralls:
 	docker build -f integration-tests/excoveralls/Dockerfile .
 
 publish-head:
-    $(call upload_artifacts, "head")
+	$(call upload_artifacts,head)
 
 publish-latest:
-    $(call upload_artifacts, "latest")
+	$(call upload_artifacts,latest)
 
 publish-version:
-	$(call upload_artifacts, $(VERSION))
+	$(call upload_artifacts,$(VERSION))
 
 clean:
 	sudo $(RM) -r ./artifacts
