@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Create version branch for release.
+# It is assumed that the CI will execute the neccessary steps
+# for a new release after pushing the version branch.
+#
+#
+###
+
+set -e
+
+version=$(< VERSIONING/VERSION)
+branch="v$version"
+git checkout -b "$branch"
+git push origin "$branch"

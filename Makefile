@@ -10,10 +10,19 @@ MAN_FILES = $(wildcard man/*.md)
 MAN_PAGES = $(patsubst man/%.md,man/%,$(MAN_FILES))
 
 PROJECT = github.com/codeclimate/test-reporter
-VERSION ?= 0.10.0
+VERSION ?= $(shell cat VERSIONING/VERSION)
 BUILD_VERSION = $(shell git log -1 --pretty=format:'%H')
 BUILD_TIME = $(shell date +%FT%T%z)
 LDFLAGS = -ldflags "-X $(PROJECT)/version.Version=${VERSION} -X $(PROJECT)/version.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/version.BuildTime=${BUILD_TIME}"
+
+define upload_artifacts
+	$(AWS) s3 cp \
+	  --acl public-read \
+	  --recursive \
+	  --exclude "*" \
+	  --include "test-reporter-$(1)-*" \
+	  artifacts/bin/ s3://codeclimate/test-reporter/;
+endef
 
 man/%: man/%.md
 	$(PANDOC) -s -t man $< -o $@
@@ -33,22 +42,12 @@ build:
 		go build -v ${LDFLAGS} -tags ${BUILD_TAGS} -o $(PREFIX)bin/test-reporter$(BINARY_SUFFIX); \
 	fi
 
-build-linux-all:
-	$(MAKE) build-linux
-	$(MAKE) build-linux-cgo
 
 build-linux:
 	$(MAKE) build \
 	  PREFIX=artifacts/ \
 	  BINARY_SUFFIX=-$(VERSION)-linux-amd64 \
 	  CGO_ENABLED=0
-
-build-docker-linux:
-	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=0
-
-build-docker-linux-cgo:
-	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=1 \
-		BUILD_TAGS="netcgo" BINARY_SUFFIX=-$(VERSION)-netcgo-linux-amd64
 
 build-linux-cgo:
 	$(MAKE) build \
@@ -57,24 +56,14 @@ build-linux-cgo:
 	  CGO_ENABLED=1 \
 	  BUILD_TAGS="netcgo"
 
+build-linux-all:
+	$(MAKE) build-linux
+	$(MAKE) build-linux-cgo
+
 build-darwin:
 	$(MAKE) build \
 	  PREFIX=artifacts/ \
 	  BINARY_SUFFIX=-$(VERSION)-darwin-amd64
-
-test-docker:
-	$(DOCKER_RUN) \
-	  --env GOPATH=/ \
-	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
-	  --workdir "/src/$(PROJECT)" \
-	  golang:1.8 make test
-
-benchmark-docker:
-	$(DOCKER_RUN) \
-	  --env GOPATH=/ \
-	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
-	  --workdir "/src/$(PROJECT)" \
-	  golang:1.8 make benchmark
 
 build-docker: BINARY_SUFFIX ?= -$(VERSION)-$$GOOS-$$GOARCH
 build-docker:
@@ -88,7 +77,28 @@ build-docker:
 	  --volume "$(PWD)"/artifacts:/artifacts \
 	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
 	  --workdir "/src/$(PROJECT)" \
-	  golang:1.8 make build BUILD_TAGS=${BUILD_TAGS}
+	  golang:1.15 make build BUILD_TAGS=${BUILD_TAGS}
+
+build-docker-linux:
+	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=0
+
+build-docker-linux-cgo:
+	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=1 \
+		BUILD_TAGS="netcgo" BINARY_SUFFIX=-$(VERSION)-netcgo-linux-amd64
+
+test-docker:
+	$(DOCKER_RUN) \
+	  --env GOPATH=/ \
+	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
+	  --workdir "/src/$(PROJECT)" \
+	  golang:1.15 make test
+
+benchmark-docker:
+	$(DOCKER_RUN) \
+	  --env GOPATH=/ \
+	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
+	  --workdir "/src/$(PROJECT)" \
+	  golang:1.15 make benchmark
 
 test-simplecov:
 	docker build -f integration-tests/simplecov/Dockerfile .
@@ -115,44 +125,21 @@ test-excoveralls:
 	docker build -f integration-tests/excoveralls/Dockerfile .
 
 publish-head:
-	$(AWS) s3 cp \
-	  --acl public-read \
-	  --recursive \
-	  --exclude "*" \
-	  --include "test-reporter-head-*" \
-	  artifacts/bin/ s3://codeclimate/test-reporter/
+	$(call upload_artifacts,head)
 
 publish-latest:
-	$(AWS) s3 cp \
-	  --acl public-read \
-	  --recursive \
-	  --exclude "*" \
-	  --include "test-reporter-latest-*" \
-	  artifacts/bin/ s3://codeclimate/test-reporter/
+	$(call upload_artifacts,latest)
 
 publish-version:
-	if [ "$(shell curl https://s3.amazonaws.com/codeclimate/test-reporter/test-reporter-$(VERSION)-linux-amd64 --output /dev/null --write-out %{http_code})" -eq 403 ]; then \
-	  $(AWS) s3 cp \
-	    --acl public-read \
-	    --recursive \
-	    --exclude "*" \
-	    --include "test-reporter-$(VERSION)-*" \
-	    artifacts/bin/ s3://codeclimate/test-reporter/; \
-	else \
-	  echo "Version $(VERSION) already published"; \
-	  exit 1; \
-	fi
-
-tag:
-	$(GIT_TAG) --message v$(VERSION) v$(VERSION)
-	$(GIT_PUSH) origin refs/tags/v$(VERSION)
+	$(call upload_artifacts,$(VERSION))
 
 clean:
 	sudo $(RM) -r ./artifacts
 	$(RM) $(MAN_PAGES)
 
+
 # Must be run in a OS X machine. OS X binary is build natively.
-release:
+manual-release:
 	$(MAKE) build-docker-linux
 	$(MAKE) build-docker-linux-cgo
 	$(MAKE) build-darwin
@@ -161,4 +148,3 @@ release:
 	$(MAKE) build-darwin VERSION=latest
 	$(MAKE) publish-version
 	$(MAKE) publish-latest
-	$(MAKE) tag

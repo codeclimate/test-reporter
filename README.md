@@ -13,6 +13,13 @@ For installation instructions, check out our docs on [Configuring Test Coverage]
 
 To sign up for Code Climate, head [here](https://codeclimate.com/quality/pricing/).
 
+## Releasing a new version
+
+Test reporter's new versions are released automatically when pushing to branches that match `vx.x.x`. The test reporter's current version is documented in [VERSIONING/VERSION](https://github.com/codeclimate/test-reporter/blob/master/VERSIONING/VERSION), following the [Semantic Versioning](https://semver.org/) convention.
+
+There are two script helpers for creating a new release:
+- [release-scripts/prep-release](https://github.com/codeclimate/test-reporter/blob/master/release-scripts/prep-release) which will create a new pull request, patching the current version. If you need to create a new MINOR or MAJOR version creating a manual pull request is the way to go.
+- [release-scripts/release](https://github.com/codeclimate/test-reporter/blob/master/release-scripts/release) This script will create a new branch named `vx.x.x` that matches the version indicated in [VERSIONING/VERSION](https://github.com/codeclimate/test-reporter/blob/master/VERSIONING/VERSION), which should trigger the CI for creating a new release.
 
 ## Copyright
 
