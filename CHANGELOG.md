@@ -1,5 +1,9 @@
 # Change log
 
+## v0.10.1 [(2021-08-10)](https://github.com/codeclimate/test-reporter/releases/tag/v0.10.1)
+
+* [NEW] Add support for Semaphore 2.0 [#473](https://github.com/codeclimate/test-reporter/pull/473)
+
 ## v0.10.0 [(2021-03-01)](https://github.com/codeclimate/test-reporter/releases/tag/v0.10.0)
 
 * [NEW] Add support for Golang coverage generated using `-coverpkg` flag [#461](https://github.com/codeclimate/test-reporter/pull/461)
