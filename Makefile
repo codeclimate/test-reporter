@@ -1,6 +1,7 @@
 .PHONY: test-docker build-docker build-linux-cgo release test-excoveralls
 
 AWS ?= $(shell which aws)
+SHA_SUM ?= $(shell which shasum)
 DOCKER_RUN ?= $(shell which docker) run --rm
 GIT_PUSH ?= $(shell which git) push
 GIT_TAG ?= $(shell which git) tag --sign
@@ -22,6 +23,11 @@ define upload_artifacts
 	  --exclude "*" \
 	  --include "test-reporter-$(1)-*" \
 	  artifacts/bin/ s3://codeclimate/test-reporter/;
+endef
+
+define gen_signed_checksum
+  cd artifacts/bin && \
+    $(SHA_SUM) -a 256 test-reporter-$(VERSION)-$(1) > test-reporter-$(VERSION)-$(1).sha256
 endef
 
 man/%: man/%.md
@@ -132,6 +138,9 @@ publish-latest:
 
 publish-version:
 	$(call upload_artifacts,$(VERSION))
+
+gen-linux-checksum:
+	$(call gen_checksum,linux-amd64)
 
 clean:
 	sudo $(RM) -r ./artifacts
