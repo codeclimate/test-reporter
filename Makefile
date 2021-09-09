@@ -2,9 +2,9 @@
 
 AWS ?= $(shell which aws)
 SHA_SUM ?= $(shell which shasum)
+GPG ?= $(shell which gpg)
+TAR ?= $(shell which tar)
 DOCKER_RUN ?= $(shell which docker) run --rm
-GIT_PUSH ?= $(shell which git) push
-GIT_TAG ?= $(shell which git) tag --sign
 PANDOC ?= $(shell which pandoc)
 
 MAN_FILES = $(wildcard man/*.md)
@@ -15,6 +15,7 @@ VERSION ?= $(shell cat VERSIONING/VERSION)
 BUILD_VERSION = $(shell git log -1 --pretty=format:'%H')
 BUILD_TIME = $(shell date +%FT%T%z)
 LDFLAGS = -ldflags "-X $(PROJECT)/version.Version=${VERSION} -X $(PROJECT)/version.BuildVersion=${BUILD_VERSION} -X $(PROJECT)/version.BuildTime=${BUILD_TIME}"
+ARTIFACTS_OUTPUT = artifacts.tar.gz
 
 define upload_artifacts
 	$(AWS) s3 cp \
@@ -26,8 +27,9 @@ define upload_artifacts
 endef
 
 define gen_signed_checksum
-  cd artifacts/bin && \
-    $(SHA_SUM) -a 256 test-reporter-$(VERSION)-$(1) > test-reporter-$(VERSION)-$(1).sha256
+	cd artifacts/bin && \
+	  $(SHA_SUM) -a 256 test-reporter-$(VERSION)-$(1) > test-reporter-$(VERSION)-$(1).sha256 && \
+	  $(GPG) --local-user $(GPG_CODECLIMATE_FINGERPRINT) --output test-reporter-$(VERSION)-$(1).sha256.sig --detach-sig test-reporter-$(VERSION)-$(1).sha256
 endef
 
 man/%: man/%.md
@@ -140,20 +142,35 @@ publish-version:
 	$(call upload_artifacts,$(VERSION))
 
 gen-linux-checksum:
-	$(call gen_checksum,linux-amd64)
+	$(call gen_signed_checksum,linux-amd64)
+
+gen-linux-cgo-checksum:
+	$(call gen_signed_checksum,netcgo-linux-amd64)
+
+gen-darwin-checksum:
+	$(call gen_signed_checksum,darwin-amd64)
 
 clean:
 	sudo $(RM) -r ./artifacts
 	$(RM) $(MAN_PAGES)
 
+tag:
+	$(TAR) -c -f ${ARTIFACTS_OUTPUT} ./artifacts/bin/test-reporter-${VERSION}-* && \
+	  hub release create -a ${ARTIFACTS_OUTPUT} -m "v${VERSION}" ${VERSION}
 
 # Must be run in a OS X machine. OS X binary is build natively.
 manual-release:
 	$(MAKE) build-docker-linux
 	$(MAKE) build-docker-linux-cgo
 	$(MAKE) build-darwin
+	$(MAKE) gen-linux-checksum
+	$(MAKE) gen-linux-cgo-checksum
+	$(MAKE) gen-darwin-checksum
 	$(MAKE) build-docker-linux VERSION=latest
 	$(MAKE) build-docker-linux-cgo VERSION=latest
 	$(MAKE) build-darwin VERSION=latest
+	$(MAKE) gen-linux-checksum VERSION=latest
+	$(MAKE) gen-linux-cgo-checksum VERSION=latest
+	$(MAKE) gen-darwin-checksum VERSION=latest
 	$(MAKE) publish-version
 	$(MAKE) publish-latest
