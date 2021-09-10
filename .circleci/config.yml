@@ -28,16 +28,6 @@ jobs:
       - run: make build-linux-all VERSION=head
       - run: make publish-head
 
-  release_linux:
-    <<: *linux_image
-    steps:
-      - checkout
-      - run: sudo apt-get install awscli
-      - run: make build-linux-all
-      - run: make build-linux-all VERSION=latest
-      - run: make publish-latest
-      - run: make publish-version
-
   test_macos:
     <<: *macos_image
     steps:
@@ -64,31 +54,6 @@ jobs:
             make build-darwin VERSION=head
             make publish-head
 
-  release_macos:
-    <<: *macos_image
-    steps:
-      - checkout
-      - run: pip install awscli
-      - run:
-          command: sh .circleci/xcode_install_go
-      - run:
-          name: Build & Upload artifacts to S3
-          command: |
-            cd $GOPATH/src/github.com/codeclimate/test-reporter
-            make build-darwin
-            make build-darwin VERSION=latest
-            make publish-latest
-            make publish-version
-
-  github_release:
-    <<: *linux_image
-    steps:
-      - run: sudo apt install hub
-      - checkout
-      - run:
-          name: Create new GH release
-          command: sh release-scripts/gh_release
-
 workflows:
   version: 2
   build_deploy:
@@ -111,26 +76,6 @@ workflows:
             branches:
               only:
                 - master
-      - release_linux:
-          requires:
-            - test_linux
-            - test_macos
-          filters:
-            branches:
-              only: /^v\d+\.\d+\.\d+$/
-      - release_macos:
-          requires:
-            - test_linux
-            - test_macos
-          filters:
-            branches:
-              only: /^v\d+\.\d+\.\d+$/
-      - github_release:
-          requires:
-            - release_linux
-          filters:
-            branches:
-              only: /^v\d+\.\d+\.\d+$/
 
 notify:
   webhooks:
