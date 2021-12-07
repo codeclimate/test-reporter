@@ -37,7 +37,7 @@ The test reporter is distributed as a pre-built binary named cc-test-reporter. Y
 
 #### e.g
 >```console
->$ curl -O https://codeclimate.com/downloads/test-reporter/test-reporter-0.10.1-darwin-amd64
+>$ curl -L -O https://codeclimate.com/downloads/test-reporter/test-reporter-0.10.1-darwin-amd64
 >```
 
 ## Verifying binaries
@@ -49,7 +49,7 @@ Along with the binaries you can download a file with a SHA 256 checksum for the 
 To download the file containing the checksum using `curl`:
 #### e.g
 >```console
->$ curl -O https://codeclimate.com/downloads/test-reporter/test-reporter-0.10.1-darwin-amd64.sha256
+>$ curl -L -O https://codeclimate.com/downloads/test-reporter/test-reporter-0.10.1-darwin-amd64.sha256
 >```
 
 To check that a downloaded file matches the checksum, run it through `shasum` with a command such as:
