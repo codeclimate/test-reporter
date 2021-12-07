@@ -1,5 +1,10 @@
 # Change log
 
+## v0.10.2 [(2021-12-7)](https://github.com/codeclimate/test-reporter/releases/tag/v0.10.2)
+
+* [NEW] Add support for Github Actions [#481](https://github.com/codeclimate/test-reporter/pull/481)
+* [FIX] Stop assigning coverage information to blank lines when using gocov [#480](https://github.com/codeclimate/test-reporter/pull/480)
+
 ## v0.10.1 [(2021-08-10)](https://github.com/codeclimate/test-reporter/releases/tag/v0.10.1)
 
 * [NEW] Add support for Semaphore 2.0 [#473](https://github.com/codeclimate/test-reporter/pull/473)
