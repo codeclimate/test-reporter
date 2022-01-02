@@ -60,7 +60,6 @@ func (r Formatter) Format() (formatters.Report, error) {
 		if err != nil {
 			return rep, errors.WithStack(err)
 		}
-		num := 0
 		blocks := []cover.ProfileBlock{}
 		for _, b := range p.Blocks {
 			lstIdx := len(blocks) - 1
@@ -70,14 +69,15 @@ func (r Formatter) Format() (formatters.Report, error) {
 			}
 			blocks[lstIdx].Count += b.Count
 		}
+		lineNum := 1
 		for _, b := range blocks {
-			for num < b.StartLine {
+			for lineNum < b.StartLine {
 				sf.Coverage = append(sf.Coverage, formatters.NullInt{})
-				num++
+				lineNum++
 			}
-			for i := 0; i < b.NumStmt; i++ {
+			for lineNum <= b.EndLine {
 				sf.Coverage = append(sf.Coverage, formatters.NewNullInt(b.Count))
-				num++
+				lineNum++
 			}
 		}
 		err = rep.AddSourceFile(sf)
