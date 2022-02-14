@@ -248,3 +248,30 @@ func Test_Format_Merged(t *testing.T) {
 	assert.Equal(lc.Missed, 2)
 	assert.Equal(lc.Total, 8)
 }
+
+func Test_ParseWithGroups(t *testing.T) {
+	ogb := env.GitBlob
+	defer func() {
+		env.GitBlob = ogb
+	}()
+	env.GitBlob = func(s string, c *object.Commit) (string, error) {
+		return s, nil
+	}
+
+	assert := require.New(t)
+
+	formatter := Formatter{
+		Path: "./simplecov-with-groups.json",
+	}
+	rep, err := formatter.Format()
+	assert.NoError(err)
+
+	assert.Len(rep.SourceFiles, 7)
+
+	cf := rep.SourceFiles["development/mygem/lib/mygem/wrap.rb"]
+	assert.Len(cf.Coverage, 10)
+	for i, x := range []interface{}{1, nil, 1, 17, 20, 16, 16, 12, nil, nil} {
+		l := cf.Coverage[i]
+		assert.Equal(x, l.Interface())
+	}
+}
