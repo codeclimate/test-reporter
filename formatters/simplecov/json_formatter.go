@@ -61,7 +61,6 @@ func jsonFormat(r Formatter, rep formatters.Report) (formatters.Report, error) {
 
 	var m simplecovJsonFormatterReport
 	decoder := json.NewDecoder(jf)
-	decoder.DisallowUnknownFields()
 
 	err = decoder.Decode(&m)
 
