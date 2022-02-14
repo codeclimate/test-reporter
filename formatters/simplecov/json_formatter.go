@@ -3,6 +3,7 @@ package simplecov
 import (
 	"encoding/json"
 	"os"
+	"fmt"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codeclimate/test-reporter/env"
@@ -29,6 +30,19 @@ type meta struct {
 type simplecovJsonFormatterReport struct {
 	Meta         meta                    `json:"meta"`
 	CoverageType map[string]fileCoverage `json:"coverage"`
+}
+
+func reportIsOnLegacyFormat(simplecovVersion string) bool {
+	var major, minor, patch int
+	fmt.Sscanf(simplecovVersion, "%d.%d.%d", &major, &minor, &patch)
+
+	if major < 1 {
+		if minor < 18 {
+			return true
+		}
+	}
+
+	return false
 }
 
 func transformLineCoverageToCoverage(ln []interface{}) formatters.Coverage {
@@ -66,6 +80,10 @@ func jsonFormat(r Formatter, rep formatters.Report) (formatters.Report, error) {
 
 	if err != nil {
 		return rep, errors.WithStack(err)
+	}
+
+	if reportIsOnLegacyFormat(m.Meta.SimpleCovVersion) {
+		return rep, errors.WithStack(errors.Errorf("Simplecov report is on legacy format, falling back to legacy formatter."))
 	}
 
 	gitHead, _ := env.GetHead()
