@@ -1,5 +1,9 @@
 # Change log
 
+## v0.10.3 [(2022-2-16)](https://github.com/codeclimate/test-reporter/releases/tag/v0.10.3)
+
+* [FIX] Plasticize simplecov's formatter so it adapts to different reports structures  [#488](https://github.com/codeclimate/test-reporter/pull/488)
+
 ## v0.10.2 [(2021-12-7)](https://github.com/codeclimate/test-reporter/releases/tag/v0.10.2)
 
 * [NEW] Add support for Github Actions [#481](https://github.com/codeclimate/test-reporter/pull/481)
