@@ -85,6 +85,7 @@ const (
 	IXANY         = 39
 	IXOFF         = 40
 	IMAXBEL       = 41
+	IUTF8         = 42 // RFC 8160
 	ISIG          = 50
 	ICANON        = 51
 	XCASE         = 52
@@ -228,6 +229,26 @@ func (s *Session) RequestSubsystem(subsystem string) error {
 	if err == nil && !ok {
 		err = errors.New("ssh: subsystem request failed")
 	}
+	return err
+}
+
+// RFC 4254 Section 6.7.
+type ptyWindowChangeMsg struct {
+	Columns uint32
+	Rows    uint32
+	Width   uint32
+	Height  uint32
+}
+
+// WindowChange informs the remote host about a terminal window dimension change to h rows and w columns.
+func (s *Session) WindowChange(h, w int) error {
+	req := ptyWindowChangeMsg{
+		Columns: uint32(w),
+		Rows:    uint32(h),
+		Width:   uint32(w * 8),
+		Height:  uint32(h * 8),
+	}
+	_, err := s.ch.SendRequest("window-change", false, Marshal(&req))
 	return err
 }
 
@@ -386,7 +407,7 @@ func (s *Session) Wait() error {
 		s.stdinPipeWriter.Close()
 	}
 	var copyError error
-	for _ = range s.copyFuncs {
+	for range s.copyFuncs {
 		if err := <-s.errors; err != nil && copyError == nil {
 			copyError = err
 		}

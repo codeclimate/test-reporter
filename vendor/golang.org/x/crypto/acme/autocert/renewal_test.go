@@ -6,27 +6,22 @@ package autocert
 
 import (
 	"context"
+	"crypto"
 	"crypto/ecdsa"
-	"crypto/elliptic"
-	"crypto/rand"
-	"crypto/tls"
-	"crypto/x509"
-	"encoding/base64"
-	"fmt"
-	"net/http"
-	"net/http/httptest"
+	"runtime"
 	"testing"
 	"time"
 
 	"golang.org/x/crypto/acme"
+	"golang.org/x/crypto/acme/autocert/internal/acmetest"
 )
 
 func TestRenewalNext(t *testing.T) {
 	now := time.Now()
-	timeNow = func() time.Time { return now }
-	defer func() { timeNow = time.Now }()
-
-	man := &Manager{RenewBefore: 7 * 24 * time.Hour}
+	man := &Manager{
+		RenewBefore: 7 * 24 * time.Hour,
+		nowFunc:     func() time.Time { return now },
+	}
 	defer man.stopRenew()
 	tt := []struct {
 		expiry   time.Time
@@ -48,102 +43,56 @@ func TestRenewalNext(t *testing.T) {
 }
 
 func TestRenewFromCache(t *testing.T) {
-	const domain = "example.org"
-
-	// ACME CA server stub
-	var ca *httptest.Server
-	ca = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("replay-nonce", "nonce")
-		if r.Method == "HEAD" {
-			// a nonce request
-			return
-		}
-
-		switch r.URL.Path {
-		// discovery
-		case "/":
-			if err := discoTmpl.Execute(w, ca.URL); err != nil {
-				t.Fatalf("discoTmpl: %v", err)
-			}
-		// client key registration
-		case "/new-reg":
-			w.Write([]byte("{}"))
-		// domain authorization
-		case "/new-authz":
-			w.Header().Set("location", ca.URL+"/authz/1")
-			w.WriteHeader(http.StatusCreated)
-			w.Write([]byte(`{"status": "valid"}`))
-		// cert request
-		case "/new-cert":
-			var req struct {
-				CSR string `json:"csr"`
-			}
-			decodePayload(&req, r.Body)
-			b, _ := base64.RawURLEncoding.DecodeString(req.CSR)
-			csr, err := x509.ParseCertificateRequest(b)
-			if err != nil {
-				t.Fatalf("new-cert: CSR: %v", err)
-			}
-			der, err := dummyCert(csr.PublicKey, domain)
-			if err != nil {
-				t.Fatalf("new-cert: dummyCert: %v", err)
-			}
-			chainUp := fmt.Sprintf("<%s/ca-cert>; rel=up", ca.URL)
-			w.Header().Set("link", chainUp)
-			w.WriteHeader(http.StatusCreated)
-			w.Write(der)
-		// CA chain cert
-		case "/ca-cert":
-			der, err := dummyCert(nil, "ca")
-			if err != nil {
-				t.Fatalf("ca-cert: dummyCert: %v", err)
-			}
-			w.Write(der)
-		default:
-			t.Errorf("unrecognized r.URL.Path: %s", r.URL.Path)
-		}
-	}))
-	defer ca.Close()
-
-	// use EC key to run faster on 386
-	key, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-	if err != nil {
-		t.Fatal(err)
+	if runtime.GOOS == "windows" && runtime.GOARCH == "arm64" {
+		// This test was observed to fail frequently in Dial with "connectex: No
+		// connection could be made because the target machine actively refused it."
+		//
+		// Failures started around CL 381715, so it looks to me (bcmills) like an
+		// undiagnosed bug in (or exposed by) acmetest.CAServer.
+		t.Skipf("skipping test on windows/arm64: see https://go.dev/issue/51080")
 	}
-	man := &Manager{
-		Prompt:      AcceptTOS,
-		Cache:       newMemCache(),
-		RenewBefore: 24 * time.Hour,
-		Client: &acme.Client{
-			Key:          key,
-			DirectoryURL: ca.URL,
-		},
+
+	man := testManager(t)
+	man.RenewBefore = 24 * time.Hour
+
+	ca := acmetest.NewCAServer(t).Start()
+	ca.ResolveGetCertificate(exampleDomain, man.GetCertificate)
+
+	man.Client = &acme.Client{
+		DirectoryURL: ca.URL(),
 	}
-	defer man.stopRenew()
 
 	// cache an almost expired cert
 	now := time.Now()
-	cert, err := dateDummyCert(key.Public(), now.Add(-2*time.Hour), now.Add(time.Minute), domain)
-	if err != nil {
-		t.Fatal(err)
-	}
-	tlscert := &tls.Certificate{PrivateKey: key, Certificate: [][]byte{cert}}
-	if err := man.cachePut(context.Background(), domain, tlscert); err != nil {
+	c := ca.LeafCert(exampleDomain, "ECDSA", now.Add(-2*time.Hour), now.Add(time.Minute))
+	if err := man.cachePut(context.Background(), exampleCertKey, c); err != nil {
 		t.Fatal(err)
 	}
 
-	// veriy the renewal happened
+	// verify the renewal happened
 	defer func() {
+		// Stop the timers that read and execute testDidRenewLoop before restoring it.
+		// Otherwise the timer callback may race with the deferred write.
+		man.stopRenew()
 		testDidRenewLoop = func(next time.Duration, err error) {}
 	}()
-	done := make(chan struct{})
+	renewed := make(chan bool, 1)
 	testDidRenewLoop = func(next time.Duration, err error) {
-		defer close(done)
+		defer func() {
+			select {
+			case renewed <- true:
+			default:
+				// The renewal timer uses a random backoff. If the first renewal fails for
+				// some reason, we could end up with multiple calls here before the test
+				// stops the timer.
+			}
+		}()
+
 		if err != nil {
 			t.Errorf("testDidRenewLoop: %v", err)
 		}
 		// Next should be about 90 days:
-		// dummyCert creates 90days expiry + account for man.RenewBefore.
+		// CaServer creates 90days expiry + account for man.RenewBefore.
 		// Previous expiration was within 1 min.
 		future := 88 * 24 * time.Hour
 		if next < future {
@@ -152,9 +101,10 @@ func TestRenewFromCache(t *testing.T) {
 
 		// ensure the new cert is cached
 		after := time.Now().Add(future)
-		tlscert, err := man.cacheGet(context.Background(), domain)
+		tlscert, err := man.cacheGet(context.Background(), exampleCertKey)
 		if err != nil {
-			t.Fatalf("man.cacheGet: %v", err)
+			t.Errorf("man.cacheGet: %v", err)
+			return
 		}
 		if !tlscert.Leaf.NotAfter.After(after) {
 			t.Errorf("cache leaf.NotAfter = %v; want > %v", tlscert.Leaf.NotAfter, after)
@@ -163,13 +113,15 @@ func TestRenewFromCache(t *testing.T) {
 		// verify the old cert is also replaced in memory
 		man.stateMu.Lock()
 		defer man.stateMu.Unlock()
-		s := man.state[domain]
+		s := man.state[exampleCertKey]
 		if s == nil {
-			t.Fatalf("m.state[%q] is nil", domain)
+			t.Errorf("m.state[%q] is nil", exampleCertKey)
+			return
 		}
 		tlscert, err = s.tlscert()
 		if err != nil {
-			t.Fatalf("s.tlscert: %v", err)
+			t.Errorf("s.tlscert: %v", err)
+			return
 		}
 		if !tlscert.Leaf.NotAfter.After(after) {
 			t.Errorf("state leaf.NotAfter = %v; want > %v", tlscert.Leaf.NotAfter, after)
@@ -177,15 +129,160 @@ func TestRenewFromCache(t *testing.T) {
 	}
 
 	// trigger renew
-	hello := &tls.ClientHelloInfo{ServerName: domain}
+	hello := clientHelloInfo(exampleDomain, algECDSA)
 	if _, err := man.GetCertificate(hello); err != nil {
 		t.Fatal(err)
 	}
+	<-renewed
+}
 
-	// wait for renew loop
-	select {
-	case <-time.After(10 * time.Second):
-		t.Fatal("renew took too long to occur")
-	case <-done:
+func TestRenewFromCacheAlreadyRenewed(t *testing.T) {
+	if runtime.GOOS == "windows" && runtime.GOARCH == "arm64" {
+		// This test was observed to fail frequently in Dial with "connectex: No
+		// connection could be made because the target machine actively refused it."
+		//
+		// Failures started around CL 381715, so it looks to me (bcmills) like an
+		// undiagnosed bug in (or exposed by) acmetest.CAServer.
+		t.Skipf("skipping test on windows/arm64: see https://go.dev/issue/51080")
+	}
+
+	ca := acmetest.NewCAServer(t).Start()
+	man := testManager(t)
+	man.RenewBefore = 24 * time.Hour
+	man.Client = &acme.Client{
+		DirectoryURL: "invalid",
+	}
+
+	// cache a recently renewed cert with a different private key
+	now := time.Now()
+	newCert := ca.LeafCert(exampleDomain, "ECDSA", now.Add(-2*time.Hour), now.Add(time.Hour*24*90))
+	if err := man.cachePut(context.Background(), exampleCertKey, newCert); err != nil {
+		t.Fatal(err)
+	}
+	newLeaf, err := validCert(exampleCertKey, newCert.Certificate, newCert.PrivateKey.(crypto.Signer), now)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// set internal state to an almost expired cert
+	oldCert := ca.LeafCert(exampleDomain, "ECDSA", now.Add(-2*time.Hour), now.Add(time.Minute))
+	if err != nil {
+		t.Fatal(err)
+	}
+	oldLeaf, err := validCert(exampleCertKey, oldCert.Certificate, oldCert.PrivateKey.(crypto.Signer), now)
+	if err != nil {
+		t.Fatal(err)
+	}
+	man.stateMu.Lock()
+	if man.state == nil {
+		man.state = make(map[certKey]*certState)
+	}
+	s := &certState{
+		key:  oldCert.PrivateKey.(crypto.Signer),
+		cert: oldCert.Certificate,
+		leaf: oldLeaf,
+	}
+	man.state[exampleCertKey] = s
+	man.stateMu.Unlock()
+
+	// verify the renewal accepted the newer cached cert
+	defer func() {
+		// Stop the timers that read and execute testDidRenewLoop before restoring it.
+		// Otherwise the timer callback may race with the deferred write.
+		man.stopRenew()
+		testDidRenewLoop = func(next time.Duration, err error) {}
+	}()
+	renewed := make(chan bool, 1)
+	testDidRenewLoop = func(next time.Duration, err error) {
+		defer func() {
+			select {
+			case renewed <- true:
+			default:
+				// The renewal timer uses a random backoff. If the first renewal fails for
+				// some reason, we could end up with multiple calls here before the test
+				// stops the timer.
+			}
+		}()
+
+		if err != nil {
+			t.Errorf("testDidRenewLoop: %v", err)
+		}
+		// Next should be about 90 days
+		// Previous expiration was within 1 min.
+		future := 88 * 24 * time.Hour
+		if next < future {
+			t.Errorf("testDidRenewLoop: next = %v; want >= %v", next, future)
+		}
+
+		// ensure the cached cert was not modified
+		tlscert, err := man.cacheGet(context.Background(), exampleCertKey)
+		if err != nil {
+			t.Errorf("man.cacheGet: %v", err)
+			return
+		}
+		if !tlscert.Leaf.NotAfter.Equal(newLeaf.NotAfter) {
+			t.Errorf("cache leaf.NotAfter = %v; want == %v", tlscert.Leaf.NotAfter, newLeaf.NotAfter)
+		}
+
+		// verify the old cert is also replaced in memory
+		man.stateMu.Lock()
+		defer man.stateMu.Unlock()
+		s := man.state[exampleCertKey]
+		if s == nil {
+			t.Errorf("m.state[%q] is nil", exampleCertKey)
+			return
+		}
+		stateKey := s.key.Public().(*ecdsa.PublicKey)
+		if !stateKey.Equal(newLeaf.PublicKey) {
+			t.Error("state key was not updated from cache")
+			return
+		}
+		tlscert, err = s.tlscert()
+		if err != nil {
+			t.Errorf("s.tlscert: %v", err)
+			return
+		}
+		if !tlscert.Leaf.NotAfter.Equal(newLeaf.NotAfter) {
+			t.Errorf("state leaf.NotAfter = %v; want == %v", tlscert.Leaf.NotAfter, newLeaf.NotAfter)
+		}
+	}
+
+	// assert the expiring cert is returned from state
+	hello := clientHelloInfo(exampleDomain, algECDSA)
+	tlscert, err := man.GetCertificate(hello)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !oldLeaf.NotAfter.Equal(tlscert.Leaf.NotAfter) {
+		t.Errorf("state leaf.NotAfter = %v; want == %v", tlscert.Leaf.NotAfter, oldLeaf.NotAfter)
+	}
+
+	// trigger renew
+	man.startRenew(exampleCertKey, s.key, s.leaf.NotAfter)
+	<-renewed
+	func() {
+		man.renewalMu.Lock()
+		defer man.renewalMu.Unlock()
+
+		// verify the private key is replaced in the renewal state
+		r := man.renewal[exampleCertKey]
+		if r == nil {
+			t.Errorf("m.renewal[%q] is nil", exampleCertKey)
+			return
+		}
+		renewalKey := r.key.Public().(*ecdsa.PublicKey)
+		if !renewalKey.Equal(newLeaf.PublicKey) {
+			t.Error("renewal private key was not updated from cache")
+		}
+	}()
+
+	// assert the new cert is returned from state after renew
+	hello = clientHelloInfo(exampleDomain, algECDSA)
+	tlscert, err = man.GetCertificate(hello)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !newLeaf.NotAfter.Equal(tlscert.Leaf.NotAfter) {
+		t.Errorf("state leaf.NotAfter = %v; want == %v", tlscert.Leaf.NotAfter, newLeaf.NotAfter)
 	}
 }

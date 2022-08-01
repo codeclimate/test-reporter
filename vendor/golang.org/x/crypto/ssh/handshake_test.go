@@ -421,6 +421,9 @@ func TestHandshakeErrorHandlingWriteCoupled(t *testing.T) {
 // handshakeTransport deadlocks, the go runtime will detect it and
 // panic.
 func testHandshakeErrorHandlingN(t *testing.T, readLimit, writeLimit int, coupled bool) {
+	if runtime.GOOS == "js" && runtime.GOARCH == "wasm" {
+		t.Skip("skipping on js/wasm; see golang.org/issue/32840")
+	}
 	msg := Marshal(&serviceRequestMsg{strings.Repeat("x", int(minRekeyThreshold)/4)})
 
 	a, b := memPipe()
@@ -555,5 +558,63 @@ func TestHandshakeRekeyDefault(t *testing.T) {
 	}
 	if wgb != 64 {
 		t.Errorf("got rekey after %dG write, want 64G", wgb)
+	}
+}
+
+func TestHandshakeAEADCipherNoMAC(t *testing.T) {
+	for _, cipher := range []string{chacha20Poly1305ID, gcmCipherID} {
+		checker := &syncChecker{
+			called: make(chan int, 1),
+		}
+		clientConf := &ClientConfig{
+			Config: Config{
+				Ciphers: []string{cipher},
+				MACs:    []string{},
+			},
+			HostKeyCallback: checker.Check,
+		}
+		trC, trS, err := handshakePair(clientConf, "addr", false)
+		if err != nil {
+			t.Fatalf("handshakePair: %v", err)
+		}
+		defer trC.Close()
+		defer trS.Close()
+
+		<-checker.called
+	}
+}
+
+// TestNoSHA2Support tests a host key Signer that is not an AlgorithmSigner and
+// therefore can't do SHA-2 signatures. Ensures the server does not advertise
+// support for them in this case.
+func TestNoSHA2Support(t *testing.T) {
+	c1, c2, err := netPipe()
+	if err != nil {
+		t.Fatalf("netPipe: %v", err)
+	}
+	defer c1.Close()
+	defer c2.Close()
+
+	serverConf := &ServerConfig{
+		PasswordCallback: func(conn ConnMetadata, password []byte) (*Permissions, error) {
+			return &Permissions{}, nil
+		},
+	}
+	serverConf.AddHostKey(&legacyRSASigner{testSigners["rsa"]})
+	go func() {
+		_, _, _, err := NewServerConn(c1, serverConf)
+		if err != nil {
+			t.Error(err)
+		}
+	}()
+
+	clientConf := &ClientConfig{
+		User:            "test",
+		Auth:            []AuthMethod{Password("testpw")},
+		HostKeyCallback: FixedHostKey(testSigners["rsa"].PublicKey()),
+	}
+
+	if _, _, _, err := NewClientConn(c2, "", clientConf); err != nil {
+		t.Fatal(err)
 	}
 }
