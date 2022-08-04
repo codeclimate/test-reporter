@@ -9,7 +9,7 @@ linux_image: &linux_image
 
 macos_image: &macos_image
   macos:
-    xcode: "11.4.0"
+    xcode: "11.7.0"
 
 setup_macos_env: &setup_macos_env
 
