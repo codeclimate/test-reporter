@@ -24,7 +24,7 @@ jobs:
     <<: *linux_image
     steps:
       - checkout
-      - run: sudo apt-get install awscli
+      - run: sudo apt-get update && sudo apt-get install awscli
       - run: make build-linux-all VERSION=head
       - run: make publish-head
 
@@ -44,7 +44,7 @@ jobs:
     <<: *macos_image
     steps:
       - checkout
-      - run: pip install awscli
+      - run: pip3 install awscli
       - run:
           command: sh .circleci/xcode_install_go
       - run:
