@@ -44,7 +44,7 @@ jobs:
     <<: *macos_image
     steps:
       - checkout
-      - run: pip install awscli
+      - run: pip3 install awscli
       - run:
           command: sh .circleci/xcode_install_go
       - run:
