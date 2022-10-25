@@ -90,6 +90,9 @@ build-docker:
 build-docker-linux:
 	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=0
 
+build-docker-linux-arm64:
+	$(MAKE) build-docker GOOS=linux GOARCH=arm64 CGO_ENABLED=0
+
 build-docker-linux-cgo:
 	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=1 \
 		BUILD_TAGS="netcgo" BINARY_SUFFIX=-$(VERSION)-netcgo-linux-amd64
@@ -144,6 +147,9 @@ publish-version:
 gen-linux-checksum:
 	$(call gen_signed_checksum,linux-amd64)
 
+gen-linux-arm64-checksum:
+	$(call gen_signed_checksum,linux-arm64)
+
 gen-linux-cgo-checksum:
 	$(call gen_signed_checksum,netcgo-linux-amd64)
 
@@ -161,15 +167,19 @@ tag:
 # Must be run in a OS X machine. OS X binary is build natively.
 manual-release:
 	$(MAKE) build-docker-linux
+	$(MAKE) build-docker-linux-arm64
 	$(MAKE) build-docker-linux-cgo
 	$(MAKE) build-darwin
 	$(MAKE) gen-linux-checksum
+	$(MAKE) gen-linux-arm64-checksum
 	$(MAKE) gen-linux-cgo-checksum
 	$(MAKE) gen-darwin-checksum
 	$(MAKE) build-docker-linux VERSION=latest
+	$(MAKE) build-docker-linux-arm64 VERSION=latest
 	$(MAKE) build-docker-linux-cgo VERSION=latest
 	$(MAKE) build-darwin VERSION=latest
 	$(MAKE) gen-linux-checksum VERSION=latest
+	$(MAKE) gen-linux-arm64-checksum VERSION=latest
 	$(MAKE) gen-linux-cgo-checksum VERSION=latest
 	$(MAKE) gen-darwin-checksum VERSION=latest
 	$(MAKE) publish-version
