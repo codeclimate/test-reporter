@@ -57,6 +57,13 @@ build-linux:
 	  BINARY_SUFFIX=-$(VERSION)-linux-amd64 \
 	  CGO_ENABLED=0
 
+build-linux-arm64:
+	$(MAKE) build \
+		PREFIX=artifacts/ \
+		BINARY_SUFFIX=-$(VERSION)-linux-arm64 \
+		CGO_ENABLED=0 \
+		GOARCH=arm64
+
 build-linux-cgo:
 	$(MAKE) build \
 	  PREFIX=artifacts/ \
@@ -66,6 +73,7 @@ build-linux-cgo:
 
 build-linux-all:
 	$(MAKE) build-linux
+	$(MAKE) build-linux-arm64
 	$(MAKE) build-linux-cgo
 
 build-darwin:
