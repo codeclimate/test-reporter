@@ -31,7 +31,7 @@ func main() {
 	}
 	// Check that we are using the Docker-based build system if we should be.
 	if goos == "linux" {
-		if os.Getenv("GOLANG_SYS_BUILD") != "docker" {
+		if os.Getenv("GOLANG_SYS_BUILD") != "podman" {
 			os.Stderr.WriteString("In the Docker-based build system, mkpost should not be called directly.\n")
 			os.Stderr.WriteString("See README.md\n")
 			os.Exit(1)

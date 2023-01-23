@@ -17,7 +17,7 @@ if test -z "$GOARCH" -o -z "$GOOS"; then
 fi
 
 # Check that we are using the new build system if we should
-if [[ "$GOOS" = "linux" ]] && [[ "$GOLANG_SYS_BUILD" != "docker" ]]; then
+if [[ "$GOOS" = "linux" ]] && [[ "$GOLANG_SYS_BUILD" != "podman" ]]; then
 	echo 1>&2 "In the Docker based build system, mkerrors should not be called directly."
 	echo 1>&2 "See README.md"
 	exit 1

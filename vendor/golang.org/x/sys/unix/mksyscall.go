@@ -103,7 +103,7 @@ func main() {
 
 	// Check that we are using the Docker-based build system if we should
 	if goos == "linux" {
-		if os.Getenv("GOLANG_SYS_BUILD") != "docker" {
+		if os.Getenv("GOLANG_SYS_BUILD") != "podman" {
 			fmt.Fprintf(os.Stderr, "In the Docker-based build system, mksyscall should not be called directly.\n")
 			fmt.Fprintf(os.Stderr, "See README.md\n")
 			os.Exit(1)

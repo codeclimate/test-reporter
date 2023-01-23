@@ -1,10 +1,10 @@
-.PHONY: test-docker build-docker build-linux-cgo release test-excoveralls
+.PHONY: test-podman build-podman build-linux-cgo release test-excoveralls
 
 AWS ?= $(shell which aws)
 SHA_SUM ?= $(shell which shasum)
 GPG ?= $(shell which gpg)
 TAR ?= $(shell which tar)
-DOCKER_RUN ?= $(shell which docker) run --rm
+PODMAN_RUN ?= $(shell which podman) run --rm
 PANDOC ?= $(shell which pandoc)
 
 MAN_FILES = $(wildcard man/*.md)
@@ -35,7 +35,7 @@ endef
 man/%: man/%.md
 	$(PANDOC) -s -t man $< -o $@
 
-all: test-docker build-all $(MAN_PAGES)
+all: test-podman build-all $(MAN_PAGES)
 
 test:
 	go test $(shell go list ./... | grep -v /vendor/)
@@ -81,9 +81,9 @@ build-darwin:
 	  PREFIX=artifacts/ \
 	  BINARY_SUFFIX=-$(VERSION)-darwin-amd64
 
-build-docker: BINARY_SUFFIX ?= -$(VERSION)-$$GOOS-$$GOARCH
-build-docker:
-	$(DOCKER_RUN) \
+build-podman: BINARY_SUFFIX ?= -$(VERSION)-$$GOOS-$$GOARCH
+build-podman:
+	$(PODMAN_RUN) \
 	  --env PREFIX=/artifacts/ \
 	  --env BINARY_SUFFIX=${BINARY_SUFFIX} \
 	  --env GOARCH \
@@ -95,53 +95,53 @@ build-docker:
 	  --workdir "/src/$(PROJECT)" \
 	  golang:1.15 make build BUILD_TAGS=${BUILD_TAGS}
 
-build-docker-linux:
-	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=0
+build-podman-linux:
+	$(MAKE) build-podman GOOS=linux GOARCH=amd64 CGO_ENABLED=0
 
-build-docker-linux-arm64:
-	$(MAKE) build-docker GOOS=linux GOARCH=arm64 CGO_ENABLED=0
+build-podman-linux-arm64:
+	$(MAKE) build-podman GOOS=linux GOARCH=arm64 CGO_ENABLED=0
 
-build-docker-linux-cgo:
-	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=1 \
+build-podman-linux-cgo:
+	$(MAKE) build-podman GOOS=linux GOARCH=amd64 CGO_ENABLED=1 \
 		BUILD_TAGS="netcgo" BINARY_SUFFIX=-$(VERSION)-netcgo-linux-amd64
 
-test-docker:
-	$(DOCKER_RUN) \
+test-podman:
+	$(PODMAN_RUN) \
 	  --env GOPATH=/ \
 	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
 	  --workdir "/src/$(PROJECT)" \
 	  golang:1.15 make test
 
-benchmark-docker:
-	$(DOCKER_RUN) \
+benchmark-podman:
+	$(PODMAN_RUN) \
 	  --env GOPATH=/ \
 	  --volume "$(PWD)":"/src/$(PROJECT)":ro \
 	  --workdir "/src/$(PROJECT)" \
 	  golang:1.15 make benchmark
 
 test-simplecov:
-	docker build -f integration-tests/simplecov/Dockerfile .
+	podman build -f integration-tests/simplecov/Dockerfile .
 
 test-lcov:
-	docker build -f integration-tests/lcov/Dockerfile .
+	podman build -f integration-tests/lcov/Dockerfile .
 
 test-covpy:
-	docker build -f integration-tests/coverage_py/Dockerfile .
+	podman build -f integration-tests/coverage_py/Dockerfile .
 
 test-gcov:
-	docker build -f integration-tests/gcov/Dockerfile .
+	podman build -f integration-tests/gcov/Dockerfile .
 
 test-gocov:
-	docker build -f integration-tests/gocov/Dockerfile .
+	podman build -f integration-tests/gocov/Dockerfile .
 
 test-clover:
-	docker build -f integration-tests/clover/Dockerfile .
+	podman build -f integration-tests/clover/Dockerfile .
 
 test-cobertura:
-	docker build -f integration-tests/cobertura/Dockerfile .
+	podman build -f integration-tests/cobertura/Dockerfile .
 
 test-excoveralls:
-	docker build -f integration-tests/excoveralls/Dockerfile .
+	podman build -f integration-tests/excoveralls/Dockerfile .
 
 publish-head:
 	$(call upload_artifacts,head)
@@ -174,17 +174,17 @@ tag:
 
 # Must be run in a OS X machine. OS X binary is build natively.
 manual-release:
-	$(MAKE) build-docker-linux
-	$(MAKE) build-docker-linux-arm64
-	$(MAKE) build-docker-linux-cgo
+	$(MAKE) build-podman-linux
+	$(MAKE) build-podman-linux-arm64
+	$(MAKE) build-podman-linux-cgo
 	$(MAKE) build-darwin
 	$(MAKE) gen-linux-checksum
 	$(MAKE) gen-linux-arm64-checksum
 	$(MAKE) gen-linux-cgo-checksum
 	$(MAKE) gen-darwin-checksum
-	$(MAKE) build-docker-linux VERSION=latest
-	$(MAKE) build-docker-linux-arm64 VERSION=latest
-	$(MAKE) build-docker-linux-cgo VERSION=latest
+	$(MAKE) build-podman-linux VERSION=latest
+	$(MAKE) build-podman-linux-arm64 VERSION=latest
+	$(MAKE) build-podman-linux-cgo VERSION=latest
 	$(MAKE) build-darwin VERSION=latest
 	$(MAKE) gen-linux-checksum VERSION=latest
 	$(MAKE) gen-linux-arm64-checksum VERSION=latest

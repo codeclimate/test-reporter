@@ -97,13 +97,13 @@ jobs:
   build:
     environment:
       CC_TEST_REPORTER_ID: YOUR_CODE_CLIMATE_REPORTER_ID
-    docker:
+    podman:
       - image: notnoopci/php:7.1.5-browsers
     working_directory: ~/repo
     steps:
       - checkout
       - run: sudo pecl channel-update pecl.php.net
-      - run: sudo pecl install xdebug && sudo docker-php-ext-enable xdebug
+      - run: sudo pecl install xdebug && sudo podman-php-ext-enable xdebug
       - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
       - run: chmod +x ./cc-test-reporter
       - run: sudo mkdir -p $CIRCLE_TEST_REPORTS/phpunit

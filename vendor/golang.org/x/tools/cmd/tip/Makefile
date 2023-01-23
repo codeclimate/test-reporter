@@ -4,12 +4,12 @@
 
 VERSION=v1
 
-docker-prod: Dockerfile
-	docker build -f Dockerfile --tag=gcr.io/symbolic-datum-552/tip:$(VERSION) .
-docker-dev: Dockerfile
-	docker build -f Dockerfile --tag=gcr.io/go-dashboard-dev/tip:$(VERSION) .
+podman-prod: Dockerfile
+	podman build -f Dockerfile --tag=gcr.io/symbolic-datum-552/tip:$(VERSION) .
+podman-dev: Dockerfile
+	podman build -f Dockerfile --tag=gcr.io/go-dashboard-dev/tip:$(VERSION) .
 
-push-prod: docker-prod
-	gcloud docker push -- gcr.io/symbolic-datum-552/tip:$(VERSION)
-push-dev: docker-dev
-	gcloud docker push -- gcr.io/go-dashboard-dev/tip:$(VERSION)
+push-prod: podman-prod
+	gcloud podman push -- gcr.io/symbolic-datum-552/tip:$(VERSION)
+push-dev: podman-dev
+	gcloud podman push -- gcr.io/go-dashboard-dev/tip:$(VERSION)

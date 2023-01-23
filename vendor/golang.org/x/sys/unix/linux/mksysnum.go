@@ -82,7 +82,7 @@ func main() {
 		os.Exit(1)
 	}
 	// Check that we are using the new build system if we should
-	if os.Getenv("GOLANG_SYS_BUILD") != "docker" {
+	if os.Getenv("GOLANG_SYS_BUILD") != "podman" {
 		fmt.Fprintf(os.Stderr, "In the new build system, mksysnum should not be called directly.\n")
 		fmt.Fprintf(os.Stderr, "See README.md\n")
 		os.Exit(1)
