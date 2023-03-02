@@ -53,7 +53,7 @@ var formatterMap = map[string]formatters.Formatter{
 	"lcov-json":   &lcovjson.Formatter{},
 	"simplecov":   &simplecov.Formatter{},
 	"xccov":       &xccov.Formatter{},
-	"dotcover":       &dotcover.Formatter{},
+	"dotcover":    &dotcover.Formatter{},
 }
 
 // formatCoverageCmd represents the format command
