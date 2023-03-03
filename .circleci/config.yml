@@ -61,6 +61,7 @@ workflows:
       - test_linux
       - test_macos
       - release_head_linux:
+          context: Quality
           requires:
             - test_linux
             - test_macos
@@ -69,6 +70,7 @@ workflows:
               only:
                 - master
       - release_head_macos:
+          context: Quality
           requires:
             - test_linux
             - test_macos
