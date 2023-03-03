@@ -1,5 +1,9 @@
 # Change log
 
+## v0.11.0 [(2023-3-3)](https://github.com/codeclimate/test-reporter/releases/tag/v0.11.0)
+
+* [NEW] Add support for .NET Dotcover XML report [#508](https://github.com/codeclimate/test-reporter/pull/508)
+
 ## v0.10.4 [(2022-8-9)](https://github.com/codeclimate/test-reporter/releases/tag/v0.10.4)
 
 * [FIX] Updates Golang crypto dependency version [#497](https://github.com/codeclimate/test-reporter/pull/497)
