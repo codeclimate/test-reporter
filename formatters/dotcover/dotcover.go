@@ -39,15 +39,9 @@ func (f Formatter) Format() (formatters.Report, error) {
 		return rep, err
 	}
 
-	fx, err := os.Open(f.Path)
+	c, err := f.readDotCoverXML()
 	if err != nil {
-		return rep, errors.WithStack(err)
-	}
-
-	c := &xmlDotCover{}
-	err = xml.NewDecoder(fx).Decode(c)
-	if err != nil {
-		return rep, errors.WithStack(err)
+		return rep, err
 	}
 
 	gitHead, _ := env.GetHead()
@@ -55,7 +49,8 @@ func (f Formatter) Format() (formatters.Report, error) {
 	for _, file := range c.Files {
 		sf, err := formatters.NewSourceFile(file.Path, gitHead)
 		if err != nil {
-			return rep, errors.WithStack(err)
+			err = errors.WithStack(err)
+			break
 		}
 
 		for _, statement := range c.Statements {
@@ -71,9 +66,25 @@ func (f Formatter) Format() (formatters.Report, error) {
 		err = rep.AddSourceFile(sf)
 
 		if err != nil {
-			return rep, errors.WithStack(err)
+			err = errors.WithStack(err)
+			break
 		}
 	}
 
-	return rep, nil
+	return rep, err
+}
+
+// readDotCoverXML reads the dotCover XML file and returns its contents.
+func (f Formatter) readDotCoverXML() (*xmlDotCover, error) {
+	fx, err := os.Open(f.Path)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	c := &xmlDotCover{}
+	if err = xml.NewDecoder(fx).Decode(c); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return c, nil
 }
