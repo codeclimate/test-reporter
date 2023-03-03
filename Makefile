@@ -143,6 +143,9 @@ test-cobertura:
 test-excoveralls:
 	docker build -f integration-tests/excoveralls/Dockerfile .
 
+test-dotcover:
+	docker build -f integration-tests/dotcover/Dockerfile .
+
 publish-head:
 	$(call upload_artifacts,head)
 
