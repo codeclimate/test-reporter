@@ -132,7 +132,7 @@ jobs:
       RACK_ENV: test
       COVERAGE: true
       TZ: /usr/share/zoneinfo/America/Chicago
-    docker:
+    podman:
       - image: circleci/ruby:2.5.1-stretch-node
         environment:
           PGHOST: 127.0.0.1
@@ -218,7 +218,7 @@ jobs:
           path: test-artifacts
 
   upload-coverage:
-    docker:
+    podman:
       - image: circleci/ruby:2.5.1-stretch-node
     environment:
       CC_TEST_REPORTER_ID: c3ff91e23ea0fea718bb62dae0a8a5440dc082d5d2bb508af6b33d0babac479a

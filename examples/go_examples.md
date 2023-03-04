@@ -93,11 +93,11 @@ RUN "$(go env GOPATH)/bin/go-bindata" -o global/assets.go -pkg global assets/...
 travis.yml
 ```yaml
 services:
-  - docker
+  - podman
 
 script:
-  - docker build -t app .
-  - docker run --rm app ./codecoverage.sh
+  - podman build -t app .
+  - podman run --rm app ./codecoverage.sh
 ```
 
 

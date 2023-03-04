@@ -19,7 +19,7 @@ Installation
 What do you need? You need an *aerospike* server. The easiest way to get one for testing is running the official **docker** container provided by Aerospike:
 
 ```
-docker run -d -p 3000:3000 --name aerospike aerospike/aerospike-server
+podman run -d -p 3000:3000 --name aerospike aerospike/aerospike-server
 ```
 
 Now, we need the sample code.
@@ -102,6 +102,6 @@ The process has read all the commits and all the needed objects from the aerospi
 If you want to explore the database, you can execute the `aql` tool and run some queries:
 
 ```sh
-docker run -it aerospike/aerospike-tools aql -h 172.17.0.1
+podman run -it aerospike/aerospike-tools aql -h 172.17.0.1
 aql> SELECT * FROM test;
 ```

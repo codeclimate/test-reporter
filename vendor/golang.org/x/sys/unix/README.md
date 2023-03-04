@@ -52,7 +52,7 @@ system and have your GOOS and GOARCH set accordingly. Running `mkall.sh` will
 then generate all of the files for all of the GOOS/GOARCH pairs in the new build
 system. Running `mkall.sh -n` shows the commands that will be run.
 
-Requirements: bash, go, docker
+Requirements: bash, go, podman
 
 ## Component files
 
@@ -60,7 +60,7 @@ This section describes the various files used in the code generation process.
 It also contains instructions on how to modify these files to add a new
 architecture/OS or to add additional syscalls, types, or constants. Note that
 if you are using the new build system, the scripts/programs cannot be called normally.
-They must be called from within the docker container.
+They must be called from within the podman container.
 
 ### asm files
 

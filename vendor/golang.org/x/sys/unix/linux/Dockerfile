@@ -68,7 +68,7 @@ RUN apt-get update && apt-get install wget xz-utils -y && mkdir /loong64 && cd /
     && ln -s /usr/local/cross-tools-loong64/bin/loongarch64-unknown-linux-gnu-gcc /usr/bin/loongarch64-linux-gnu-gcc \
     && rm -rf /loong64
 
-# Let the scripts know they are in the docker environment
-ENV GOLANG_SYS_BUILD docker
+# Let the scripts know they are in the podman environment
+ENV GOLANG_SYS_BUILD podman
 WORKDIR /build/unix
 ENTRYPOINT ["go", "run", "linux/mkall.go", "/git/linux", "/git/glibc"]

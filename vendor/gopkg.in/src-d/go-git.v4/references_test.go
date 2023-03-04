@@ -4,11 +4,8 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/src-d/go-git-fixtures"
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
-
-	. "gopkg.in/check.v1"
 )
 
 type ReferencesSuite struct {
@@ -145,7 +142,7 @@ var referencesTests = [...]struct {
 	{"https://github.com/spinnaker/spinnaker.git", "b32b2aecae2cfca4840dd480f8082da206a538da", "install/__init__.py", []string{
 		"a24001f6938d425d0e7504bdf5d27fc866a85c3d",
 	}},
-	{"https://github.com/spinnaker/spinnaker.git", "b32b2aecae2cfca4840dd480f8082da206a538da", "experimental/docker-compose/docker-compose.yml", []string{
+	{"https://github.com/spinnaker/spinnaker.git", "b32b2aecae2cfca4840dd480f8082da206a538da", "experimental/podman-compose/podman-compose.yml", []string{
 		"fda357835d889595dc39dfebc6181d863cce7d4f",
 		"57c59e7144354a76e1beba69ae2f85db6b1727af",
 		"7682dff881029c722d893a112a64fea6849a0428",

@@ -13,7 +13,7 @@
 version: 2.0
 defaults: &defaults
   working_directory: ~/repo
-  docker:
+  podman:
     - image: circleci/ruby:2.4.2-jessie-node-browsers
       environment:
         PGHOST: 127.0.0.1

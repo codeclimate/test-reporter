@@ -179,7 +179,7 @@ func main() {
 	}
 
 	// Check that we are using the new build system if we should
-	if os.Getenv("GOLANG_SYS_BUILD") != "docker" {
+	if os.Getenv("GOLANG_SYS_BUILD") != "podman" {
 		fmt.Println("In the new build system, mkall.go should not be called directly.")
 		fmt.Println("See README.md")
 		return
