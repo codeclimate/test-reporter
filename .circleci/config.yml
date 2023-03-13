@@ -72,7 +72,6 @@ jobs:
           command: |
             go install golang.org/dl/go1.15@latest
             & $env:WHEREISGO\bingo1.15 version
-          shell: bash.exe
 
       # .\go1.15 download
       # .\go1.15 version
