@@ -66,12 +66,16 @@ jobs:
           name: Setup Environment Variables
           command: |
             New-Item $Profile.CurrentUserAllHosts -Force
-            Add-Content -Path $Profile.CurrentUserAllHosts -Value '$env:WHEREISGO = ${env:GOPATH}'
+            Add-Content -Path $Profile.CurrentUserAllHosts -Value '$Env:WHEREISGO = ${env:GOPATH}'
       - run:
           name: Install golang 1.15 version
           command: |
             go install golang.org/dl/go1.15@latest
-            & $env:WHEREISGO\bingo1.15 version
+            & $Env:WHEREISGO\bin\go1.15 version
+      - run:
+          name: TEST golang 1.15 version
+          command: |
+            go1.15 version
 
       # .\go1.15 download
       # .\go1.15 version
