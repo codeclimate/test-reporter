@@ -59,7 +59,8 @@ jobs:
   #           make publish-head
 
   test_windows:
-    executor: win/server-2022
+    executor: win/default
+    shell: bash.exe
     steps:
       # - checkout
       - run:
