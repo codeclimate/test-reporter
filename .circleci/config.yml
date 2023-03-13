@@ -61,7 +61,9 @@ jobs:
   test_windows:
     executor: win/server-2022
     steps:
+      - checkout
       - run: Write-Host 'Hello, Windows'
+      - run: go version
 
 
 workflows:
