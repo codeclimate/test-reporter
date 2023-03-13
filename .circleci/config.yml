@@ -63,7 +63,7 @@ jobs:
     steps:
       - checkout
       - run: choco install make
-      - run: choco install golang --version=1.15
+      - run: choco install -y golang --version=1.15 --force --allow-downgrade
       - run: go version
       - run: make test
 
