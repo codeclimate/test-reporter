@@ -61,19 +61,20 @@ jobs:
   test_windows:
     executor: win/default
     steps:
-      # - checkout
-      - run:
-          name: Install golang 1.15 version
-          command: |
-            go install golang.org/dl/go1.15@latest
-      - run:
-          name: Setup Environment Variables
-          command: |
-            setx PATH "$($env:path);$env:GOPATH\bar"
-      - run:
-          name: TEST golang 1.15 version
-          command: |
-            go1.15 version
+      - checkout
+      - run: make test
+      # - run:
+      #     name: Install golang 1.15 version
+      #     command: |
+      #       go install golang.org/dl/go1.15@latest
+      # - run:
+      #     name: Setup Environment Variables
+      #     command: |
+      #       setx PATH "$($env:path);$env:GOPATH\bar"
+      # - run:
+      #     name: TEST golang 1.15 version
+      #     command: |
+      #       go1.15 version
 
       # .\go1.15 download
       # .\go1.15 version
