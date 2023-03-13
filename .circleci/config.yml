@@ -64,13 +64,14 @@ jobs:
       - checkout
 
       - run: choco install make
+      - run: go install github.com/andrewkroh/gvm/cmd/gvm@v0.5.0
       - run:
-          name: install golang
+          name: Install golang 1.15
           command: |
-            $goRootVal = "C:\tools\go"
-            [System.Environment]::SetEnvironmentVariable("GOROOT", $goRootVal,[System.EnvironmentVariableTarget]::Machine)
-            choco install -y golang --version=1.15 --force --allow-downgrade -y -vv -ia "INSTALLDIR=""C:\tools\go"""
-      - run: go version
+            gvm install 1.15
+            gvm use 1.15
+            gvm --format=powershell 1.15 | Invoke-Expression
+            go version
       - run: make test
 
       # .\go1.15 download
