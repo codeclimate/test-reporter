@@ -61,17 +61,8 @@ jobs:
   test_windows:
     executor: win/default
     steps:
-      # - checkout
-      - run:
-          name: Install golang 1.15 version
-          command: |
-            go install golang.org/dl/go1.15@latest
-      - run:
-          name: TEST golang 1.15 version
-          command: |
-            $gopath = $env:GOPATH
-            & $gopath\bin\go1.15 version
-
+      - checkout
+      - run: make test
 
       # .\go1.15 download
       # .\go1.15 version
