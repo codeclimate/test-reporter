@@ -65,11 +65,13 @@ jobs:
       - run:
           name: Install golang 1.15 version
           command: |
-            cd ..
             go install golang.org/dl/go1.15@latest
-            cd go\bin
-            .\go1.15 download
-            .\go1.15 version
+            echo 'export PATH="$GOPATH"/bin:"$PATH"' >> "$BASH_ENV"
+            go1.15 version
+
+      # .\go1.15 download
+      # .\go1.15 version
+      # .\go1.15 test
       # - run: $GOPATH\bin\go1.15 test $(shell go list ./... | grep -v /vendor/)
       # - run: Write-Host 'Hello, Windows'
       # - run: go version
