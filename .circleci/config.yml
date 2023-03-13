@@ -60,6 +60,8 @@ jobs:
 
   test_windows:
     executor: win/default
+    environment:
+      GO111MODULE: on
     steps:
       - checkout:
           path: .gvm\versions\go1.15.windows.amd64\src\github.com\codeclimate\test-reporter
