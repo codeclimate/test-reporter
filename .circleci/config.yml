@@ -62,8 +62,15 @@ jobs:
     executor: win/server-2022
     steps:
       - checkout
-      - run: Write-Host 'Hello, Windows'
-      - run: go version
+      - run:
+          name: Install golang 1.15 version
+          command: |
+            go install golang.org/dl/go1.15@latest
+            go1.15 download
+            go1.15 version
+      - run: go1.15 test $(shell go list ./... | grep -v /vendor/)
+      # - run: Write-Host 'Hello, Windows'
+      # - run: go version
 
 
 workflows:
