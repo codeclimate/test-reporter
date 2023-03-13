@@ -61,8 +61,8 @@ jobs:
   test_windows:
     executor: win/default
     steps:
-      - checkout
-
+      - checkout:
+          path: .gvm\versions\go1.15.windows.amd64\src
       - run: choco install make
       - run:
           name: Install GVM
