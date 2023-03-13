@@ -68,7 +68,8 @@ jobs:
             cd ..
             go install golang.org/dl/go1.15@latest
             cd go\bin
-            dir
+            .\go1.15 download
+            .\go1.15 version
       # - run: $GOPATH\bin\go1.15 test $(shell go list ./... | grep -v /vendor/)
       # - run: Write-Host 'Hello, Windows'
       # - run: go version
