@@ -65,8 +65,10 @@ jobs:
       - run:
           name: Install golang 1.15 version
           command: |
-            echo ${userprofile}
-            cd ${userprofile}
+            cd ..
+            go install golang.org/dl/go1.15@latest
+            bin\go1.15 download
+            bin\go1.15 version
       # - run: $GOPATH\bin\go1.15 test $(shell go list ./... | grep -v /vendor/)
       # - run: Write-Host 'Hello, Windows'
       # - run: go version
