@@ -64,7 +64,9 @@ jobs:
       # - checkout
       - run:
           name: Install golang 1.15 version
-          command: go env
+          run: |
+            echo %userprofile%
+            cd %userprofile%
       # - run: $GOPATH\bin\go1.15 test $(shell go list ./... | grep -v /vendor/)
       # - run: Write-Host 'Hello, Windows'
       # - run: go version
