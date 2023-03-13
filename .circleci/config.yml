@@ -68,7 +68,7 @@ jobs:
             go install golang.org/dl/go1.15@latest
             %GOPATH%\bin\go1.15 download
             %GOPATH%\bin\go1.15 version
-      - run: %GOPATH%\bin\go1.15 test $(shell go list ./... | grep -v /vendor/)
+      - run: \%GOPATH%\bin\go1.15 test $(shell go list ./... | grep -v /vendor/)
       # - run: Write-Host 'Hello, Windows'
       # - run: go version
 
