@@ -81,7 +81,7 @@ jobs:
           command: |
             .\gvm --format=powershell 1.15 | Invoke-Expression
             cd go\src\github.com\codeclimate\test-reporter
-            make test
+            go test
 
       # .\go1.15 download
       # .\go1.15 version
