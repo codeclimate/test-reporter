@@ -64,7 +64,7 @@ jobs:
       # - checkout
       - run:
           name: Install golang 1.15 version
-          run: |
+          command: |
             echo %userprofile%
             cd %userprofile%
       # - run: $GOPATH\bin\go1.15 test $(shell go list ./... | grep -v /vendor/)
