@@ -72,9 +72,9 @@ jobs:
       - run:
           name: Install golang 1.15
           command: |
-            gvm install 1.15
-            gvm use 1.15
-            gvm --format=powershell 1.15 | Invoke-Expression
+            .\gvm install 1.15
+            .\gvm use 1.15
+            .\gvm --format=powershell 1.15 | Invoke-Expression
             go version
       - run: make test
 
