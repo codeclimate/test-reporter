@@ -64,10 +64,11 @@ jobs:
       - checkout
 
       - run: choco install make
-      - run: go install github.com/andrewkroh/gvm/cmd/gvm@v0.5.0
       - run:
           name: Install golang 1.15
           command: |
+            go install github.com/andrewkroh/gvm/cmd/gvm@v0.5.0
+            refreshenv
             gvm install 1.15
             gvm use 1.15
             gvm --format=powershell 1.15 | Invoke-Expression
