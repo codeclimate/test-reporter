@@ -1,82 +1,93 @@
-version: 2
+version: 2.1
 
-linux_image: &linux_image
-  docker:
-    - image: circleci/golang:1.15
-  working_directory: /go/src/github.com/codeclimate/test-reporter
-  setup_remote_docker:
-    docker_layer_caching: true
+orbs:
+  win: circleci/windows@5.0 # The Windows orb gives you everything you need to start using the Windows executor.
 
-macos_image: &macos_image
-  macos:
-    xcode: "11.7.0"
 
-setup_macos_env: &setup_macos_env
+# linux_image: &linux_image
+#   docker:
+#     - image: circleci/golang:1.15
+#   working_directory: /go/src/github.com/codeclimate/test-reporter
+#   setup_remote_docker:
+#     docker_layer_caching: true
+
+# macos_image: &macos_image
+#   macos:
+#     xcode: "11.7.0"
+
+# setup_macos_env: &setup_macos_env
 
 jobs:
-  test_linux:
-    <<: *linux_image
-    steps:
-      - checkout
-      - run: make test
+  # test_linux:
+  #   <<: *linux_image
+  #   steps:
+  #     - checkout
+  #     - run: make test
 
-  release_head_linux:
-    <<: *linux_image
-    steps:
-      - checkout
-      - run: sudo apt-get update && sudo apt-get install awscli
-      - run: make build-linux-all VERSION=head
-      - run: make publish-head
+  # release_head_linux:
+  #   <<: *linux_image
+  #   steps:
+  #     - checkout
+  #     - run: sudo apt-get update && sudo apt-get install awscli
+  #     - run: make build-linux-all VERSION=head
+  #     - run: make publish-head
 
-  test_macos:
-    <<: *macos_image
-    steps:
-      - checkout
-      - run:
-          command: sh .circleci/xcode_install_go
-      - run:
-          name: Run tests
-          command: |
-            cd $GOPATH/src/github.com/codeclimate/test-reporter
-            make test
+  # test_macos:
+  #   <<: *macos_image
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         command: sh .circleci/xcode_install_go
+  #     - run:
+  #         name: Run tests
+  #         command: |
+  #           cd $GOPATH/src/github.com/codeclimate/test-reporter
+  #           make test
 
-  release_head_macos:
-    <<: *macos_image
+  # release_head_macos:
+  #   <<: *macos_image
+  #   steps:
+  #     - checkout
+  #     - run: pip3 install awscli
+  #     - run:
+  #         command: sh .circleci/xcode_install_go
+  #     - run:
+  #         name: Build & Upload artifacts to S3
+  #         command: |
+  #           cd $GOPATH/src/github.com/codeclimate/test-reporter
+  #           make build-darwin VERSION=head
+  #           make publish-head
+
+  test_windows:
+    executor: win/server-2022
     steps:
-      - checkout
-      - run: pip3 install awscli
-      - run:
-          command: sh .circleci/xcode_install_go
-      - run:
-          name: Build & Upload artifacts to S3
-          command: |
-            cd $GOPATH/src/github.com/codeclimate/test-reporter
-            make build-darwin VERSION=head
-            make publish-head
+      - run: Write-Host 'Hello, Windows'
+
 
 workflows:
   version: 2
   build_deploy:
     jobs:
-      - test_linux
-      - test_macos
-      - release_head_linux:
-          requires:
-            - test_linux
-            - test_macos
-          filters:
-            branches:
-              only:
-                - master
-      - release_head_macos:
-          requires:
-            - test_linux
-            - test_macos
-          filters:
-            branches:
-              only:
-                - master
+      # - test_linux
+      # - test_macos
+      - test_windows
+      # - release_head_linux:
+      #     requires:
+      #       - test_linux
+      #       - test_macos
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
+      # - release_head_macos:
+      #     requires:
+      #       - test_linux
+      #       - test_macos
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
 
-notify:
-  webhooks:
-    - url: https://cc-slack-proxy.herokuapp.com/circle
+# notify:
+#   webhooks:
+#     - url: https://cc-slack-proxy.herokuapp.com/circle
