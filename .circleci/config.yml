@@ -71,7 +71,6 @@ jobs:
           name: Install golang 1.15 version
           command: |
             go install golang.org/dl/go1.15@latest
-            & $Env:WHEREISGO\bin\go1.15 version
       - run:
           name: TEST golang 1.15 version
           command: |
