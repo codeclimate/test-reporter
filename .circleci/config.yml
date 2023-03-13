@@ -61,7 +61,7 @@ jobs:
   test_windows:
     executor: win/server-2022
     steps:
-      - checkout
+      # - checkout
       - run:
           name: Install golang 1.15 version
           command: echo $GOPATH
