@@ -64,7 +64,7 @@ jobs:
       # - checkout
       - run:
           name: Install golang 1.15 version
-          - run: |
+          - command: |
             cd ..
             go install golang.org/dl/go1.15@latest
             cd go\bin
