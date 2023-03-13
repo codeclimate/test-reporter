@@ -62,7 +62,7 @@ jobs:
     executor: win/default
     steps:
       - checkout:
-          path: .gvm\versions\go1.15.windows.amd64\src
+          path: .gvm\versions\go1.15.windows.amd64\src\github.com\codeclimate\test-reporter
       - run: choco install make
       - run:
           name: Install GVM
@@ -80,7 +80,7 @@ jobs:
           name: Run Tests
           command: |
             .\gvm --format=powershell 1.15 | Invoke-Expression
-            cd .gvm\versions\go1.15.windows.amd64\src
+            cd .gvm\versions\go1.15.windows.amd64\src\github.com\codeclimate\test-reporter
             make test
 
       # .\go1.15 download
