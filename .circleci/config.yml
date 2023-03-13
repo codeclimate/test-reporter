@@ -79,8 +79,8 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            cd .gvm\versions\go1.15.windows.amd64\src
             .\gvm --format=powershell 1.15 | Invoke-Expression
+            cd .gvm\versions\go1.15.windows.amd64\src
             make test
 
       # .\go1.15 download
