@@ -62,9 +62,14 @@ jobs:
     executor: win/default
     steps:
       - checkout
+
       - run: choco install make
-      - run: choco install -y golang --version=1.15 --force --allow-downgrade
-      - run: refreshenv
+      - run:
+          name: install golang
+          command: |
+            $goRootVal = "C:\tools\go"
+            [System.Environment]::SetEnvironmentVariable("GOROOT", $goRootVal,[System.EnvironmentVariableTarget]::Machine)
+            choco install -y golang --version=1.15 --force --allow-downgrade -y -vv -ia "INSTALLDIR=""C:\tools\go"""
       - run: go version
       - run: make test
 
