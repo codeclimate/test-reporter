@@ -64,6 +64,7 @@ jobs:
       - checkout
       - run: choco install make
       - run: choco install -y golang --version=1.15 --force --allow-downgrade
+      - run: refreshenv
       - run: go version
       - run: make test
 
