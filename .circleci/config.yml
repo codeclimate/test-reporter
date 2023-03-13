@@ -60,18 +60,19 @@ jobs:
 
   test_windows:
     executor: win/default
-    shell: bash.exe
     steps:
       # - checkout
       - run:
           name: Setup Environment Variables
           command: |
             echo 'export PATH="$GOPATH"/bin:"$PATH"' >> "$BASH_ENV"
+          shell: bash.exe
       - run:
           name: Install golang 1.15 version
           command: |
             go install golang.org/dl/go1.15@latest
             go1.15 version
+          shell: bash.exe
 
       # .\go1.15 download
       # .\go1.15 version
