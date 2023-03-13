@@ -76,7 +76,11 @@ jobs:
             .\gvm use 1.15
             .\gvm --format=powershell 1.15 | Invoke-Expression
             go version
-      - run: make test
+      - run:
+          name: Run Tests
+          command: |
+            .\gvm --format=powershell 1.15 | Invoke-Expression
+            make test
 
       # .\go1.15 download
       # .\go1.15 version
