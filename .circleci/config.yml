@@ -62,7 +62,7 @@ jobs:
     executor: win/default
     steps:
       - checkout:
-          path: go\src\github.com\codeclimate\test-reporter
+          path: ..\go\src\github.com\codeclimate\test-reporter
       - run: choco install make
       - run:
           name: Install GVM
@@ -81,7 +81,7 @@ jobs:
           name: Run Tests
           command: |
             .\gvm --format=powershell 1.15 | Invoke-Expression
-            cd go\src\github.com\codeclimate\test-reporter
+            cd ..\go\src\github.com\codeclimate\test-reporter
             dir
             go env
             go test $(go list ./...)
