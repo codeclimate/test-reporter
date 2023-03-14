@@ -19,7 +19,9 @@ var basePackage string
 
 func init() {
 	basePackage, _ = os.Getwd()
+	fmt.Println(basePackage)
 	for _, gp := range envy.GoPaths() {
+		fmt.Println(filepath.Join(gp, "src")+string(os.PathSeparator))
 		basePackage = strings.TrimPrefix(basePackage, filepath.Join(gp, "src")+string(os.PathSeparator))
 	}
 	fmt.Println(basePackage)
