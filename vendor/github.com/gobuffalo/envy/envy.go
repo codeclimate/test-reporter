@@ -18,17 +18,18 @@ func init() {
 	fmt.Println("ACA")
 	v := runtime.Version()
 	// set the GOPATH if using >= 1.8 and the GOPATH isn't set
-	if v >= "go1.8" && os.Getenv("GOPATH") == "" {
-		fmt.Println("ACA2")
-		home, err := homedir.Dir()
+	if os.Getenv("GOPATH") == "" {
+		out, err := exec.Command("go", "env", "GOPATH").Output()
+		fmt.Println(" ACA 2")
+		fmt.Println(out)
 		if err == nil {
-			home, err := homedir.Expand(home)
-			if err == nil {
-				fmt.Println(home)
-				os.Setenv("GOPATH", filepath.Join(home, "go"))
-			}
+			fmt.Println(" ACA 3")
+			gp := strings.TrimSpace(string(out))
+			fmt.Println(gp)
+			os.Setenv("GOPATH", gp)
 		}
 	}
+
 
 	for _, e := range os.Environ() {
 		pair := strings.Split(e, "=")
