@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"fmt"
 	"golang.org/x/tools/cover"
 
 	"github.com/Sirupsen/logrus"
@@ -21,6 +22,7 @@ func init() {
 	for _, gp := range envy.GoPaths() {
 		basePackage = strings.TrimPrefix(basePackage, filepath.Join(gp, "src")+string(os.PathSeparator))
 	}
+	fmt.Println(basePackage)
 }
 
 var searchPaths = []string{"c.out"}
@@ -55,6 +57,8 @@ func (r Formatter) Format() (formatters.Report, error) {
 
 	gitHead, _ := env.GetHead()
 	for _, p := range profiles {
+		fmt.Println(basePackage+string(os.PathSeparator))
+		fmt.Println(filepath.FromSlash(p.FileName))
 		n := strings.TrimPrefix(filepath.FromSlash(p.FileName), basePackage+string(os.PathSeparator))
 		sf, err := formatters.NewSourceFile(n, gitHead)
 		if err != nil {
