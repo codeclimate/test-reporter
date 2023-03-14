@@ -3,27 +3,22 @@ package envy
 import (
 	"fmt"
 	"os"
-	"path/filepath"
+	"os/exec"
 	"runtime"
 	"strings"
 	"sync"
-
-	homedir "github.com/mitchellh/go-homedir"
 )
 
 var gil = &sync.Mutex{}
 var env = map[string]string{}
 
 func init() {
-	v := runtime.Version()
-	// set the GOPATH if using >= 1.8 and the GOPATH isn't set
-	if v >= "go1.8" && os.Getenv("GOPATH") == "" {
-		home, err := homedir.Dir()
+	// set the GOPATH if not present
+	if os.Getenv("GOPATH") == "" {
+		out, err := exec.Command("go", "env", "GOPATH").Output()
 		if err == nil {
-			home, err := homedir.Expand(home)
-			if err == nil {
-				os.Setenv("GOPATH", filepath.Join(home, "go"))
-			}
+			gp := strings.TrimSpace(string(out))
+			os.Setenv("GOPATH", gp)
 		}
 	}
 
