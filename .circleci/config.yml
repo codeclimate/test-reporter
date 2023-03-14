@@ -84,7 +84,7 @@ jobs:
           name: Run Tests
           command: |
             ls -l
-            eval "$(./gvm 1.15)"
+            eval "$(gvm.exe 1.15)"
             cd go/src/github.com/codeclimate/test-reporter
             go env
             make test
