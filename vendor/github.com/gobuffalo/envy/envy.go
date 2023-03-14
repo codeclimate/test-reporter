@@ -15,13 +15,16 @@ var gil = &sync.Mutex{}
 var env = map[string]string{}
 
 func init() {
+	fmt.Println("ACA")
 	v := runtime.Version()
 	// set the GOPATH if using >= 1.8 and the GOPATH isn't set
 	if v >= "go1.8" && os.Getenv("GOPATH") == "" {
+		fmt.Println("ACA2")
 		home, err := homedir.Dir()
 		if err == nil {
 			home, err := homedir.Expand(home)
 			if err == nil {
+				fmt.Println(home)
 				os.Setenv("GOPATH", filepath.Join(home, "go"))
 			}
 		}
