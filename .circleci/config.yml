@@ -78,7 +78,9 @@ jobs:
       - run:
           name: Run Tests
           command: |
+            .\gvm use 1.15
             .\gvm --format=powershell 1.15 | Invoke-Expression
+            go env
             cd ..\go\src\github.com\codeclimate\test-reporter
             go test $(go list ./...)
 
