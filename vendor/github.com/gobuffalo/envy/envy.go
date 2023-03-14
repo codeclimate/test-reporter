@@ -3,12 +3,10 @@ package envy
 import (
 	"fmt"
 	"os"
-	"path/filepath"
+	"os/exec"
 	"runtime"
 	"strings"
 	"sync"
-
-	homedir "github.com/mitchellh/go-homedir"
 )
 
 var gil = &sync.Mutex{}
