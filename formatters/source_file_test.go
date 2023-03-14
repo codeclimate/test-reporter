@@ -3,6 +3,8 @@ package formatters
 import (
 	"testing"
 
+	"path/filepath"
+
 	"github.com/gobuffalo/envy"
 	"github.com/stretchr/testify/require"
 )
@@ -100,20 +102,20 @@ func Test_SourceFile_AddPrefix(t *testing.T) {
 		envy.Set("ADD_PREFIX", "test-prefix")
 		envy.Set("PREFIX", ".")
 		r := require.New(t)
-		sf, err := NewSourceFile("./coverage.go", nil)
+		sf, err := NewSourceFile("coverage.go", nil)
 		r.NoError(err)
-		r.Equal(sf.Name, "test-prefix/coverage.go")
+		r.Equal(sf.Name, filepath.Join("test-prefix", "coverage.go"))
 	})
 }
 
 func Test_SourceFile_AddPrefixWithPathSeparator(t *testing.T) {
 	envy.Temp(func() {
-		envy.Set("ADD_PREFIX", "test-prefix/")
+		envy.Set("ADD_PREFIX", filepath.Join("test-prefix"))
 		envy.Set("PREFIX", ".")
 		r := require.New(t)
-		sf, err := NewSourceFile("./coverage.go", nil)
+		sf, err := NewSourceFile("coverage.go", nil)
 		r.NoError(err)
-		r.Equal(sf.Name, "test-prefix/coverage.go")
+		r.Equal(sf.Name, filepath.Join("test-prefix","coverage.go"))
 	})
 }
 
@@ -121,7 +123,7 @@ func Test_SourceFilePrefix(t *testing.T) {
 	envy.Temp(func() {
 		envy.Set("PREFIX", ".")
 		r := require.New(t)
-		sf, err := NewSourceFile("./coverage.go", nil)
+		sf, err := NewSourceFile("coverage.go", nil)
 		r.NoError(err)
 		r.Equal(sf.Name, "coverage.go")
 	})
@@ -131,7 +133,7 @@ func Test_SourceFilePrefixWithPathSeparator(t *testing.T) {
 	envy.Temp(func() {
 		envy.Set("PREFIX", "./")
 		r := require.New(t)
-		sf, err := NewSourceFile("./coverage.go", nil)
+		sf, err := NewSourceFile("coverage.go", nil)
 		r.NoError(err)
 		r.Equal(sf.Name, "coverage.go")
 	})
@@ -142,7 +144,7 @@ func Test_SourceFileEmptyAddPrefixDoesNothing(t *testing.T) {
 		envy.Set("PREFIX", "./")
 		envy.Set("ADD_PREFIX", "")
 		r := require.New(t)
-		sf, err := NewSourceFile("./coverage.go", nil)
+		sf, err := NewSourceFile("coverage.go", nil)
 		r.NoError(err)
 		r.Equal(sf.Name, "coverage.go")
 	})
