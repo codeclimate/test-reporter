@@ -2,6 +2,7 @@ package gocov
 
 import (
 	"testing"
+	"fmt"
 
 	"path/filepath"
 
@@ -54,12 +55,13 @@ func Test_Parse(t *testing.T) {
 
 		r := require.New(t)
 
-		f := &Formatter{Path: filepath.Join("example", "foobar_test.out")}
+		f := &Formatter{Path: "./example/foobar_test.out"}
 		rep, err := f.Format()
 		r.NoError(err)
 
 		r.Len(rep.SourceFiles, 2)
 
+		fmt.Println(rep.SourceFiles)
 		sfFoo := rep.SourceFiles[filepath.Join("example","foo","foo.go")]
 		sfBar := rep.SourceFiles[filepath.Join("example","bar","bar.go")]
 
