@@ -77,13 +77,17 @@ jobs:
             .\gvm --format=powershell 1.15 | Invoke-Expression
             go version
       - run:
+          name: Install grep
+          command: |
+            choco install grep -y
+      - run:
           name: Run Tests
           command: |
-            .\gvm --format=powershell 1.15 | Invoke-Expression
+            eval "$(gvm 1.15)"
             cd go\src\github.com\codeclimate\test-reporter
-            choco install grep -y
             go env
             make test
+          shell: bash.exe
 
       # .\go1.15 download
       # .\go1.15 version
