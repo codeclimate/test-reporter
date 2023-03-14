@@ -81,9 +81,9 @@ jobs:
           command: |
             .\gvm --format=powershell 1.15 | Invoke-Expression
             cd go\src\github.com\codeclimate\test-reporter
-            choco install grep
+            choco install grep -y
             go env
-            go test
+            make test
 
       # .\go1.15 download
       # .\go1.15 version
