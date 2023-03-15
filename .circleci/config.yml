@@ -74,7 +74,6 @@ jobs:
             .\gvm install 1.15
             .\gvm --format=powershell 1.15 | Invoke-Expression
             go version
-      # - run: choco install grep -y
       - run:
           name: Run Tests
           command: |
