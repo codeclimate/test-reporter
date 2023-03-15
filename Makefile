@@ -105,6 +105,9 @@ build-docker-linux-cgo:
 	$(MAKE) build-docker GOOS=linux GOARCH=amd64 CGO_ENABLED=1 \
 		BUILD_TAGS="netcgo" BINARY_SUFFIX=-$(VERSION)-netcgo-linux-amd64
 
+build-docker-windows:
+	$(MAKE) build-docker GOOS=windows GOARCH=amd64 CGO_ENABLED=0
+
 test-docker:
 	$(DOCKER_RUN) \
 	  --env GOPATH=/ \
@@ -167,6 +170,9 @@ gen-linux-cgo-checksum:
 gen-darwin-checksum:
 	$(call gen_signed_checksum,darwin-amd64)
 
+gen-windows-checksum:
+	$(call gen_signed_checksum,windows-amd64)
+
 clean:
 	sudo $(RM) -r ./artifacts
 	$(RM) $(MAN_PAGES)
@@ -180,18 +186,22 @@ manual-release:
 	$(MAKE) build-docker-linux
 	$(MAKE) build-docker-linux-arm64
 	$(MAKE) build-docker-linux-cgo
+	$(MAKE) build-docker-windows
 	$(MAKE) build-darwin
 	$(MAKE) gen-linux-checksum
 	$(MAKE) gen-linux-arm64-checksum
 	$(MAKE) gen-linux-cgo-checksum
+	$(MAKE) gen-windows-checksum
 	$(MAKE) gen-darwin-checksum
 	$(MAKE) build-docker-linux VERSION=latest
 	$(MAKE) build-docker-linux-arm64 VERSION=latest
 	$(MAKE) build-docker-linux-cgo VERSION=latest
+	$(MAKE) build-docker-windows VERSION=latest
 	$(MAKE) build-darwin VERSION=latest
 	$(MAKE) gen-linux-checksum VERSION=latest
 	$(MAKE) gen-linux-arm64-checksum VERSION=latest
 	$(MAKE) gen-linux-cgo-checksum VERSION=latest
+	$(MAKE) gen-windows-checksum VERSION=latest
 	$(MAKE) gen-darwin-checksum VERSION=latest
 	$(MAKE) publish-version
 	$(MAKE) publish-latest
