@@ -97,23 +97,22 @@ func Test_SourceFile_Merge_With_Mismatch_Blob_Id(t *testing.T) {
 
 func Test_SourceFile_AddPrefix(t *testing.T) {
 	envy.Temp(func() {
-		envy.Set("ADD_PREFIX", "test-prefix")
-		envy.Set("PREFIX", ".")
+		envy.Set("ADD_PREFIX", "lcov")
 		r := require.New(t)
-		sf, err := NewSourceFile("./coverage.go", nil)
+		sf, err := NewSourceFile("example.info", nil)
 		r.NoError(err)
-		r.Equal(sf.Name, "test-prefix/coverage.go")
+		r.Equal(sf.Name, "lcov/example.info")
 	})
 }
 
 func Test_SourceFile_AddPrefixWithPathSeparator(t *testing.T) {
 	envy.Temp(func() {
-		envy.Set("ADD_PREFIX", "test-prefix/")
+		envy.Set("ADD_PREFIX", "lcov/")
 		envy.Set("PREFIX", ".")
 		r := require.New(t)
-		sf, err := NewSourceFile("./coverage.go", nil)
+		sf, err := NewSourceFile("./example.info", nil)
 		r.NoError(err)
-		r.Equal(sf.Name, "test-prefix/coverage.go")
+		r.Equal(sf.Name, "lcov/example.info")
 	})
 }
 

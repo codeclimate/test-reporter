@@ -91,6 +91,17 @@ func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 		}
 	}
 
+	if addPrefix, err := envy.MustGet("ADD_PREFIX"); err == nil {
+		if addPrefix != "" {
+			logrus.Printf("adding prefix %s", addPrefix)
+			if strings.HasSuffix(addPrefix, string(os.PathSeparator)) {
+				name = addPrefix + name
+			} else {
+				name = addPrefix + string(os.PathSeparator) + name
+			}
+		}
+	}
+
 	sf := SourceFile{
 		Name:     name,
 		Coverage: Coverage{},
@@ -101,16 +112,6 @@ func NewSourceFile(name string, commit *object.Commit) (SourceFile, error) {
 
 	if err != nil {
 		return sf, errors.WithStack(err)
-	}
-
-	if addPrefix, err := envy.MustGet("ADD_PREFIX"); err == nil {
-		if addPrefix != "" {
-			if strings.HasSuffix(addPrefix, string(os.PathSeparator)) {
-				sf.Name = addPrefix + sf.Name
-			} else {
-				sf.Name = addPrefix + string(os.PathSeparator) + sf.Name
-			}
-		}
 	}
 
 	return sf, nil
