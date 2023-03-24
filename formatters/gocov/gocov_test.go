@@ -3,6 +3,8 @@ package gocov
 import (
 	"testing"
 
+	"path/filepath"
+
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 
 	"github.com/codeclimate/test-reporter/env"
@@ -25,7 +27,8 @@ func Test_Parse(t *testing.T) {
 
 		r.Len(rep.SourceFiles, 4)
 
-		sf := rep.SourceFiles["github.com/codeclimate/test-reporter/formatters/source_file.go"]
+		sf := rep.SourceFiles[filepath.FromSlash("github.com/codeclimate/test-reporter/formatters/source_file.go")]
+
 		r.InDelta(75.8, sf.CoveredPercent, 1)
 		r.Len(sf.Coverage, 115)
 		r.False(sf.Coverage[5].Valid)
@@ -51,14 +54,14 @@ func Test_Parse(t *testing.T) {
 
 		r := require.New(t)
 
-		f := &Formatter{Path: "./example/foobar_test.out"}
+		f := &Formatter{Path: filepath.Join("example", "foobar_test.out")}
 		rep, err := f.Format()
 		r.NoError(err)
 
 		r.Len(rep.SourceFiles, 2)
 
-		sfFoo := rep.SourceFiles["example/foo/foo.go"]
-		sfBar := rep.SourceFiles["example/bar/bar.go"]
+		sfFoo := rep.SourceFiles[filepath.Join("example","foo","foo.go")]
+		sfBar := rep.SourceFiles[filepath.Join("example","bar","bar.go")]
 
 		r.EqualValues(85, rep.CoveredPercent)
 		r.EqualValues(100, sfFoo.CoveredPercent)
