@@ -1,5 +1,10 @@
 # Change log
 
+## v0.11.1 [(2023-3-24)](https://github.com/codeclimate/test-reporter/releases/tag/v0.11.1)
+
+* [NEW] Release Windows binary and update envy dependency version [#511](https://github.com/codeclimate/test-reporter/pull/511)
+
+
 ## v0.11.0 [(2023-3-3)](https://github.com/codeclimate/test-reporter/releases/tag/v0.11.0)
 
 * [NEW] Add support for .NET Dotcover XML report [#508](https://github.com/codeclimate/test-reporter/pull/508)
