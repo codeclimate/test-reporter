@@ -179,7 +179,7 @@ clean:
 
 tag:
 	$(TAR) -c -f ${ARTIFACTS_OUTPUT} ./artifacts/bin/test-reporter-${VERSION}-* && \
-	  hub release create -a ${ARTIFACTS_OUTPUT} -m "v${VERSION}" ${VERSION}
+		gh release create "v${VERSION}" ${ARTIFACTS_OUTPUT} -t "v${VERSION}"
 
 # Must be run in a OS X machine. OS X binary is build natively.
 manual-release:
