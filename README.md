@@ -37,6 +37,10 @@ The test reporter is distributed as a pre-built binary named cc-test-reporter. Y
 - [codeclimate.com/downloads/test-reporter/test-reporter-latest-darwin-amd64](https://codeclimate.com/downloads/test-reporter/test-reporter-latest-darwin-amd64)
 - [codeclimate.com/downloads/test-reporter/test-reporter-${VERSION}-darwin-amd64](https://codeclimate.com/downloads/test-reporter/test-reporter-${VERSION}-darwin-amd64)
 
+### Windows
+
+- [https://codeclimate.com/downloads/test-reporter/test-reporter-latest-windows-amd64](https://codeclimate.com/downloads/test-reporter/test-reporter-latest-windows-amd64)
+- [https://codeclimate.com/downloads/test-reporter/test-reporter-${VERSION}-windows-amd64](https://codeclimate.com/downloads/test-reporter/test-reporter-${VERSION}-windows-amd64)
 
 #### e.g
 >```console
