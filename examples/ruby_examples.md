@@ -37,6 +37,7 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
+  # Note that to make simplecov output in appropriate format, `CC_TEST_REPORTER_ID` environment variable should be set before testing
   - bundle exec rake $TASKS
 
 after_script:
@@ -100,6 +101,7 @@ before_script: bundle exec rake db:create db:migrate
 # Run the test suites
 script:
   - bundle exec rubocop -DESP           # Backend linting
+  # Note that to make simplecov output in appropriate format, `CC_TEST_REPORTER_ID` environment variable should be set before testing
   - bundle exec rake                    # Backend specs
   #- npm test -- --browsers Firefox      # Frontend specs
   - npm test                            # Frontend linting & specs
@@ -204,6 +206,9 @@ jobs:
                               --out test-results/rspec/rspec.xml \
                               --format progress \
                               -- ${TESTFILES}
+          environment:
+            # Note that to make simplecov output in appropriate format, `CC_TEST_REPORTER_ID` environment variable should be set before testing
+            CC_TEST_REPORTER_ID: c3ff91e23ea0fea718bb62dae0a8a5440dc082d5d2bb508af6b33d0babac479a
       - run:
           name: Code Climate Test Coverage
           command: |
