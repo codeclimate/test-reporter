@@ -54,6 +54,9 @@ jobs:
           command: |
             bundle exec rake
             ./tmp/cc-test-reporter format-coverage -t simplecov -o tmp/codeclimate.backend.json coverage/backend/.resultset.json
+          environment:
+            # Note that to make simplecov output in appropriate format, `CC_TEST_REPORTER_ID` environment variable should be set before testing
+            - CC_TEST_REPORTER_ID: 1acf55093f33b525eefdd9fb1e601d748e5d8b1267729176605edb4b5d82dc3d
       - persist_to_workspace:
           root: tmp
           paths:
