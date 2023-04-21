@@ -1,4 +1,4 @@
-FROM golang:1.8.1
+FROM golang:1.16.10
 
 ENV CCTR=$GOPATH/src/github.com/codeclimate/test-reporter
 RUN mkdir -p $CCTR
