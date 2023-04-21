@@ -1,5 +1,18 @@
 # Change log
 
+## v0.11.1 [(2023-3-24)](https://github.com/codeclimate/test-reporter/releases/tag/v0.11.1)
+
+* [NEW] Release Windows binary and update envy dependency version [#511](https://github.com/codeclimate/test-reporter/pull/511)
+
+
+## v0.11.0 [(2023-3-3)](https://github.com/codeclimate/test-reporter/releases/tag/v0.11.0)
+
+* [NEW] Add support for .NET Dotcover XML report [#508](https://github.com/codeclimate/test-reporter/pull/508)
+
+## v0.10.4 [(2022-8-9)](https://github.com/codeclimate/test-reporter/releases/tag/v0.10.4)
+
+* [FIX] Updates Golang crypto dependency version [#497](https://github.com/codeclimate/test-reporter/pull/497)
+
 ## v0.10.3 [(2022-2-16)](https://github.com/codeclimate/test-reporter/releases/tag/v0.10.3)
 
 * [FIX] Plasticize simplecov's formatter so it adapts to different reports structures  [#488](https://github.com/codeclimate/test-reporter/pull/488)

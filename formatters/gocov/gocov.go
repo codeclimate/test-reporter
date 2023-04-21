@@ -55,7 +55,7 @@ func (r Formatter) Format() (formatters.Report, error) {
 
 	gitHead, _ := env.GetHead()
 	for _, p := range profiles {
-		n := strings.TrimPrefix(p.FileName, basePackage+string(os.PathSeparator))
+		n := strings.TrimPrefix(filepath.FromSlash(p.FileName), basePackage+string(os.PathSeparator))
 		sf, err := formatters.NewSourceFile(n, gitHead)
 		if err != nil {
 			return rep, errors.WithStack(err)

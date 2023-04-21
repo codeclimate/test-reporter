@@ -17,12 +17,13 @@ const renewJitter = time.Hour
 // domainRenewal tracks the state used by the periodic timers
 // renewing a single domain's cert.
 type domainRenewal struct {
-	m      *Manager
-	domain string
-	key    crypto.Signer
+	m   *Manager
+	ck  certKey
+	key crypto.Signer
 
-	timerMu sync.Mutex
-	timer   *time.Timer
+	timerMu    sync.Mutex
+	timer      *time.Timer
+	timerClose chan struct{} // if non-nil, renew closes this channel (and nils out the timer fields) instead of running
 }
 
 // start starts a cert renewal timer at the time
@@ -38,16 +39,28 @@ func (dr *domainRenewal) start(exp time.Time) {
 	dr.timer = time.AfterFunc(dr.next(exp), dr.renew)
 }
 
-// stop stops the cert renewal timer.
-// If the timer is already stopped, calling stop is a noop.
+// stop stops the cert renewal timer and waits for any in-flight calls to renew
+// to complete. If the timer is already stopped, calling stop is a noop.
 func (dr *domainRenewal) stop() {
 	dr.timerMu.Lock()
 	defer dr.timerMu.Unlock()
-	if dr.timer == nil {
-		return
+	for {
+		if dr.timer == nil {
+			return
+		}
+		if dr.timer.Stop() {
+			dr.timer = nil
+			return
+		} else {
+			// dr.timer fired, and we acquired dr.timerMu before the renew callback did.
+			// (We know this because otherwise the renew callback would have reset dr.timer!)
+			timerClose := make(chan struct{})
+			dr.timerClose = timerClose
+			dr.timerMu.Unlock()
+			<-timerClose
+			dr.timerMu.Lock()
+		}
 	}
-	dr.timer.Stop()
-	dr.timer = nil
 }
 
 // renew is called periodically by a timer.
@@ -55,7 +68,9 @@ func (dr *domainRenewal) stop() {
 func (dr *domainRenewal) renew() {
 	dr.timerMu.Lock()
 	defer dr.timerMu.Unlock()
-	if dr.timer == nil {
+	if dr.timerClose != nil {
+		close(dr.timerClose)
+		dr.timer, dr.timerClose = nil, nil
 		return
 	}
 
@@ -67,29 +82,47 @@ func (dr *domainRenewal) renew() {
 		next = renewJitter / 2
 		next += time.Duration(pseudoRand.int63n(int64(next)))
 	}
-	dr.timer = time.AfterFunc(next, dr.renew)
 	testDidRenewLoop(next, err)
+	dr.timer = time.AfterFunc(next, dr.renew)
+}
+
+// updateState locks and replaces the relevant Manager.state item with the given
+// state. It additionally updates dr.key with the given state's key.
+func (dr *domainRenewal) updateState(state *certState) {
+	dr.m.stateMu.Lock()
+	defer dr.m.stateMu.Unlock()
+	dr.key = state.key
+	dr.m.state[dr.ck] = state
 }
 
 // do is similar to Manager.createCert but it doesn't lock a Manager.state item.
 // Instead, it requests a new certificate independently and, upon success,
 // replaces dr.m.state item with a new one and updates cache for the given domain.
 //
-// It may return immediately if the expiration date of the currently cached cert
-// is far enough in the future.
+// It may lock and update the Manager.state if the expiration date of the currently
+// cached cert is far enough in the future.
 //
 // The returned value is a time interval after which the renewal should occur again.
 func (dr *domainRenewal) do(ctx context.Context) (time.Duration, error) {
 	// a race is likely unavoidable in a distributed environment
 	// but we try nonetheless
-	if tlscert, err := dr.m.cacheGet(ctx, dr.domain); err == nil {
+	if tlscert, err := dr.m.cacheGet(ctx, dr.ck); err == nil {
 		next := dr.next(tlscert.Leaf.NotAfter)
 		if next > dr.m.renewBefore()+renewJitter {
-			return next, nil
+			signer, ok := tlscert.PrivateKey.(crypto.Signer)
+			if ok {
+				state := &certState{
+					key:  signer,
+					cert: tlscert.Certificate,
+					leaf: tlscert.Leaf,
+				}
+				dr.updateState(state)
+				return next, nil
+			}
 		}
 	}
 
-	der, leaf, err := dr.m.authorizedCert(ctx, dr.key, dr.domain)
+	der, leaf, err := dr.m.authorizedCert(ctx, dr.key, dr.ck)
 	if err != nil {
 		return 0, err
 	}
@@ -102,16 +135,15 @@ func (dr *domainRenewal) do(ctx context.Context) (time.Duration, error) {
 	if err != nil {
 		return 0, err
 	}
-	dr.m.cachePut(ctx, dr.domain, tlscert)
-	dr.m.stateMu.Lock()
-	defer dr.m.stateMu.Unlock()
-	// m.state is guaranteed to be non-nil at this point
-	dr.m.state[dr.domain] = state
+	if err := dr.m.cachePut(ctx, dr.ck, tlscert); err != nil {
+		return 0, err
+	}
+	dr.updateState(state)
 	return dr.next(leaf.NotAfter), nil
 }
 
 func (dr *domainRenewal) next(expiry time.Time) time.Duration {
-	d := expiry.Sub(timeNow()) - dr.m.renewBefore()
+	d := expiry.Sub(dr.m.now()) - dr.m.renewBefore()
 	// add a bit of randomness to renew deadline
 	n := pseudoRand.int63n(int64(renewJitter))
 	d -= time.Duration(n)

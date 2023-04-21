@@ -25,6 +25,9 @@ The test reporter is distributed as a pre-built binary named cc-test-reporter. Y
 - [codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64](https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64)
 - [codeclimate.com/downloads/test-reporter/test-reporter-${VERSION}-linux-amd64](https://codeclimate.com/downloads/test-reporter/test-reporter-${VERSION}-linux-amd64)
 
+### Linux ARM64
+- [codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-arm64](https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-arm64)
+- [codeclimate.com/downloads/test-reporter/test-reporter-${VERSION}-linux-arm64](https://codeclimate.com/downloads/test-reporter/test-reporter-${VERSION}-linux-arm64)
 
 ### Linux netcgo (recommended if you're using a VPN)
 - [codeclimate.com/downloads/test-reporter/test-reporter-latest-netcgo-linux-amd64](https://codeclimate.com/downloads/test-reporter/test-reporter-latest-netcgo-linux-amd64)
@@ -34,6 +37,10 @@ The test reporter is distributed as a pre-built binary named cc-test-reporter. Y
 - [codeclimate.com/downloads/test-reporter/test-reporter-latest-darwin-amd64](https://codeclimate.com/downloads/test-reporter/test-reporter-latest-darwin-amd64)
 - [codeclimate.com/downloads/test-reporter/test-reporter-${VERSION}-darwin-amd64](https://codeclimate.com/downloads/test-reporter/test-reporter-${VERSION}-darwin-amd64)
 
+### Windows
+
+- [https://codeclimate.com/downloads/test-reporter/test-reporter-latest-windows-amd64](https://codeclimate.com/downloads/test-reporter/test-reporter-latest-windows-amd64)
+- [https://codeclimate.com/downloads/test-reporter/test-reporter-${VERSION}-windows-amd64](https://codeclimate.com/downloads/test-reporter/test-reporter-${VERSION}-windows-amd64)
 
 #### e.g
 >```console
