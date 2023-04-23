@@ -23,7 +23,7 @@ func init() {
 	}
 }
 
-var searchPaths = []string{"c.out"}
+var searchPaths = []string{"c.out", "cover.out}
 
 type Formatter struct {
 	Path string
